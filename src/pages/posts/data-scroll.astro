@@ -1,0 +1,48 @@
+---
+import "/src/styles/data-scroll.css";
+title: "Data Scroll"
+---
+
+<html>
+
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
+<div
+    class="flex flex-row bg-neutral-500 w-full sticky top-0 z-100 place-content-center p-3"
+>
+    <h1 class="backdrop-blur-md">How to scroll data!!</h1>
+</div>
+
+<div class="@container grid grid-cols-2 gap-2">
+    <div id="graphic">
+        <div id="sections">
+            <section class="step">
+                <h3 class="title">OpenVis Conf 2013</h3>
+                I did what no presenter should ever do: I watched my own talk...
+            </section>
+
+            <section class="step">
+                <h3 class="title">hello</h3>
+                Greetings
+            </section>
+
+            <section class="step">
+                <h3 class="title">body</h3>
+                I said something about the body of the talk
+            </section>
+
+            <section class="step">
+                <h3 class="title">bye</h3>
+                farewell~
+            </section>
+        </div>
+
+        <div id="vis" class="sticky top-0"></div>
+        <footer class="h-96">contact</footer>
+    </div>
+</div>
+
+
+<script src="/src/scripts/data-scroll.js"></script>
+
+</html>
