@@ -1,0 +1,210 @@
+<!--    https://flyonui.com/docs/overlays/drawer/#drawer-with-navigation -->
+<button
+    id="dropdown-name"
+    type="button"
+    class="dropdown-toggle btn btn-text btn-circle dropdown-open:bg-base-content/10 dropdown-open:text-base-content"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    aria-controls="overlay-navigation-example"
+    data-overlay="#overlay-navigation-example"
+>
+    <span class="icon-[tabler--menu-2] size-5"></span>
+</button>
+
+<div
+    id="overlay-navigation-example"
+    class="overlay overlay-open:translate-x-0 drawer drawer-start hidden max-w-5xl md:w-[15rem]"
+    tabindex="-1"
+>
+    <div class="drawer-header">
+        <button
+            type="button"
+            class="btn btn-text btn-circle btn-sm absolute start-3 top-3"
+            aria-label="Close"
+            data-overlay="#overlay-navigation-example"
+        >
+            <span class="icon-[tabler--x] size-4"></span>
+        </button>
+    </div>
+
+    <div class="drawer-body justify-start pb-6 px-1">
+        <ul
+            class="menu space-y-0.5 p-0 [&_.nested-collapse-wrapper]:space-y-0.5 [&_ul]:space-y-0.5"
+        >
+            <li>
+                <a href="#">
+                    <span class="icon-[tabler--home] size-5"></span>
+                    홈
+                </a>
+            </li>
+            <li class="nested-collapse-wrapper">
+                <a
+                    class="collapse-toggle nested-collapse"
+                    id="layout-collapse"
+                    data-collapse="#layout-collapse-menu"
+                >
+                    <span class="icon-[tabler--layout-navbar] size-5"></span>
+                    Layouts
+                    <span
+                        class="icon-[tabler--chevron-down] collapse-icon size-4"
+                    ></span>
+                </a>
+                <ul
+                    id="layout-collapse-menu"
+                    class="collapse hidden w-auto overflow-hidden transition-[height] duration-300"
+                    aria-labelledby="layout-collapse"
+                >
+                    <li>
+                        <a href="#">
+                            <span class="icon-[tabler--point] size-5"></span>
+                            Content Navbar
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="icon-[tabler--point] size-5"></span>
+                            Horizontal
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="icon-[tabler--point] size-5"></span>
+                            Without Menu
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nested-collapse-wrapper">
+                <a
+                    class="collapse-toggle nested-collapse"
+                    id="front-page-collapse"
+                    data-collapse="#front-page-collapse-menu"
+                >
+                    <span class="icon-[tabler--box-multiple] size-5"></span>
+                    Front Pages
+                    <span
+                        class="icon-[tabler--chevron-down] collapse-icon size-4"
+                    ></span>
+                </a>
+                <ul
+                    id="front-page-collapse-menu"
+                    class="collapse hidden w-auto overflow-hidden transition-[height] duration-300"
+                    aria-labelledby="front-page-collapse"
+                >
+                    <li>
+                        <a href="#">
+                            <span class="icon-[tabler--point] size-5"></span>
+                            Landing Page
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="icon-[tabler--point] size-5"></span>
+                            Pricing Page
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="icon-[tabler--point] size-5"></span>
+                            Checkout Page
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <div class="divider text-base-content/50 py-6 after:border-0">
+                    Apps & Pages
+                </div>
+                <a href="#">
+                    <span class="icon-[tabler--message-chatbot] size-5"></span>
+                    Chat
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icon-[tabler--mail] size-5"></span>
+                    Email
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icon-[tabler--calendar] size-5"></span>
+                    Calendar
+                </a>
+            </li>
+            <li class="nested-collapse-wrapper">
+                <a
+                    class="collapse-toggle nested-collapse"
+                    id="ecommerce-collapse"
+                    data-collapse="#ecommerce-collapse-menu"
+                >
+                    <span class="icon-[tabler--shopping-cart] size-5"></span>
+                    Ecommerce
+                    <span
+                        class="icon-[tabler--chevron-down] collapse-icon size-4"
+                    ></span>
+                </a>
+                <ul
+                    id="ecommerce-collapse-menu"
+                    class="collapse hidden w-auto overflow-hidden transition-[height] duration-300"
+                    aria-labelledby="ecommerce-collapse"
+                >
+                    <li>
+                        <a href="#">
+                            <span class="icon-[tabler--point] size-5"></span>
+                            Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="icon-[tabler--point] size-5"></span>
+                            Categories
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="icon-[tabler--point] size-5"></span>
+                            Shipping & Delivery
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="icon-[tabler--point] size-5"></span>
+                            Location
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <div class="divider text-base-content/50 py-6 after:border-0">
+                Account
+            </div>
+            <li>
+                <a href="#">
+                    <span class="icon-[tabler--login] size-5"></span>
+                    Sign In
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icon-[tabler--logout-2] size-5"></span>
+                    Sign Out
+                </a>
+            </li>
+            <div class="divider text-base-content/50 py-6 after:border-0">
+                Miscellaneous
+            </div>
+            <li>
+                <a href="#">
+                    <span class="icon-[tabler--users-group] size-5"></span>
+                    Support
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icon-[tabler--files] size-5"></span>
+                    Documentation
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

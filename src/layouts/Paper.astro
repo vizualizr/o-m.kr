@@ -1,8 +1,12 @@
 ---
-import "/src/styles/global.css";
+import "../styles/global.css";
+import GlobalNav from "./GlobalNav.astro";
+import Footer from "./Footer.astro";
 // 야 그냥 클립보드라고 생각해라.
 // 아래처럼 쓰면 해당 컴포넌트에서 title을 임의로 지정해서 사용할 수 있다.
-const {title} = Astro.props;
+
+const title = "ilbo";
+const { frontmatter } = Astro.props;
 ---
 
 <!doctype html>
@@ -12,12 +16,14 @@ const {title} = Astro.props;
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="generator" content={Astro.generator} />
-        <title>{title}</title>
+        <title>진경 | {frontmatter?.title}</title>
     </head>
     <body>
         <!-- {} -->
-        <div>
+        <GlobalNav title={title} />
             <slot />
-        </div>
+        <Footer title={title} />
     </body>
 </html>
+
+<script is:inline src="../../node_modules/flyonui/flyonui.js"></script>

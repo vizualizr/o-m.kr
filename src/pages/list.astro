@@ -1,0 +1,32 @@
+---
+const allPosts = Object.values(
+    import.meta.glob("/src/pages/posts/*.(md|astro)", { eager: true }),
+);
+
+function getFrontmatters() {
+  return Object.values(allPosts).map((post) => post.frontmatter);
+}
+
+const frontmatters = getFrontmatters();
+---
+
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    </head>
+
+    <h1>제목이시다!</h1>
+
+
+    <ul class="hidden">
+        {
+            allPosts.map((post: any, i) => (
+                <p>{i} {(post?.frontmatter?.title) ? post.frontmatter.title : JSON.stringify(post)}</p>
+                <p>{(post?.frontmatter?.title)  && JSON.stringify(post)}</p>
+                
+            ))
+        }
+    </ul>
+    {JSON.stringify(frontmatters)}
+</html>

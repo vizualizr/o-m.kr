@@ -1,0 +1,60 @@
+.container {
+  @apply max-w-6xl relative;
+}
+
+#graphic {
+  @apply mx-auto flex-col justify-center content-center;
+}
+
+#sections {
+	@apply block z-50;
+	/* padding-bottom: 200px; */
+}
+
+.step {
+  @apply h-screen mx-auto items-center justify-center p-10;
+}
+
+#sections .title {
+  @apply text-2xl font-serif font-bold;
+}
+
+#extra-space {
+  @apply hidden;
+	/* height: 300px; */
+}
+
+#vis svg {
+  @apply m-auto z-20;
+}
+
+#vis {
+  @apply flex sticky h-svh inset-0 justify-center;
+}
+
+#vis .title {
+	@apply text-7xl;
+	text-anchor: middle;
+}
+
+#vis .sub-title {
+	@apply text-3xl;
+	text-anchor: middle;
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: #666;
+	shape-rendering: crispEdges;
+}
+
+.highlight {
+	fill: #008080;
+	font-weight: bold;
+}
+
+.cough-arrow {
+	stroke: #000;
+	stroke-width: 4px;
+}

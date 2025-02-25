@@ -1,9 +1,32 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+	/* equals to 7xl in tailwind default responsive unit */
+	--max-width: 80rem;
+}
 
-* {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+body {
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	word-break: keep-all;
+}
+
+.card {
+	@apply shadow-none;
+}
+
+#brand {
+	font-family: "궁서", "Gungsuh", "Times New Roman", Times, serif;
+}
+
+
+.articleBox h1 {
+	@apply text-2xl;
+}
+.articleBox h2 {
+	@apply text-xl;
+}
+.articleBox p {
+	@apply my-2;
 }

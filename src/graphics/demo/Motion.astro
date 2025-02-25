@@ -1,0 +1,21 @@
+---
+import "./styles/chart.css";
+// const faker = require('faker');
+---
+
+<div>
+<svg id="frame" width="640" xmlns="http://www.w3.org/2000/svg"
+class="">
+<g class="chart"> </g>
+</svg>
+</div>
+
+<!-- 클라이언트 스크립트 이므로 is:inline을 삽입한다. -->
+<!-- 이를 삽입하지 않으면 각 파일의 함수를 전부 import로 불러와야 한다. -->
+<!-- 자세한 내용은 https://docs.astro.build/ko/reference/directives-reference/#isinline 를 참조하라. -->
+<script is:inline src="https://d3js.org/d3.v7.min.js"></script>
+
+<script is:inline src="/src/graphics/demo/scripts/config.js"></script>
+<script is:inline src="/src/graphics/demo/scripts/layout.js"></script>
+<script is:inline src="/src/graphics/demo/scripts/update.js"></script>
+<script is:inline src="/src/graphics/demo/scripts/main.js"></script>
