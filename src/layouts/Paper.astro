@@ -10,19 +10,21 @@ const { frontmatter } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="generator" content={Astro.generator} />
-        <title>진경 | {frontmatter?.title}</title>
+        <title>{frontmatter?.title}</title>
     </head>
-    <body>
+    <body class="">
         <!-- {} -->
-        <GlobalNav title={title} />
+        <div class="flex flex-col min-h-svh mb-0">
+            <GlobalNav title={title} />
             <slot />
-        <Footer title={title} />
+            <Footer title={title} />
+        </div>
     </body>
 </html>
 

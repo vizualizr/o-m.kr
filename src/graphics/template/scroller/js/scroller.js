@@ -7,22 +7,22 @@
  *
  */
 function scroller() {
-  var container = d3.select('body');
+  let container = d3.select('body');
   // event dispatcher
-  var dispatch = d3.dispatch('active', 'progress');
+  let dispatch = d3.dispatch('active', 'progress');
 
   // d3 selection of all the
   // text sections that will
   // be scrolled through
-  var sections = null;
+  let sections = null;
 
   // array that will hold the
   // y coordinate of each section
   // that is scrolled through
-  var sectionPositions = [];
-  var currentIndex = -1;
+  let sectionPositions = [];
+  let currentIndex = -1;
   // y coordinate of
-  var containerStart = 0;
+  let containerStart = 0;
 
   /**
    * scroll - constructor function.
@@ -55,7 +55,7 @@ function scroller() {
     // @v4 timer no longer stops if you
     // return true at the end of the callback
     // function - so here we stop it explicitly.
-    var timer = d3.timer(function () {
+    let timer = d3.timer(() => {
       position();
       timer.stop();
     });
@@ -72,9 +72,9 @@ function scroller() {
     // starting position relative to the top
     // of the first section.
     sectionPositions = [];
-    var startPos;
+    let startPos;
     sections.each(function (d, i) {
-      var top = this.getBoundingClientRect().top;
+      let top = this.getBoundingClientRect().top;
       if (i === 0) {
         startPos = top;
       }
@@ -91,8 +91,8 @@ function scroller() {
    *
    */
   function position() {
-    var pos = window.pageYOffset - 10 - containerStart;
-    var sectionIndex = d3.bisect(sectionPositions, pos);
+    let pos = window.scrollY - 10 - containerStart;
+    let sectionIndex = d3.bisect(sectionPositions, pos);
     sectionIndex = Math.min(sections.size() - 1, sectionIndex);
 
     if (currentIndex !== sectionIndex) {
@@ -101,9 +101,9 @@ function scroller() {
       currentIndex = sectionIndex;
     }
 
-    var prevIndex = Math.max(sectionIndex - 1, 0);
-    var prevTop = sectionPositions[prevIndex];
-    var progress = (pos - prevTop) / (sectionPositions[sectionIndex] - prevTop);
+    let prevIndex = Math.max(sectionIndex - 1, 0);
+    let prevTop = sectionPositions[prevIndex];
+    let progress = (pos - prevTop) / (sectionPositions[sectionIndex] - prevTop);
     // @v4 you now `.call` the dispatch callback
     dispatch.call('progress', this, currentIndex, progress);
   }
@@ -116,17 +116,17 @@ function scroller() {
    *
    * @param value - the new container value
    */
-  scroll.container = function (value) {
-    if (arguments.length === 0) {
+  scroll.container = (...args) => {
+    if (args.length === 0) {
       return container;
     }
-    container = value;
+    container = args[0];
     return scroll;
   };
-
+  
   // @v4 There is now no d3.rebind, so this implements
   // a .on method to pass in a callback to the dispatcher.
-  scroll.on = function (action, callback) {
+  scroll.on = (action, callback) => {
     dispatch.on(action, callback);
   };
 

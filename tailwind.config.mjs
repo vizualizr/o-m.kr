@@ -23,6 +23,34 @@ module.exports = withMT({
 	],
 	theme: {
 		extend: {
+			colors: {
+				coriander: {
+					50: "#f3f7ee",
+					100: "#e5ecdb",
+					200: "#cedcbc",
+					300: "#aec492",
+					400: "#8fad6e",
+					500: "#729151",
+					600: "#58733d",
+					700: "#455932",
+					800: "#39482c",
+					900: "#323f28",
+					950: "#192112",
+				},
+				paper: {
+					50: "#F3F2F2",
+					100: "#F1EEEE",
+					200: "#F3EEED",
+					300: "#F3EFE7",
+					400: "#D4C5BF",
+					500: "#B09C9D",
+					600: "#857F82",
+					700: "#5C5C5C",
+					800: "#383838",
+					900: "#141414",
+					950: "#030303",
+				},
+			},
 			mixBlendMode: {
 				normal: "normal",
 				multiply: "multiply",
@@ -47,4 +75,7 @@ module.exports = withMT({
 		mixBlendMode: ["responsive"],
 	},
 	plugins: [require("flyonui"), require("flyonui/plugin")],
+	flyonui: {
+		darkTheme: null,
+	},
 });

@@ -3,9 +3,9 @@ import Menu from "./Menu.astro";
 const { title } = Astro.props;
 ---
 
-<div class="navbar-container border-b-[1px] border-base-content/15">
+<div class="navbar-container p-0 border-b-[1px] border-base-content/15">
   <nav
-    class="navbar box justify-between gap-4 max-w-[var(--max-width)] mx-auto bg-transparent"
+    class="navbar box justify-between gap-4 max-w-[var(--max-width)] mx-auto py-1 bg-transparent"
   >
     <div class="navbar-start">
       <div
@@ -41,7 +41,7 @@ const { title } = Astro.props;
           aria-label="Dropdown"
         >
           <div class="avatar">
-            <div class="size-9.5 rounded-full">
+            <div class="size-7.5 rounded-full">
               <img
                 src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png"
                 alt="avatar 1"

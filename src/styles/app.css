@@ -1,0 +1,38 @@
+@import "tailwindcss";
+@theme {
+	--color-coriander-50: #f3f7ee;
+	--color-coriander-100: #e5ecdb;
+	--color-coriander-200: #cedcbc;
+	--color-coriander-300: #aec492;
+	--color-coriander-400: #8fad6e;
+	--color-coriander-500: #729151;
+	--color-coriander-600: #58733d;
+	--color-coriander-700: #455932;
+	--color-coriander-800: #39482c;
+	--color-coriander-900: #323f28;
+	--color-coriander-950: #192112;
+
+	--color-tiara-50: #f6f7f7;
+	--color-tiara-100: #e1e6e5;
+	--color-tiara-200: #c8d0ce;
+	--color-tiara-300: #9daba7;
+	--color-tiara-400: #798885;
+	--color-tiara-500: #5e6e6b;
+	--color-tiara-600: #4a5755;
+	--color-tiara-700: #3e4746;
+	--color-tiara-800: #343b3b;
+	--color-tiara-900: #2e3333;
+	--color-tiara-950: #171c1b;
+
+	--color-cinnamon-50: #fffee7;
+	--color-cinnamon-100: #fffebf;
+	--color-cinnamon-200: #fffa82;
+	--color-cinnamon-300: #ffef3b;
+	--color-cinnamon-400: #ffde06;
+	--color-cinnamon-500: #f9c400;
+	--color-cinnamon-600: #d79700;
+	--color-cinnamon-700: #ab6a00;
+	--color-cinnamon-800: #8d5206;
+	--color-cinnamon-900: #7a440c;
+	--color-cinnamon-950: #462102;
+}

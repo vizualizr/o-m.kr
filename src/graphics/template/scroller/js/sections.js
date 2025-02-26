@@ -5,7 +5,7 @@
  * http://bost.ocks.org/mike/chart/
  */
 let scrollVis = () => {
-// constants to define the size
+	// constants to define the size
 	// and margins of the vis area.
 	let width = window.innerWidth * 0.5;
 	let height = window.innerHeight * 0.5;
@@ -37,6 +37,8 @@ let scrollVis = () => {
 	// d3 selection that will be used
 	// for displaying visualizations
 	let g = null;
+  // wordData is the preprocessed data of rawdata from TSV.
+  let wordData;
 
 	// We will set the domain when the
 	// data is processed.
@@ -86,7 +88,7 @@ let scrollVis = () => {
 	let xAxisBar = d3.axisBottom().scale(xBarScale);
 
 	// @v4 using new axis name
-	var xAxisHist = d3
+	let xAxisHist = d3
 		.axisBottom()
 		.scale(xHistScale)
 		.tickFormat(function (d) {
@@ -96,12 +98,12 @@ let scrollVis = () => {
 	// When scrolling to a new section
 	// the activation function for that
 	// section is called.
-	var activateFunctions = [];
+	let activateFunctions = [];
 	// If a section has an update function
 	// then it is called while scrolling
 	// through the section with the current
 	// progress through the section.
-	var updateFunctions = [];
+	let updateFunctions = [];
 
 	/**
 	 * chart
@@ -110,11 +112,11 @@ let scrollVis = () => {
 	 *  to draw the visualization in. For this
 	 *  example, we will be drawing it in #vis
 	 */
-	var chart = function (selection) {
+	let chart = function (selection) {
 		selection.each(function (rawData) {
 			// create svg and give it a width and height
 			svg = d3.select(this).selectAll("svg").data([wordData]);
-			var svgE = svg.enter().append("svg");
+			let svgE = svg.enter().append("svg");
 			// @v4 use merge to combine enter and existing selection
 			svg = svg.merge(svgE);
 
@@ -130,7 +132,7 @@ let scrollVis = () => {
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			// perform some preprocessing on raw data
-			var wordData = getWords(rawData);
+			wordData = getWords(rawData);
 			// filter to just include filler words
 			var fillerWords = getFillerWords(wordData);
 

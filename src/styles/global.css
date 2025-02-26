@@ -2,14 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
+
 :root {
 	/* equals to 7xl in tailwind default responsive unit */
 	--max-width: 80rem;
 }
 
 body {
-	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	font-family: "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 	word-break: keep-all;
+	@apply min-h-svh;
 }
 
 .card {
@@ -19,14 +22,25 @@ body {
 #brand {
 	font-family: "궁서", "Gungsuh", "Times New Roman", Times, serif;
 }
-
-
+.articleBox {
+	@apply flex flex-col items-center justify-center h-full mb-auto;
+}
+.articleBoxHeadings {
+	@apply inline-block float-start not-italic badge rounded-none py-0 px-1 mr-2 h-auto -ml-1 font-bold  text-base/[1.85];
+}
 .articleBox h1 {
-	@apply text-2xl;
+	@apply articleBoxHeadings;
+	@apply bg-black text-white/90;
 }
 .articleBox h2 {
-	@apply text-xl;
+	@apply articleBoxHeadings;
+	@apply bg-yellow-300/50 text-black/75;
 }
+
+.articleBox main {
+	@apply block w-full p-7 md:w-[700px];
+}
+
 .articleBox p {
-	@apply my-2;
+	@apply my-2 mb-10 text-base/[1.85];
 }
