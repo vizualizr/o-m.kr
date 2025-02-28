@@ -9,11 +9,11 @@ about: Limit the boundary and todos for a new task
 
 - 
 
-## Dos and Donts
+## Dos and Don'ts
 
 - 
 
-## Requried Resources
+## Required Resources
 
 - 
 
