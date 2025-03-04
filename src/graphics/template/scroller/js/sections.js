@@ -37,8 +37,9 @@ let scrollVis = () => {
 	// d3 selection that will be used
 	// for displaying visualizations
 	let g = null;
-  // wordData is the preprocessed data of rawdata from TSV.
-  let wordData;
+
+	// wordData is the preprocessed data of raw data from TSV.
+	let wordData;
 
 	// We will set the domain when the
 	// data is processed.
@@ -51,7 +52,7 @@ let scrollVis = () => {
 	// @v4 using new scale type
 	let yBarScale = d3
 		.scaleBand()
-		.paddingInner(0.08)
+		.paddingInner(0.05)
 		.domain([0, 1, 2])
 		.range([0, height - 50], 0.1, 0.1);
 
@@ -64,8 +65,8 @@ let scrollVis = () => {
 	// @v4 using new scale name
 	let xHistScale = d3
 		.scaleLinear()
-		.domain([0, 30])
-		.range([0, width - 20]);
+		.domain([0, 30]) // input scale
+		.range([0, width - 20]); // output scale
 
 	// @v4 using new scale name
 	let yHistScale = d3.scaleLinear().range([height, 0]);
@@ -91,14 +92,15 @@ let scrollVis = () => {
 	let xAxisHist = d3
 		.axisBottom()
 		.scale(xHistScale)
-		.tickFormat(function (d) {
-			return d + " min";
+		.tickFormat((d) => {
+			return "$d min";
 		});
 
 	// When scrolling to a new section
 	// the activation function for that
 	// section is called.
 	let activateFunctions = [];
+
 	// If a section has an update function
 	// then it is called while scrolling
 	// through the section with the current
@@ -112,7 +114,7 @@ let scrollVis = () => {
 	 *  to draw the visualization in. For this
 	 *  example, we will be drawing it in #vis
 	 */
-	let chart = function (selection) {
+	let chart = (selection) => {
 		selection.each(function (rawData) {
 			// create svg and give it a width and height
 			svg = d3.select(this).selectAll("svg").data([wordData]);
@@ -323,7 +325,7 @@ let scrollVis = () => {
 	 * the section's index.
 	 *
 	 */
-	var setupSections = function () {
+	let setupSections = function () {
 		// activateFunctions are called each
 		// time the active section changes
 		activateFunctions[0] = showTitle;
@@ -799,7 +801,7 @@ let scrollVis = () => {
 function display(data) {
 	// create a new plot and
 	// display it
-	var plot = scrollVis();
+	let plot = scrollVis();
 	d3.select("#vis").datum(data).call(plot);
 
 	// setup scroll functionality
@@ -812,10 +814,10 @@ function display(data) {
 	scroll.on("active", function (index) {
 		// highlight current step text
 		d3.selectAll(".step").style("opacity", function (d, i) {
-			return i === index ? 1 : 0.1;
+			return i === index ? 1 : 0.05;
 		});
 
-		// activate current section
+		// activate visualization matches the current index
 		plot.activate(index);
 	});
 
