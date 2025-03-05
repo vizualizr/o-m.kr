@@ -1,58 +1,41 @@
 /**
- * scroller - handles the details
- * of figuring out which section
- * the user is currently scrolled
- * to.
- *
+ * scrollHandler
+ * - stores the all necessary coordinates, HTML elements, and events.
  */
-function scroller() {
+function scrollHandler() {
+	// if not specified graphics will be nested in Body element.
 	let container = d3.select("body");
-	// event dispatcher has two events,
-	// 'active' and 'progress'
+
+	// event dispatcher will be initialized inside the scroller function
+	// registers two types of event,  active and progress.
 	let dispatch = d3.dispatch("active", "progress");
 
-	// d3 selection of all the
-	// text sections that will
-	// be scrolled through
+	// d3 selection of all HTML elements with
+	// enclosing text sections
+	// where user will scroll through.
+	// Probably an array of <section> element
 	let sections = null;
 
-	// array that will hold the
-	// y coordinate of each section
-	// that is scrolled through
-	let sectionYCoords = [];
-	let currentSectionIndex = -1;
-	// y coordinate of
-	let containerStart = 0;
-
-	let index = {
-		current: -1,
-		prev: undefined,
-		progress: undefined,
-		update: function () {
-			let yPos = window.scrollY - 10 - containerStart;
-			let newIndex = d3.bisect(sectionYCoords, yPos);
-			newIndex = Math.min(sections.size() - 1, newIndex);
-
-			if (currentSectionIndex !== newIndex) {
-				this.current = newIndex;
-				// dispatch.call("active", this, currentSectionIndex);
-			}
-
-			this.current = newIndex;
-			this.prev = Math.max(currentSectionIndex - 1, 0);
-			this.progress =
-				(yPos - sectionYCoords[this.prev]) /
-				(sectionYCoords[this.current] - sectionYCoords[this.prev]);
-		},
-	};
-
+	/**
+	 * yCoords
+	 * - An object collects and updates all the y coordinates required
+	 * to decide current index and user's progress of scroll
+	 */
 	let yCoords = {
+		// yCoords.allSections stores
+		// all y coordinates of each HTML elements
 		allSections: [],
+		// yCoords.containerStart stores
+		// the y coordinates of the beginning of sections.
 		containerStart: 0,
 		update: function () {
 			let startPos;
 			let _tempArray = [];
-			// console.log(sections);
+
+			// Get more details on
+			// how get an array of y coordinates
+			// from the link below.
+			// https://vallandingham.me/scroller.html#a-reusable-scroller
 			sections.each(function (d, i) {
 				let thisSectionTop = this.getBoundingClientRect().top;
 				if (i === 0) {
@@ -63,137 +46,116 @@ function scroller() {
 
 			this.allSections = [..._tempArray];
 			this.containerStart =
+				// selection.node() returns
+				// the DOM object of the selected element.
 				container.node().getBoundingClientRect().top + window.scrollY;
-			console.log(containerStart);
 		},
 	};
 
 	/**
-	 * scroll - constructor function.
-	 * Sets up scroller to monitor
-	 * scrolling of els selection.
+	 * index
+	 * - An object collects and updates the current index and the progress within the index progress is int over 0 and below 1, e.g. 0.8
+	 */
+	let index = {
+		current: -1,
+		prev: undefined,
+		progress: undefined,
+		update: function () {
+			let yPos = window.scrollY - 10 - yCoords.containerStart;
+			let indexNow = d3.bisect(yCoords.allSections, yPos);
+			indexNow = Math.min(sections.size() - 1, indexNow);
+
+			if (this.current !== indexNow) {
+				this.current = indexNow;
+				// if scrolled position enters a new index
+				// broadcast the event "active"
+				dispatch.call("active", this, this.current);
+			}
+
+			this.current = indexNow;
+			this.prev = Math.max(this.current - 1, 0);
+			this.progress =
+				(yPos - yCoords.allSections[this.prev]) /
+				(yCoords.allSections[this.current] - yCoords.allSections[this.prev]);
+
+			// Dispatch the graphics for this.current proceeds
+			// its animation based on this.progress
+			dispatch.call("progress", this, this.current, this.progress);
+		},
+	};
+
+	/**
+	 * scroller - constructor function.
+	 * This is a sole agent that
+	 * broadcasts event to activate
+	 * which index and graphic
 	 *
-	 * @param selectedElements - d3 selection of
-	 *  elements that will be scrolled
-	 *  through by user.
+	 * @param selectedElements - The selected elements by d3.
+	 * selectAll which will be scrolled through by user.
+	 * E.g. d3.selectAll(".step")
 	 */
 
-	function scroll(selectedElements) {
-		// 	scroll(d3.selectAll(".step")); in section.js file.
+	function scroller(selectedElements) {
 		sections = selectedElements;
 
 		// when window is scrolled
-		// call getCurrentSectionIndex.
-		// When it is resized
-		// call resize.
+		// call updateIndex.
+		// When window is resized
+		// call updateYCoords.
 		d3.select(window)
-			.on("scroll.scroller", updateSectionIndex)
-			.on("resize.scroller", resize);
+			.on("scroll.scroller", updateIndex)
+			.on("resize.scroller", updateYCoords);
 
-		// At the start, call resize()
-		// to setup scroller.
-		resize();
+		// As an constructor it is necessary
+		// to init the y coordinates by calling updateYCoords()
+		updateYCoords();
 
-		index.update();
-		yCoords.update();
-
-		// hack to get position
-		// to be called once for
-		// the scroll position on
-		// load.
 		// @v4 timer no longer stops if you
 		// return true at the end of the callback
 		// function - so here we stop it explicitly.
 		let timer = d3.timer(() => {
-			updateSectionIndex();
+			updateIndex();
 			timer.stop();
 		});
 	}
 
-	/**
-	 * resize - called initially and
-	 * also when page is resized.
-	 * Resets the sectionYCoords
-	 *
-	 */
-	function resize() {
-		// sectionYCoords will be each sections
-		// starting position relative to the top
-		// of the first section.
-		sectionYCoords = [];
-		let startPos;
-		sections.each(function (d, i) {
-			//
-			let thisSectionTop = this.getBoundingClientRect().top;
-			if (i === 0) {
-				startPos = thisSectionTop;
-			}
-			sectionYCoords.push(thisSectionTop - startPos);
-		});
-		containerStart =
-			container.node().getBoundingClientRect().top + window.scrollY;
+	function updateIndex() {
+		index.update();
+		updateInfo();
+	}
 
+	function updateYCoords() {
+		// formerly resize()
+		yCoords.update();
 		updateInfo();
 	}
 
 	/**
-	 * updateSectionIndex - get the current index
-	 * based on the user's position.
-	 * if user has scrolled to new section,
-	 * dispatch active event with new section
-	 * index.
-	 *
-	 */
-	function updateSectionIndex() {
-		// get the current y coordinates.
-		let yPos = window.scrollY - 10 - containerStart;
-		let newIndex = d3.bisect(sectionYCoords, yPos);
-		newIndex = Math.min(sections.size() - 1, newIndex);
-
-		// if the index has changed to a new one
-		if (currentSectionIndex !== newIndex) {
-			// @v4 you now `.call` the dispatch callback
-			currentSectionIndex = newIndex;
-			dispatch.call("active", this, currentSectionIndex);
-		}
-
-		let prevIndex = Math.max(currentSectionIndex - 1, 0);
-		let prevTop = sectionYCoords[prevIndex];
-		let progress =
-			(yPos - prevTop) / (sectionYCoords[currentSectionIndex] - prevTop);
-
-		// @v4 you now `.call` the dispatch callback
-		dispatch.call("progress", this, currentSectionIndex, progress);
-
-		updateInfo();
-	}
-
-	/**
-	 * container - get/set the parent element
+	 * attachContainer - get/set the parent element
 	 * of the sections. Useful for if the
 	 * scrolling doesn't start at the very top
 	 * of the page.
 	 *
-	 * @param value - the new container value
+	 * @param ...args - the new container value
 	 */
-	scroll.container = (...args) => {
+	scroller.attachContainer = (...args) => {
 		if (args.length === 0) {
 			return container;
 		}
 		container = args[0];
-		return scroll;
+		return scroller;
 	};
 
 	// @v4 There is now no d3.rebind, so this implements
 	// a .on method to pass in a callback to the dispatcher.
-	scroll.on = (action, callback) => {
+	scroller.on = (action, callback) => {
 		dispatch.on(action, callback);
 	};
 
 	function updateInfo() {
-		index.update();
-		yCoords.update();
-		d3.select("#info").text(yCoords.allSections[index.current]);
+		d3.select("#info").text(
+			`${yCoords.allSections[index.current]}, ${window.scrollY}`,
+		);
 	}
-	return scroll;
+	return scroller;
 }

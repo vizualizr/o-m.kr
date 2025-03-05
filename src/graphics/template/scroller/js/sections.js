@@ -122,16 +122,17 @@ let scrollVis = () => {
 			// @v4 use merge to combine enter and existing selection
 			svg = svg.merge(svgE);
 
-			svg.attr("width", width + margin.left + margin.right);
-			svg.attr("height", height + margin.top + margin.bottom);
+			// svg.attr("width", width + margin.left + margin.right);
+			// svg.attr("height", height + margin.top + margin.bottom);
+			svg.attr("class", "size-10/12");
+			svg.attr("viewBox", `0 0 ${width} ${height}`);
 
 			svg.append("g");
 
 			// this group element will be used to contain all
 			// other elements.
-			g = svg
-				.select("g")
-				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+			g = svg.select("g");
+			// .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 			// perform some preprocessing on raw data
 			wordData = getWords(rawData);
@@ -325,7 +326,7 @@ let scrollVis = () => {
 	 * the section's index.
 	 *
 	 */
-	let setupSections = function () {
+	function setupSections () {
 		// activateFunctions are called each
 		// time the active section changes
 		activateFunctions[0] = showTitle;
@@ -799,30 +800,34 @@ let scrollVis = () => {
  * @param data - loaded tsv data
  */
 function display(data) {
-	// create a new plot and
+	// create a new graphics and
 	// display it
-	let plot = scrollVis();
-	d3.select("#vis").datum(data).call(plot);
+	let graphics = scrollVis();
+
+	// call() passes the selected element and
+	// bound data to the specified function
+	// for further processing.
+	d3.select("#vis").datum(data).call(graphics);
 
 	// setup scroll functionality
-	var scroll = scroller().container(d3.select("#graphic"));
+	// scroller returns scroll(), the type is function.
+	let scroll = scrollHandler().attachContainer(d3.select("#graphic"));
 
 	// pass in .step selection as the steps
-	scroll(d3.selectAll(".step"));
+	scroll (d3.selectAll(".step"));
 
 	// setup event handling
 	scroll.on("active", function (index) {
 		// highlight current step text
 		d3.selectAll(".step").style("opacity", function (d, i) {
-			return i === index ? 1 : 0.05;
+			return i === index ? 0.5 : 0.05;
 		});
-
 		// activate visualization matches the current index
-		plot.activate(index);
+		graphics.activate(index);
 	});
 
 	scroll.on("progress", function (index, progress) {
-		plot.update(index, progress);
+		graphics.update(index, progress);
 	});
 }
 
