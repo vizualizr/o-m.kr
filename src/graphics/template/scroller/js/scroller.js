@@ -8,7 +8,7 @@ function scrollHandler() {
 
 	// event dispatcher will be initialized inside the scroller function
 	// registers two types of event,  active and progress.
-	let dispatch = d3.dispatch("active", "progress");
+	let dispatch = d3.dispatch("active", "progress", "resize");
 
 	// d3 selection of all HTML elements with
 	// enclosing text sections
@@ -49,6 +49,7 @@ function scrollHandler() {
 				// selection.node() returns
 				// the DOM object of the selected element.
 				container.node().getBoundingClientRect().top + window.scrollY;
+			dispatch.call("resize", this, this.current, this.progress);
 		},
 	};
 
@@ -61,7 +62,8 @@ function scrollHandler() {
 		prev: undefined,
 		progress: undefined,
 		update: function () {
-			let yPos = window.scrollY - 10 - yCoords.containerStart;
+			let yPos =
+				window.scrollY - 10 - yCoords.containerStart - window.innerHeight / 2;
 			let indexNow = d3.bisect(yCoords.allSections, yPos);
 			indexNow = Math.min(sections.size() - 1, indexNow);
 
@@ -153,9 +155,12 @@ function scrollHandler() {
 	};
 
 	function updateInfo() {
-		d3.select("#info").text(
-			`${yCoords.allSections[index.current]}, ${window.scrollY}`,
-		);
+		let nowMessage;
+		nowMessage = `${yCoords.allSections[index.current] + yCoords.containerStart}, ${index.current}, 
+		${window.scrollY + yCoords.containerStart}, 
+		${yCoords.containerStart + container.node().getBoundingClientRect().height}`;
+		nowMessage = index.current;
+		d3.select("#info").text(nowMessage);
 	}
 	return scroller;
 }

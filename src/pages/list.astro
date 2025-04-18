@@ -1,32 +1,72 @@
 ---
-const allPosts = Object.values(
-    import.meta.glob("/src/pages/posts/*.(md|astro)", { eager: true }),
-);
+import Paper from "@layouts/Paper.astro";
+import { getCollection } from "astro:content";
 
-function getFrontmatters() {
-  return Object.values(allPosts).map((post) => post.frontmatter);
-}
-
-const frontmatters = getFrontmatters();
+const articles = await getCollection("articles");
+const coverStories = await getCollection("articles", ({ data }) => data.highlight.listed === true);
 ---
 
-<html lang="ko">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    </head>
+<Paper title="news.app">
+    <main>
+    <article class="articleBox">
+            <article>
+                <section>
+                    <h2>전체 기사 목록</h2>
+                    <ul>
+                        {articles.map( article => (
+                                <li>
+                                    <a href={`/article/${article.data.slug}`}>{article.data.headline}</a> 취재: {article.data.authors}
+                                </li>
+                            ))}
+                    </ul>
+                    {
+                        articles.length === 0 && (
+                            <p>
+                                No articles found in the 'articles' collection.
+                            </p>
+                        )
+                    }
+                </section>
+<section>
+    <h2>현재 표지 기사</h2>
 
-    <h1>제목이시다!</h1>
+                <ul>
+                    {
+                        coverStories.length > 0 && (
+                            <li>
+                                <a href={`/article/${coverStories[0].data.slug}`}>
+                                    <strong>{coverStories[0].data.headline}</strong>
+                                </a> 
+                                취재: {coverStories[0].data.authors}
+                            </li>
+                        )
+                    }
+                </ul>
 
-
-    <ul class="hidden">
-        {
-            allPosts.map((post: any, i) => (
-                <p>{i} {(post?.frontmatter?.title) ? post.frontmatter.title : JSON.stringify(post)}</p>
-                <p>{(post?.frontmatter?.title)  && JSON.stringify(post)}</p>
-                
-            ))
-        }
-    </ul>
-    {JSON.stringify(frontmatters)}
-</html>
+            </section>
+                <section>
+                    <h2>표지기사 목록</h2>
+                    <ul>
+                        {
+                            coverStories.map((coverStory, index) => (
+                                <li>
+                                    <a href={`/article/${coverStory.data.slug}`}>
+                                        {index === 0 ? <strong>{coverStory.data.headline}</strong> : coverStory.data.headline}
+                                    </a> 
+                                    취재: {coverStory.data.authors}
+                                </li>
+                            ))
+                        }
+                    </ul>
+                    {
+                        coverStories.length === 0 && (
+                            <p>
+                                No cover stories
+                            </p>
+                        )
+                    }
+                </section>
+            </article>
+        </article>
+    </main>
+</Paper>

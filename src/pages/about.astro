@@ -1,22 +1,19 @@
 ---
 import Paper from "/src/layouts/Paper.astro";
-const frontmatter = {
+
+export const frontmatter = {
     title: "진실은 앙상하다",
 };
 ---
 
 <Paper frontmatter={frontmatter}>
-    <div class="articleBox">
         <main>
             <article>
                 <section>
                     <h2>진실은 앙상하다</h2>
 
                     <p>
-                        기억은 불완전하다. 매체 기술 또한 기억을 흉내내기에
-                        불완전하기는 마찬가지다. 매체는 이러한 결점을 감추고자
-                        우리의 상상력을 자극한다. 기록의 씨줄과 날줄 사이에 남아
-                        있는 빈틈이 커질 수록 우리의 상상력은 더
+                        완벽한 기록이란 존재하지 않는다. 상상력은 불완전한 기억의 씨줄과 날줄을 가로지는 빈틈을 채우는 아교다. 기록의 마침표가 언제나 상상력인 이유다. 
                     </p>
 
                     <h2>문제는 말이 아니라 행동이다.</h2>
@@ -56,6 +53,7 @@ const frontmatter = {
                     <h2>다시 그림으로</h2>
 
                     <p>
+                        우리는 분명히 밝히고자 한다. 그림에 진실은 없다. 그림은 그저 설득을 위한 도구일 뿐이다. ([카이로, 2020](zotero://select/library/items/WIWQN64T)) 간혹 매우 힘이 센 도구일 때도 있지만 유일한 도구도 아니며 언제나 정답도 아니다.
                         뻔한 거짓말은 달콤하다. 너무나 뻔해서, 쉽고 간편해서
                         생각이 끼어들 틈이 없다.
                     </p>
@@ -69,5 +67,4 @@ const frontmatter = {
                 </section>
             </article>
         </main>
-    </div>
 </Paper>

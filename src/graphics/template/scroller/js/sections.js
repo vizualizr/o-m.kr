@@ -5,19 +5,6 @@
  * http://bost.ocks.org/mike/chart/
  */
 let scrollVis = () => {
-	// constants to define the size
-	// and margins of the vis area.
-	let width = window.innerWidth * 0.5;
-	let height = window.innerHeight * 0.5;
-	if (width > height) {
-		width = height;
-	} else {
-		height = width;
-	}
-
-	let gap = 7;
-	let margin = { top: gap, left: gap, bottom: gap, right: gap };
-
 	// Keep track of which visualization
 	// we are on and which was the last
 	// index activated. When user scrolls
@@ -25,11 +12,6 @@ let scrollVis = () => {
 	// activate functions that they pass.
 	let lastIndex = -1;
 	let activeIndex = 0;
-
-	// Sizing for the grid visualization
-	let squareSize = 6;
-	let squarePad = 2;
-	let numPerRow = width / (squareSize + squarePad);
 
 	// main svg used for visualization
 	let svg = null;
@@ -44,17 +26,13 @@ let scrollVis = () => {
 	// We will set the domain when the
 	// data is processed.
 	// @v4 using new scale names
-	let xBarScale = d3.scaleLinear().range([0, width]);
+	let xBarScale;
 
 	// The bar chart display is horizontal
 	// so we can use an ordinal scale
 	// to get width and y locations.
 	// @v4 using new scale type
-	let yBarScale = d3
-		.scaleBand()
-		.paddingInner(0.05)
-		.domain([0, 1, 2])
-		.range([0, height - 50], 0.1, 0.1);
+	let yBarScale;
 
 	// Color is determined just by the index of the bars
 	let barColors = { 0: "#008080", 1: "#399785", 2: "#5AAF8C" };
@@ -63,13 +41,10 @@ let scrollVis = () => {
 	// first 30 minutes of data
 	// so the range goes from 0 to 30
 	// @v4 using new scale name
-	let xHistScale = d3
-		.scaleLinear()
-		.domain([0, 30]) // input scale
-		.range([0, width - 20]); // output scale
+	let xHistScale; // output scale
 
 	// @v4 using new scale name
-	let yHistScale = d3.scaleLinear().range([height, 0]);
+	let yHistScale;
 
 	// The color translation uses this
 	// scale to convert the progress
@@ -86,15 +61,72 @@ let scrollVis = () => {
 	// scale, but I will use two separate
 	// ones to keep things easy.
 	// @v4 using new axis name
-	let xAxisBar = d3.axisBottom().scale(xBarScale);
+	xAxisBar = d3.axisBottom().scale(xBarScale);
 
 	// @v4 using new axis name
-	let xAxisHist = d3
+	let xAxisHist;
+
+	// constants to define the size
+	// and margins of the vis area.
+
+	// let width = window.innerWidth * 0.5;
+	// let height = window.innerHeight * 0.5;
+	// if (width > height) {
+	// 	width = height;
+	// } else {
+	// 	height = width;
+	// }
+
+	// let gap = 7;
+	// let margin = { top: gap, left: gap, bottom: gap, right: gap };
+
+	let width;
+	let height;
+	let margin;
+	let gap = {
+		top: undefined,
+		bottom: undefined,
+		right: undefined,
+		left: undefined,
+	};
+
+	// Sizing for the grid visualization
+	let squareSize;
+	let squarePad;
+	let numPerRow;
+
+	let updateDimensionsFrom = (theGivenWidth) => {
+		width = height = theGivenWidth;
+		for (const [key, value] of Object.entries(gap)) {
+			gap[key] = 8;
+		}
+		squareSize = width/1000;
+		squarePad = squareSize / 10;
+		numPerRow = width / (squareSize + squarePad);
+		xBarScale = d3.scaleLinear().range([0, width]);
+
+		yBarScale = d3
+		.scaleBand()
+		.paddingInner(0.05)
+		.domain([0, 1, 2])
+		.range([0, height - 50], 0.1, 0.1);
+		
+		xHistScale = d3
+		.scaleLinear()
+		.domain([0, 30]) // input scale
+		.range([0, width - 20]); // output scale
+		
+		yHistScale = d3.scaleLinear().range([height, 0]);
+
+		xAxisBar = d3.axisBottom().scale(xBarScale);
+
+		xAxisHist = d3
 		.axisBottom()
 		.scale(xHistScale)
 		.tickFormat((d) => {
-			return "$d min";
+			return `${d}`;
 		});
+	};
 
 	// When scrolling to a new section
 	// the activation function for that
@@ -115,6 +147,11 @@ let scrollVis = () => {
 	 *  example, we will be drawing it in #vis
 	 */
 	let chart = (selection) => {
+
+		console.log(selection.node().getBoundingClientRect().width);
+
+		updateDimensionsFrom(selection.node().getBoundingClientRect().width);
+		
 		selection.each(function (rawData) {
 			// create svg and give it a width and height
 			svg = d3.select(this).selectAll("svg").data([wordData]);
@@ -122,10 +159,13 @@ let scrollVis = () => {
 			// @v4 use merge to combine enter and existing selection
 			svg = svg.merge(svgE);
 
-			// svg.attr("width", width + margin.left + margin.right);
+			// svg.attr("width", width);
+			// svg.attr("height", height);
 			// svg.attr("height", height + margin.top + margin.bottom);
-			svg.attr("class", "size-10/12");
 			svg.attr("viewBox", `0 0 ${width} ${height}`);
+			// svg.attr("viewBox", `0 0 ${width} ${height}`);
+			// svg.attr("style", "border: 2px solid black;");
+			// svg.attr("viewBox", "0 0 100 100");
 
 			svg.append("g");
 
@@ -176,15 +216,15 @@ let scrollVis = () => {
 		// axis
 		g.append("g")
 			.attr("class", "x axis")
-			.attr("transform", "translate(0," + height + ")")
+			// .attr("transform", "translate(0," + height + ")")
 			.call(xAxisBar);
 		g.select(".x.axis").style("opacity", 0);
 
 		// count openvis title
 		g.append("text")
 			.attr("class", "title openvis-title")
-			.attr("x", width / 2)
-			.attr("y", height / 3)
+			.attr("x", `${width/2}`)
+			.attr("y", `${height/2}`)
 			.text("2013");
 
 		g.append("text")
@@ -326,7 +366,7 @@ let scrollVis = () => {
 	 * the section's index.
 	 *
 	 */
-	function setupSections () {
+	function setupSections() {
 		// activateFunctions are called each
 		// time the active section changes
 		activateFunctions[0] = showTitle;
@@ -349,7 +389,7 @@ let scrollVis = () => {
 			updateFunctions[i] = function () {};
 		}
 		updateFunctions[7] = updateCough;
-	};
+	}
 
 	/**
 	 * ACTIVATE FUNCTIONS
@@ -379,7 +419,7 @@ let scrollVis = () => {
 
 		g.selectAll(".openvis-title")
 			.transition()
-			.duration(600)
+			.duration(1000)
 			.attr("opacity", 1.0);
 	}
 
@@ -814,20 +854,23 @@ function display(data) {
 	let scroll = scrollHandler().attachContainer(d3.select("#graphic"));
 
 	// pass in .step selection as the steps
-	scroll (d3.selectAll(".step"));
+	scroll(d3.selectAll(".step"));
 
 	// setup event handling
-	scroll.on("active", function (index) {
+	scroll.on("active", (index) => {
 		// highlight current step text
 		d3.selectAll(".step").style("opacity", function (d, i) {
-			return i === index ? 0.5 : 0.05;
+			return i === index ? 1 : 0.5;
 		});
 		// activate visualization matches the current index
 		graphics.activate(index);
 	});
 
-	scroll.on("progress", function (index, progress) {
+	scroll.on("progress", (index, progress) =>  {
 		graphics.update(index, progress);
+	});
+	scroll.on("resize", function (index, progress) {
+		console.log("resized");
 	});
 }
 

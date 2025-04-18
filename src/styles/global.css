@@ -1,4 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&display=swap');
+
 
 @tailwind base;
 @tailwind components;
@@ -11,9 +12,22 @@
 }
 
 body {
+	@apply text-[#363636] flex flex-col min-h-svh mb-0;
 	font-family: "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 	word-break: keep-all;
-	@apply min-h-svh;
+}
+
+.plane {
+	@apply m-0 p-0;
+}
+
+main {
+	@apply grow mx-auto my-0 w-full md:max-w-3xl;
+}
+
+footer {
+	@apply footer p-3 pt-7 pb-10 max-w-4xl m-auto border-t-[1px] border-neutral-200 text-sm h-fit;
+	font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .card {
@@ -22,26 +36,4 @@ body {
 
 #brand {
 	font-family: "궁서", "Gungsuh", "Times New Roman", Times, serif;
-}
-.articleBox {
-	@apply flex flex-col items-center justify-center h-full mb-auto;
-}
-.articleBoxHeadings {
-	@apply inline-block float-start not-italic badge rounded-none py-0 px-1 mr-2 h-auto -ml-1 font-bold  text-base/[1.85];
-}
-.articleBox h1 {
-	@apply articleBoxHeadings;
-	@apply bg-black text-white/90;
-}
-.articleBox h2 {
-	@apply articleBoxHeadings;
-	@apply bg-yellow-300/50 text-black/75;
-}
-
-.articleBox main {
-	@apply block w-full p-7 md:w-[700px];
-}
-
-.articleBox p {
-	@apply my-2 mb-10 text-base/[1.85];
 }

@@ -1,0 +1,36 @@
+---
+import Paper from "@layouts/Paper.astro";
+import { getCollection } from "astro:content";
+
+const articles = await getCollection("articles");
+---
+
+<Paper title="news.app">
+    <article class="articleBox">
+        <main>
+            <article>
+                <section>
+                    <h2>List of Articles</h2>
+                    <ul>
+                        {
+                            articles.map((article) => (
+
+                                //     <li><a href={`/blog/${post.id}`}>{post.data.title}</a></li>
+
+                                <li><a href={`/article/${article.data.slug}`}>{article.data.title}</a> 취재: {article.data.author}
+                                </li>
+                            ))
+                        }
+                    </ul>
+                    {
+                        articles.length === 0 && (
+                            <p>
+                                No articles found in the 'articles' collection.
+                            </p>
+                        )
+                    }
+                </section>
+            </article>
+        </main>
+    </article>
+</Paper>

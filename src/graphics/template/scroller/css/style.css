@@ -1,45 +1,45 @@
+.plane{
+	@apply bg-blue-gray-100;
+}
 .container {
-  @apply max-w-6xl relative;
+	@apply max-w-6xl relative;
 }
 
 #graphic {
-  @apply mx-auto flex-col justify-center content-center;
+	@apply relative mx-auto flex-col justify-center;
 }
 
 #sections {
-	@apply block z-50;
+	@apply block z-30;
 	/* padding-bottom: 200px; */
 }
 
-.step {
-  @apply h-screen mx-auto items-center justify-center p-10;
-}
-
-#sections .title {
-  @apply text-2xl font-serif font-bold;
-}
-
-#extra-space {
-  @apply hidden;
-	/* height: 300px; */
+#vis {
+	@apply sticky top-12 h-[50vh] items-start justify-center z-0;
 }
 
 #vis svg {
-  @apply m-auto z-20;
-}
-
-#vis {
-  @apply flex sticky h-svh inset-0 justify-center;
+	@apply mx-0 w-full md:max-w-xl aspect-square object-cover;
 }
 
 #vis .title {
-	@apply text-7xl;
+	@apply text-4xl;
 	text-anchor: middle;
 }
 
 #vis .sub-title {
-	@apply text-3xl;
 	text-anchor: middle;
+}
+
+p {
+	@apply max-w-xl mx-auto;
+}
+
+.step {
+	@apply max-w-xl h-screen mx-auto items-center justify-center content-start p-10 pb-[50vh] bg-yellow-500/0;
+}
+.step .title {
+	@apply text-2xl font-serif font-bold;
 }
 
 .axis path,
@@ -57,4 +57,9 @@
 .cough-arrow {
 	stroke: #000;
 	stroke-width: 4px;
+}
+
+#extra-space {
+	@apply hidden;
+	/* height: 300px; */
 }

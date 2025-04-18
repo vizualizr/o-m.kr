@@ -1,0 +1,27 @@
+---
+title: faker 테스트
+author: 김완
+slug: 수박 찾기
+coverStory: false
+tags:
+  - MDX
+---
+
+import { faker } from "@faker-js/faker/locale/ko";
+
+export const Title = faker.lorem.words();
+export const Fake = faker.lorem.paragraphs(10, '</br>')
+
+    <article class="articleBox">
+        <main>
+            <article>
+        
+        # {Title}
+        <p> 
+            <Fake />
+        </p>
+        </article>
+    </main>
+</article>
+
+

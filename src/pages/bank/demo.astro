@@ -1,21 +1,25 @@
 ---
 import Scroller from "/src/graphics/template/scroller/Scroller.astro";
-import SubduedSyrianTeenagers from "/src/graphics/demo/SubduedSyrianTeenagers.astro";
 import Paper from "/src/layouts/Paper.astro";
 
 // const faker = require ('faker');
 const frontmatter = {
     title: "각국의 에너지원별 발전 비중",
 };
+
+// 여기에 프론트매터 속성을 추가합니다
+title: "내 Astro 페이지";
+description: "Astro로 만든 멋진 페이지입니다";
+layout: "../layouts/MainLayout.astro";
+publishDate: "2023-01-01";
+tags: ["astro", "web", "frontend"];
 ---
 
 <Paper frontmatter={frontmatter}>
     <div class="flex flex-col justify-center bg-green-50">
         <main class="box mx-auto">
             <article>
-                <section class="">
-                    <Scroller />
-                </section>
+                <Scroller />
             </article>
         </main>
     </div>
