@@ -1,0 +1,27 @@
+---
+import Paper from "/src/layouts/Paper.astro";
+
+export const frontmatter = {
+    title: "진실은 앙상하다",
+};
+---
+
+<Paper frontmatter={frontmatter}>
+        <main>
+            <article>
+                <section>
+                    <h2>숫자</h2>
+
+                    <p>
+                        모든 의사 결정은 정량화를 거친다. 하지만 누가 어디서 어떻게 이런 숫자를 셈하는지 
+                    </p>
+
+                    <ul>
+                        <li>
+                            <a class="link" href='https://argos.nanet.go.kr/lawstat/twdcvln/main' target="_blank" alt="‘입법과 통계’는 법률과 밀접한 통계데이터를 수집·축적하여 입법과정에 필요한 통계를 선제적으로 제공하는 국회도서관의 입법 지원 서비스입니다.">국회도서관 입법과 통계</a> 
+                        </li>
+                    </ul>
+                </section>
+            </article>
+        </main>
+</Paper>

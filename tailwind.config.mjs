@@ -75,7 +75,5 @@ module.exports = withMT({
 		mixBlendMode: ["responsive"],
 	},
 	plugins: [require("flyonui"), require("flyonui/plugin")],
-	flyonui: {
-		darkTheme: null,
-	},
+
 });

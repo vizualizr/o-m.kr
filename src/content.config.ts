@@ -62,13 +62,13 @@ const articleSchema = z.object({
 
 // Define the 'articles' content collection
 const articleCollection = defineCollection({
-  // Specify the loader to fetch .md, .mdx, and .astro files from the specified directory
-  loader: glob({
-    pattern: '**/*.mdx',
-    base: 'src/content/article',
-  }),
   // Define a schema for the frontmatter to include common GitHub Markdown format items
   schema: articleSchema,
+  // Specify the loader to fetch .md, .mdx, and .astro files from the specified directory
+  loader: glob({
+    pattern: '**/*.{mdx,md}',
+    base: 'src/content/article',
+  }),
 });
 
 export const collections = {

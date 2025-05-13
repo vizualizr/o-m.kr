@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Individualism vs WFH Density</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    body { font-family: sans-serif; }
+    .axis path, .axis line {
+      stroke: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <svg width="600" height="600"></svg>
+
+  <script>
+    const margin = { top: 50, right: 30, bottom: 60, left: 60 },
+          width = 600 - margin.left - margin.right,
+          height = 600 - margin.top - margin.bottom;
+
+    const svg = d3.select("svg")
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
+
+    d3.csv("data.csv").then(data => {
+      data.forEach(d => {
+        d.individualism = +d.individualism;
+        d.wfh_days = +d.wfh_days;
+      });
+
+      const x = d3.scaleLinear()
+        .domain([0, 100])
+        .range([0, width]);
+
+      const y = d3.scaleLinear()
+        .domain([0, 2])
+        .range([height, 0]);
+
+      svg.append("g")
+        .attr("transform", `translate(0,${height})`)
+        .call(d3.axisBottom(x));
+
+      svg.append("g")
+        .call(d3.axisLeft(y));
+
+      svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 45)
+        .attr("text-anchor", "middle")
+        .text("Individualism score, 2015");
+
+      svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -45)
+        .attr("text-anchor", "middle")
+        .text("Average full-time days per week working from home");
+
+      // 커널 밀도 추정 및 등고선
+      const contours = d3.contourDensity()
+        .x(d => x(d.individualism))
+        .y(d => y(d.wfh_days))
+        .size([width, height])
+        .bandwidth(17)   // 조정 가능: 수치가 클수록 부드러워짐 기본값 20
+        (data);
+
+      svg.selectAll("path")
+        .data(contours)
+        .enter().append("path")
+        .attr("d", d3.geoPath())
+        .attr("fill", "#d6272880") // 붉은색 반투명
+        .attr("stroke", "#d62728")
+        .attr("stroke-width", 1);
+
+      // 데이터 점 (선택사항: 윤곽선 위에 점 찍기)
+      svg.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("cx", d => x(d.individualism))
+        .attr("cy", d => y(d.wfh_days))
+        .attr("r", 2)
+        .attr("fill", "black")
+        .attr("opacity", 0.5);
+    });
+  </script>
+</body>
+</html>
