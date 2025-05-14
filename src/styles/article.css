@@ -1,41 +1,50 @@
 @import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css");
+@import url("https://cdn.jsdelivr.net/gh/fonts-archive/NanumSquareNeo/NanumSquareNeo.css");
+@import url("https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/S-CoreDream.css");
 
-.articleMain {
-	@apply pb-10;
-	/* ----------------------------------- */
-	h1,
-	h2,
-	h3,
-	h4,
-	h5,
-	h6 {
-		font-family: "NanumBarunPenB", "Noto Serif KR", "MaruBuri", "Yoon Daehan", "Times New Roman",
-			Times, serif;
-		@apply px-5 py-3 text-[#121212] max-w-[36rem] mx-auto;
-	}
+@import './global.css';
 
-	h1 {
-		@apply text-2xl/normal sm:text-3xl/normal;
-	}
-	h2 {
-		@apply text-xl/normal font-normal;
-	}
 
-	p {
-		font-family: "NanumBarunPen", "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-		@apply px-5 py-3 text-[1.25rem]/7 max-w-[36rem] mx-auto;
-	}
-
-	figure {
-		@apply p-0 py-5 m-0 place-self-center sm:w-full md:p-5;
-	}
-
-	img {
-		@apply aspect-[2/1] w-full object-cover sm:aspect-auto;
-	}
-
-	figcaption {
-		@apply block text-sm/6 text-gray-600 not-italic py-2 px-5 sm:max-w-xl md:px-0;
-		font-family: "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-	}
+main a {
+  @apply link;
 }
+main {
+  @apply pb-10;
+  /* ----------------------------------- */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Nanum Square Neo", "Noto Sans KR", "Noto Sans CJK KR",
+      "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    @apply px-5 pt-7 max-w-[36rem] mx-auto tracking-[-0.05em] sm:tracking-[-0.025em] antialiased sm:pt-10 sm:pb-3 text-indigo-950;
+  }
+
+  h1 {
+    @apply text-3xl/normal sm:text-4xl/normal font-[450] sm:font-[400];
+  }
+  h2 {
+    @apply text-2xl/normal sm:text-3xl/normal sm:font-[450] sm:font-[400];
+  }
+
+  p {
+    font-family: "S-Core Dream", "NanumSquareNeoRegular", "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    @apply px-5 py-3 text-base/7 max-w-[36rem] mx-auto text-sky-950;
+  }
+
+  figure {
+    @apply p-0 py-5 m-0 place-self-center sm:w-full md:p-5;
+  }
+
+  img {
+    @apply aspect-[2/1] w-full object-cover sm:aspect-auto;
+  }
+
+  figcaption {
+    @apply block text-sm/6 text-gray-600 not-italic py-2 px-5 sm:max-w-xl md:px-0;
+    font-family: "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  }
+}
+

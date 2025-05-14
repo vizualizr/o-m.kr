@@ -35,10 +35,15 @@ const latestRevisionDate = new Date(latestRevision?.timestamp).toLocaleString(
 				<p>{frontmatter.category} / {frontmatter.flytitle}</p>
 				<h1>{frontmatter.headline}</h1>
 <p class="rubric">{frontmatter.rubric}</p>
-				<figure>
-					<img src={frontmatter.image[0].src} alt={frontmatter.image[0].alt || ''} />
-					<figcaption>{frontmatter.image[0].caption}</figcaption>
-				</figure>
+
+<figure>
+  {frontmatter.image?.length > 0 && (
+    <>
+      <img src={frontmatter.image[0].src} alt={frontmatter.image[0].alt || ''} />
+      <figcaption>{frontmatter.image[0].caption}</figcaption>
+    </>
+  )}
+</figure>
 			);
 </figure>;
 		default:

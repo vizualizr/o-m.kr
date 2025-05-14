@@ -1,39 +1,50 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&display=swap");
+
 @import "tailwindcss";
+@import "./theme.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&display=swap');
+@plugin "flyonui";
+
+@import "flyonui/variants.css";
+@source "../node_modules/flyonui/flyonui.js";
+
+@plugin "@iconify/tailwind4";
 
 :root {
-	/* equals to 7xl in tailwind default responsive unit */
-	--max-width: 80rem;
-}
-
-body {
-	@apply text-[#363636] flex flex-col min-h-svh mb-0;
-	font-family: "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-	word-break: keep-all;
+  /* equals to 7xl in tailwind default responsive unit */
+  --max-width: 80rem;
 }
 
 .plane {
-	@apply m-0 p-0;
+	@apply m-0 p-0 bg-paper-200 grow;
+}
+
+body {
+  @apply text-[#363636] flex flex-col min-h-svh mb-0;
+  word-break: keep-all;
 }
 
 main {
-	@apply grow mx-auto my-0 w-full md:max-w-3xl;
+  @apply mx-auto my-0 w-full md:max-w-3xl;
 }
 
+.footerContainer {
+  /* @apply bg-[#675350] text-[#fcf8ee] ; */
+  /* @apply bg-mojo-200; */
+}
 footer {
-	@apply footer p-3 pt-7 pb-10 max-w-4xl m-auto border-t-[1px] border-neutral-200 text-sm h-fit;
-	font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  @apply footer p-3 pt-7 pb-10 max-w-4xl m-auto border-t-[1px] border-neutral-200 text-sm h-fit;
+  font-family: "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .card {
-	@apply shadow-none;
+  @apply shadow-none;
 }
 
 #brand {
-	font-family: "궁서", "Gungsuh", "Times New Roman", Times, serif;
+  font-family: "궁서", "Gungsuh", "Times New Roman", Times, serif;
 }

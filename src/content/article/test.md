@@ -31,10 +31,7 @@ keywords:
   - "Software Automation"
   - "Tech Innovation"
 
-image:
-  - src: "/src/content/article/2024/04/탄핵 심판 9차 변론 전망/photo.webp"
-    alt: "A futuristic AI-driven software development interface"
-    caption: "도널드 트럼프 대통령이 백악관 집무실에서 행정명령에 서명한 후 스콧 베선트 미국 재무장관과 하워드 러트닉(오른쪽) 상무부 장관을 보고 있다./AFP 연합뉴스"
+
 
 revisions:
   - authors:
