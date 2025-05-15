@@ -1,8 +1,8 @@
 ---
 import { getCollection, render } from "astro:content";
+
 import Paper from "@layouts/Paper.astro";
 import Header from '@layouts/articleHeader.astro';
-import "@styles/article.css";
 
 export async function getStaticPaths() {
 	const articles = await getCollection("articles");

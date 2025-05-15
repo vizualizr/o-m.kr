@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+.articleCard {
+    img {
+        @apply aspect-square object-cover rounded-md;
+    }
+}

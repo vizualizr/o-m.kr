@@ -1,31 +1,30 @@
 ---
-import "@styles/global.css";
 import GlobalNav from "@layouts/GlobalNav.astro";
 import Footer from "@layouts/Footer.astro";
+import "@styles/global.css";
 
 const title = "그림";
 const { data } = Astro.props;
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko" data-theme="light">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="icon" type="image/png" href="favicon.png">
-        <!-- <link rel="icon" type="image/svg+xml" href="/favicon.svg" /> -->
-        <meta name="generator" content={Astro.generator} />
-        <title>{data?.headline}</title>
-    </head>
-    <body>
-        
-        <div class="plane">
-            <GlobalNav title={title} />
-            <slot />
-        </div>
-        
-        <Footer />
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    
+    <title>{data?.headline}</title>
+  </head>
+  <body>
+    <div class="plane">
+      <GlobalNav title={title} />
+      <slot />
+    </div>
+
+    <Footer />
+  </body>
 </html>
 
 <script is:inline src="/node_modules/flyonui/flyonui.js"></script>

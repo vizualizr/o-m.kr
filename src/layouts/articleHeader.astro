@@ -1,4 +1,6 @@
 ---
+import "@styles/article.css";
+
 import { Image } from "astro:assets";
 const { frontmatter } = Astro.props;
 const latestRevision = frontmatter.revisions?.reduce((latest, current) => {
@@ -19,6 +21,7 @@ const latestRevisionDate = new Date(latestRevision?.timestamp).toLocaleString(
 	},
 );
 ---
+
 {(() => {
 	switch (frontmatter.type) {
 		case 'graphics':

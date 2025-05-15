@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite';
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
     server: {
@@ -9,5 +10,9 @@ export default defineConfig({
             methods: ['GET', 'POST'],
             allowedHeaders: ['Content-Type']
         },
+        allowedHosts: ['notebook01.gate-truck.ts.net'] //added this
     },
+    plugins: [
+        tailwindcss(),
+    ],
 });

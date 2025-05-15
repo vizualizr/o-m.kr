@@ -1,93 +1,102 @@
 ---
-import Paper from "../layouts/Paper.astro";
+import Paper from "@layouts/Paper.astro";
+import "@styles/landing.css";
 const { title } = Astro.props;
 ---
 
 <Paper title="news.app">
-	<div
-		class="articleList
-		grid grid-cols-1
-		max-w-6xl mx-auto w-full
-		
-		md:grid-cols-10"
-	>
-		<!-- 1st card -->
-		<div
-			class="flex flex-col m-5 gap-1 relative
-				md:col-span-7 md:row-span-3"
-			"
-		>
-			<figure>
-				<img
-					src="https://flexible.img.hani.co.kr/flexible/normal/806/504/imgdb/original/2025/0117/20250117502492.webp"
-					src="https://static01.nytimes.com/newsgraphics/2025-01-08-trump-conflicts/ce9c96eb-c51c-482e-8453-ad9aeb06dd31/_assets/topper-medium.jpg"
-					src="https://static.beijinghikers.com/photos/QilianMountainsYuguSnowMountain/QilianMountainsYuguSnowMountain-beijing-hikers-china-hiking_1024x576.jpg"
-					alt="Watch"
-					class="aspect-square object-cover w-7/10 rounded-md
-					md:aspect-auto"
-				/>
-			</figure>
+  <div
+    class="articleList grid grid-cols-1 max-w-6xl mx-auto w-full md:grid-cols-10"
+  >
+    <div class="card image-full aspect-square m-5 sm:max-w-sm">
+      <figure>
+        <img
+          <img
+          src="https://flexible.img.hani.co.kr/flexible/normal/806/504/imgdb/original/2025/0117/20250117502492.webp"
+          src="https://static01.nytimes.com/newsgraphics/2025-01-08-trump-conflicts/ce9c96eb-c51c-482e-8453-ad9aeb06dd31/_assets/topper-medium.jpg"
+          src="https://static.beijinghikers.com/photos/QilianMountainsYuguSnowMountain/QilianMountainsYuguSnowMountain-beijing-hikers-china-hiking_1024x576.jpg"
+          alt="overlay image"
+        />
+      </figure>
+      <div class="card-body">
+        <!-- <h2 class="card-title mb-2.5 text-white">Marketing</h2> -->
+        <p class="text-white">
+          Boost your brand's visibility and engagement through targeted
+          marketing strategies.
+        </p>
+      </div>
+    </div>
 
-			<a href="#">
-				<div class="absolute top-0 left-0 w-full">
-					<div
-						class="block p-3 border-0
+    <!-- 1st card -->
+    <div
+      class="articleCard flex flex-col m-5 gap-1 relative
+				md:col-span-7 md:row-span-3"
+    >
+      <figure>
+        <img
+          src="https://flexible.img.hani.co.kr/flexible/normal/806/504/imgdb/original/2025/0117/20250117502492.webp"
+          src="https://static01.nytimes.com/newsgraphics/2025-01-08-trump-conflicts/ce9c96eb-c51c-482e-8453-ad9aeb06dd31/_assets/topper-medium.jpg"
+          src="https://static.beijinghikers.com/photos/QilianMountainsYuguSnowMountain/QilianMountainsYuguSnowMountain-beijing-hikers-china-hiking_1024x576.jpg"
+          alt=""
+        />
+      </figure>
+
+      <a href="#">
+        <div class="absolute top-0 left-0 w-full">
+          <div
+            class="block p-3 border-0
 					rounded-t-md bg-gray-50/10
 					mix-blend-difference backdrop-blur-lg
 					hover:mix-blend-exclusion"
-					>
-						<span class="badge badge-neutral badge-sm">
-							<span class="icon-[tabler--clock] size-3.5"></span>
-							3시간 전</span
-						>
-						<span class="text-[0.9rem] text-black/90 invert">
-							홍장원 차장 직접 작성한 메모를 증거로 제출
-						</span>
-					</div>
-				</div></a
-			>
+          >
+            <span class="badge badge-neutral badge-sm">
+              <span class="icon-[tabler--clock] size-3.5"></span>
+              3시간 전</span
+            >
+            <span class="text-[0.9rem] text-black/90 invert">
+              홍장원 차장 직접 작성한 메모를 증거로 제출
+            </span>
+          </div>
+        </div></a
+      >
 
-			<h3 class="text-2xl font-bold my-3">
-				<a href="">12.3 내란: 누가 무엇을 실행에 옮겼나</a>
-			</h3>
-			<p class="text-base">
-				탄핵 심리에서 드러나는 계엄의 규모가 점점 더 커지고 있다. 최정예
-				군부대는 물론 군경의 핵심 인력과 행정력을 동원했다는 증언이
-				계속되고 있다. 계엄에 동조한 조직과 개인을 망라해 그림으로
-				정리했다.
-			</p>
-			<p class="mt-2 pt-2 text-xs text-gray-600">
-				2024.12.3부터 3시간 전까지 <span class="">27번</span> 수정함
-			</p>
-		</div>
+      <h3 class="text-2xl font-bold my-3">
+        <a href="">12.3 내란: 누가 무엇을 실행에 옮겼나</a>
+      </h3>
+      <p class="text-base">
+        탄핵 심리에서 드러나는 계엄의 규모가 점점 더 커지고 있다. 최정예
+        군부대는 물론 군경의 핵심 인력과 행정력을 동원했다는 증언이 계속되고
+        있다. 계엄에 동조한 조직과 개인을 망라해 그림으로 정리했다.
+      </p>
+      <p class="mt-2 pt-2 text-xs text-gray-600">
+        2024.12.3부터 3시간 전까지 <span class="">27번</span> 수정함
+      </p>
+    </div>
 
-		<div class="card max-w-auto min-h-10 m-5 md:col-span-3 bg-gray-200">
-		</div>
-		<div class="card max-w-auto min-h-10 m-5 md:col-span-3 bg-gray-200">
-		</div>
-		<div class="card max-w-auto min-h-10 m-5 md:col-span-3 bg-gray-200">
-		</div>
+    <div class="card max-w-auto min-h-10 m-5 md:col-span-3 bg-gray-200"></div>
+    <div class="card max-w-auto min-h-10 m-5 md:col-span-3 bg-gray-200"></div>
+    <div class="card max-w-auto min-h-10 m-5 md:col-span-3 bg-gray-200"></div>
 
-		<div class="divider row-span-1 md:col-span-10 border-0 my-0"></div>
+    <div class="divider row-span-1 md:col-span-10 border-0 my-0"></div>
 
-		<div class="flex flex-row m-5 gap-2
+    <div class="flex flex-row m-5 gap-2
 		md:gap-0 md:col-span-2">
-			<div class="flex flex-col">
-				<h3 class="text-xl font-bold md:hidden">
-					이스라엘, 15일까지 인질 석방되지 않으면 가자지구 휴전 종결
-				</h3>
-				<p class="text-base mt-5 md:hidden">
-					베냐민 네타냐후 총리는 이스라엘군에 가자지구 병력 집결을
-					명령했다고 밝혔다
-				</p>
-			</div>
+      <div class="flex flex-col">
+        <h3 class="text-xl font-bold md:hidden">
+          이스라엘, 15일까지 인질 석방되지 않으면 가자지구 휴전 종결
+        </h3>
+        <p class="text-base mt-5 md:hidden">
+          베냐민 네타냐후 총리는 이스라엘군에 가자지구 병력 집결을 명령했다고
+          밝혔다
+        </p>
+      </div>
 
-			<figure class="w-52 md:size-full">
-				<img
-					src="https://static01.nytimes.com/newsgraphics/2025-01-08-trump-conflicts/ce9c96eb-c51c-482e-8453-ad9aeb06dd31/_assets/topper-medium.jpg"
-					class="aspect-square object-cover rounded-md opacity-50"
-				/>
-			</figure>
-		</div>
-	</div>
+      <figure class="w-52 md:size-full">
+        <img
+          src="https://static01.nytimes.com/newsgraphics/2025-01-08-trump-conflicts/ce9c96eb-c51c-482e-8453-ad9aeb06dd31/_assets/topper-medium.jpg"
+          class="aspect-square object-cover rounded-md opacity-50"
+        />
+      </figure>
+    </div>
+  </div>
 </Paper>

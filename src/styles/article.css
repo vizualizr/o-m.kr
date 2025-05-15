@@ -2,12 +2,23 @@
 @import url("https://cdn.jsdelivr.net/gh/fonts-archive/NanumSquareNeo/NanumSquareNeo.css");
 @import url("https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/S-CoreDream.css");
 
-@import './global.css';
+@import "tailwindcss";
 
+@plugin "flyonui";
+@plugin "@iconify/tailwind4";
+@import "flyonui/variants.css";
+@source "../node_modules/flyonui/flyonui.js";
+
+@import "@styles/theme.css";
+
+.plane {
+	@apply bg-paper-100;
+}
 
 main a {
   @apply link;
 }
+
 main {
   @apply pb-10;
   /* ----------------------------------- */
@@ -30,7 +41,8 @@ main {
   }
 
   p {
-    font-family: "S-Core Dream", "NanumSquareNeoRegular", "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "S-Core Dream", "NanumSquareNeoRegular", "Noto Sans KR",
+      "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     @apply px-5 py-3 text-base/7 max-w-[36rem] mx-auto text-sky-950;
   }
 
@@ -47,4 +59,3 @@ main {
     font-family: "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   }
 }
-
