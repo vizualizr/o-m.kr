@@ -3,70 +3,105 @@ import Paper from "@layouts/Paper.astro";
 import { getCollection } from "astro:content";
 
 const articles = await getCollection("articles");
-const coverStories = await getCollection("articles", ({ data }) => data.highlight.listed === true);
+
+const coverStories = await getCollection(
+  "articles",
+  ({ data }) => data.highlight.listed === true
+);
+const coverStoriesSorted = coverStories
+  .sort((a, b) => {
+    const getLatestTimestamp = (revisions) => {
+      if (!Array.isArray(revisions) || revisions.length === 0) return null;
+      return revisions.reduce((latest, current) =>
+        new Date(current.timestamp) > new Date(latest.timestamp)
+          ? current
+          : latest
+      ).timestamp;
+    };
+
+    const indexA = a.data.highlight.index ?? 0;
+    const indexB = b.data.highlight.index ?? 0;
+    if (indexA !== indexB) return indexA - indexB;
+
+    const latestA = getLatestTimestamp(a.data.revisions);
+    const latestB = getLatestTimestamp(b.data.revisions);
+
+    if (!latestA && !latestB) return 0;
+    if (!latestA) return 1;
+    if (!latestB) return -1;
+
+    return new Date(latestB) - new Date(latestA);
+  })
+  .slice(0, 5);
+
+const articleList = articles.filter(
+  (article) => article.data.slug && !coverStoriesSorted.some(story => story.data.slug === article.data.slug)
+);
+
 ---
 
 <Paper title="news.app">
-    <main>
-    <article class="articleBox">
-            <article>
-                <section>
-                    <h2>전체 기사 목록</h2>
-                    <ul>
-                        {articles.map( article => (
-                                <li>
-                                    <a href={`/article/${article.data.slug}`}>{article.data.headline}</a> 취재: {article.data.authors}
-                                </li>
-                            ))}
-                    </ul>
-                    {
-                        articles.length === 0 && (
-                            <p>
-                                No articles found in the 'articles' collection.
-                            </p>
-                        )
-                    }
-                </section>
-<section>
-    <h2>현재 표지 기사</h2>
+  <main class="flex flex-col gap-10">
+    <section>
+      <h2 class="text-2xl">현재 표지 기사</h2>
 
-                <ul>
-                    {
-                        coverStories.length > 0 && (
-                            <li>
-                                <a href={`/article/${coverStories[0].data.slug}`}>
-                                    <strong>{coverStories[0].data.headline}</strong>
-                                </a> 
-                                취재: {coverStories[0].data.authors}
-                            </li>
-                        )
-                    }
-                </ul>
+      <ol>
+        {
+          coverStoriesSorted.map((coverStory) => (
+            <li>
+              <a href={`/article/${coverStory.data.slug}`}>
+                <strong>{coverStory.data.headline}</strong>
+              </a>
+              취재: {coverStory.data.authors}
+            </li>
+          ))
+        }
+        {coverStoriesSorted.length === 0 && <p>No cover stories</p>}
+      </ol>
+    </section>
 
-            </section>
-                <section>
-                    <h2>표지기사 목록</h2>
-                    <ul>
-                        {
-                            coverStories.map((coverStory, index) => (
-                                <li>
-                                    <a href={`/article/${coverStory.data.slug}`}>
-                                        {index === 0 ? <strong>{coverStory.data.headline}</strong> : coverStory.data.headline}
-                                    </a> 
-                                    취재: {coverStory.data.authors}
-                                </li>
-                            ))
-                        }
-                    </ul>
-                    {
-                        coverStories.length === 0 && (
-                            <p>
-                                No cover stories
-                            </p>
-                        )
-                    }
-                </section>
-            </article>
-        </article>
-    </main>
+    <section>
+      <h2 class="text-2xl">
+        일반기사 목록
+      </h2>
+      <ul>
+        {
+          articleList.map((article, index) => (
+            <li>
+              <a href={`/article/${article.data.slug}`}>
+                {index === 0 ? (
+                  <strong>{article.data.headline}</strong>
+                ) : (
+                  article.data.headline
+                )}
+              </a>
+              취재: {article.data.authors}
+            </li>
+          ))
+        }
+      </ul>
+      {articleList.length === 0 && <p>No articles</p>}
+    </section>
+
+    <section class="hidden">
+      <h2 class="">전체 기사 목록</h2>
+      <ol>
+        {
+          articles.map((article) => (
+            <li>
+              <a href={`/article/${article.data.slug}`}>
+                {article.data.headline}
+              </a>{" "}
+              취재: {article.data.authors}
+            </li>
+          ))
+        }
+      </ol>
+      {
+        articles.length === 0 && (
+          <p>No articles found in the 'articles' collection.</p>
+        )
+      }
+    </section>
+  </main>
 </Paper>

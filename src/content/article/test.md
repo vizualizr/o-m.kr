@@ -4,7 +4,7 @@ category: 경제
 flytitle: "사라진 정책"
 headline: "MD 속 .astro"
 rubric: "국채금리"
-slug: "MD 속 .astro"
+slug: "마크다운 속 아스트로 컴포넌트"
 
 highlight:
   listed: true
@@ -48,8 +48,7 @@ revisions:
     message: "Refined conclusion with industry expert comments."
 ---
 
-<Scroller />
-
 ## 9차 변론에서 다툴 주요 쟁점은?
 
 변호인 측은 윤 대통령이 결정한 바를 구체적으로 언급하지는 않았다. 하지만 헌재가 추가변론길을 정하지 않을 경우 변호인단이 총사퇴할 가능성이 높음을 시사한다.
+

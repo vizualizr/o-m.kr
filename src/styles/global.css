@@ -1,4 +1,19 @@
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&display=swap");
+@import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css");
+
+@font-face {
+    font-family: 'Minguk';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Minguk-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+/* font-family: 'Minguk-Regular'; */
+@font-face {
+    font-family: 'Minguk';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Minguk-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 
 @import "tailwindcss";
 
@@ -14,16 +29,15 @@
   --max-width: 80rem;
 }
 
-a {
-  @apply link;
-}
-.plane {
-	@apply m-0 p-0 grow;
-}
-
 body {
   @apply text-[#363636] flex flex-col min-h-svh mb-0;
   word-break: keep-all;
+
+  font-family: "Minguk", "NanumSquareRound", "Noto Sans KR", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+.paper {
+  @apply m-0 p-0 grow;
 }
 
 main {
@@ -36,13 +50,8 @@ main {
 }
 footer {
   @apply footer p-3 pt-7 pb-10 max-w-4xl m-auto border-t-[1px] border-neutral-200 text-sm h-fit;
-  font-family: "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .card {
   @apply shadow-none;
-}
-
-#brand {
-  font-family: "궁서", "Gungsuh", "Times New Roman", Times, serif;
 }

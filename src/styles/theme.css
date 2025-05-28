@@ -16,16 +16,5 @@
   --color-paper-900: oklch(43.44% 0.053 325.18);
   --color-paper-950: oklch(22.07% 0.013 314.54);
 
-  --color-mojo: oklch(90.11% 0.00174 67.8);
-  --color-mojo-50: oklch(93.177% 0.00108 17.177);
-  --color-mojo-100: oklch(90.11% 0.00174 67.8);
-  --color-mojo-200: oklch(83.222% 0.00275 106.46);
-  --color-mojo-300: oklch(76.062% 0.00305 84.562);
-  --color-mojo-400: oklch(68.615% 0.00449 91.466);
-  --color-mojo-500: oklch(61.078% 0.00508 78.286);
-  --color-mojo-600: oklch(53.121% 0.00478 91.487);
-  --color-mojo-700: oklch(44.979% 0.00347 84.57);
-  --color-mojo-800: oklch(36.414% 0.00365 84.575);
-  --color-mojo-900: oklch(27.236% 0.00182 106.52);
-  --color-mojo-950: oklch(22.173% 0.00191 106.55);
+
 }

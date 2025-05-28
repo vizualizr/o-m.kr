@@ -1,6 +1,7 @@
 @import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css");
 @import url("https://cdn.jsdelivr.net/gh/fonts-archive/NanumSquareNeo/NanumSquareNeo.css");
 @import url("https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/S-CoreDream.css");
+@import url("https://hangeul.pstatic.net/hangeul_static/css/NanumHuman.css");
 
 @import "tailwindcss";
 
@@ -11,8 +12,8 @@
 
 @import "@styles/theme.css";
 
-.plane {
-	@apply bg-paper-100;
+.paper {
+  @apply bg-paper-100;
 }
 
 main a {
@@ -30,20 +31,22 @@ main {
   h6 {
     font-family: "Nanum Square Neo", "Noto Sans KR", "Noto Sans CJK KR",
       "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-    @apply px-5 pt-7 max-w-[36rem] mx-auto tracking-[-0.05em] sm:tracking-[-0.025em] antialiased sm:pt-10 sm:pb-3 text-indigo-950;
+    @apply px-5 pt-7 max-w-[36rem] mx-auto tracking-[-0.05em] sm:tracking-[-0.035em] antialiased sm:pt-10 sm:pb-3 text-cyan-950;
+    transform: scaleX(0.925);
+    transform-origin: left;
   }
 
   h1 {
-    @apply text-3xl/normal sm:text-4xl/normal font-[450] sm:font-[400];
+    @apply text-3xl/normal sm:text-4xl/normal font-[450];
   }
   h2 {
-    @apply text-2xl/normal sm:text-3xl/normal sm:font-[450] sm:font-[400];
+    @apply text-2xl/normal sm:text-3xl/normal sm:font-[400];
   }
 
-  p {
-    font-family: "S-Core Dream", "NanumSquareNeoRegular", "Noto Sans KR",
-      "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    @apply px-5 py-3 text-base/7 max-w-[36rem] mx-auto text-sky-950;
+  p, ul, ol {
+    font-family: "NanumHuman", "Noto Sans KR", "Noto Sans CJK KR",
+      "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    @apply text-[1.15rem]/9 px-5 py-3 max-w-[36rem] mx-auto text-slate-900;
   }
 
   figure {
@@ -51,11 +54,60 @@ main {
   }
 
   img {
-    @apply aspect-[2/1] w-full object-cover sm:aspect-auto;
+    @apply aspect-square w-full object-cover sm:aspect-auto;
   }
 
   figcaption {
     @apply block text-sm/6 text-gray-600 not-italic py-2 px-5 sm:max-w-xl md:px-0;
-    font-family: "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    /* font-family: "Noto Sans KR", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; */
   }
+}
+
+.graphics-header {
+  @apply text-center;
+  h1 {
+    transform-origin: center;
+  }
+}
+.runner {
+  @apply text-left;
+}
+.share-menu {
+  @apply text-left;
+}
+
+main > p:last-of-type::after {
+  content: "";
+  display: inline-block;
+  vertical-align: text-bottom;
+  width: 1em;
+  height: 1em;
+  margin: 0.1em;
+  background: no-repeat center/contain
+    url("https://api.iconify.design/tabler/circle-dot-filled.svg?color=%231e1b4b");
+  opacity: 0.3;
+}
+
+.footnotes h2#footnote-label {
+  visibility: hidden;
+  position: absolute;
+}
+
+.footnotes::before {
+  content: "참고자료";
+  display: block;
+
+  font-family: "Nanum Square Neo", "Noto Sans KR", "Noto Sans CJK KR",
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+
+  @apply mt-20 pb-0 px-5 pt-5 max-w-[36rem] mx-auto tracking-[-0.05em] sm:tracking-[-0.025em] antialiased  text-cyan-950 font-normal text-lg sm:text-xl;
+
+}
+
+.footnotes ol {
+  @apply mt-0 pt-0 list-inside;
+}
+
+.footnotes a {
+  @apply text-base/tight;
 }

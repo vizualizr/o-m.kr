@@ -1,6 +1,5 @@
 ---
 import Menu from "./Menu.astro";
-const { title } = Astro.props;
 ---
 
 <div class="navbar-container p-0 border-b-[1px] border-base-content/15">
@@ -18,18 +17,19 @@ const { title } = Astro.props;
       <a
         class="link text-base-content link-neutral text-xl font-semibold no-underline"
         href="/"
-        >{title}</a>
-      </a>
+        ><img src="/logo.svg"
+          alt="로고입니다. 클릭하면 첫 페이지로 이동합니다." /></a>
     </div>
-
+    
+    
     <div class="navbar-end items-center gap-4">
-      <button
-        class="btn btn-sm btn-text btn-circle size-[2.125rem]"
-        aria-label="Search Button"
+      <!-- <button
+      class="btn btn-sm btn-text btn-circle size-[2.125rem]"
+      aria-label="Search Button"
       >
-        <span class="icon-[tabler--search] size-[1.375rem]"></span>
-      </button>
-      <div
+      <span class="icon-[tabler--search] size-[1.375rem]"></span>
+      </button> -->
+      <!-- <div
         class="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]"
       >
         <button
@@ -102,7 +102,8 @@ const { title } = Astro.props;
             </a>
           </li>
         </ul>
-      </div>
-    </div>
-  </nav>
+      </div> -->
+  </div>
+    </nav>
+
 </div>

@@ -3,61 +3,96 @@ import "@styles/article.css";
 
 import { Image } from "astro:assets";
 const { frontmatter } = Astro.props;
-const latestRevision = frontmatter.revisions?.reduce((latest, current) => {
-	return new Date(current.timestamp) > new Date(latest.timestamp)
-		? current
-		: latest;
+
+const firstPublished = frontmatter.revisions?.reduce((earliest, current) => {
+  return new Date(current.timestamp) < new Date(earliest.timestamp)
+    ? current
+    : earliest;
 }, frontmatter.revisions[0]);
 
-// Format the latest revision timestamp
-const latestRevisionDate = new Date(latestRevision?.timestamp).toLocaleString(
-	"ko-KR",
-	{
-		year: "numeric",
-		month: "long",
-		day: "numeric",
-		hour: "2-digit",
-		minute: "2-digit",
-	},
-);
+const firstPublishedTimestamp = firstPublished?.timestamp ?? "";
+
+const latestRevision = frontmatter.revisions?.reduce((latest, current) => {
+  return new Date(current.timestamp) > new Date(latest.timestamp)
+    ? current
+    : latest;
+}, frontmatter.revisions[0]);
+
+const latestTimestamp = latestRevision?.timestamp ?? "";
+const pageURL = "https://" + Astro.url.host + "/" + frontmatter.slug;
 ---
 
-{(() => {
-	switch (frontmatter.type) {
-		case 'graphics':
-			return (
-				<div class="text-center">
-			<p>{frontmatter.category} / {frontmatter.flytitle}</p>
-			<h1 class="text-center">{frontmatter.headline}</h1>
-<p class="rubric">{frontmatter.rubric}</p>
+<div
+  class={frontmatter.type === "graphics" ? "graphics-header" : "article-header"}
+>
+  <p class="runner">
+    {frontmatter.category} / {frontmatter.flytitle}
+  </p>
+
+  <h1>{frontmatter.headline}</h1>
+  <p class="rubric">{frontmatter.rubric}</p>
+
+  <div class={frontmatter.type === "graphics"}></div>
+
+  <p>
+    <span
+      class="time"
+      id="published-time"
+      data-timestamp={firstPublishedTimestamp}></span> 작성해 <span
+      class="time"
+      id="relative-time"
+      data-timestamp={latestTimestamp}></span> 수정한 글입니다.
+  </p>
+  <script type="module">
+    import { getRelativeTime } from "/src/assets/scripts/utils.js";
+
+    const ft = document.getElementById("published-time");
+    const el = document.getElementById("relative-time");
+
+    if (
+      getRelativeTime(ft.dataset.timestamp) !=
+      getRelativeTime(el.dataset.timestamp)
+    )
+      if (ft && ft.dataset.timestamp) {
+        ft.textContent = getRelativeTime(ft.dataset.timestamp);
+      }
+
+    if (el && el.dataset.timestamp) {
+      el.textContent = getRelativeTime(el.dataset.timestamp);
+    }
+  </script>
+
+  <p class="share-menu">
+    <button
+      class="btn btn-sm rounded-full bg-paper-700/20 border-0 shadow-none text-neutral-500"
+      id="share-button"
+      data-url={pageURL}
+      ><span class="icon-[material-symbols--share] size-4.5 shrink-0"
+      ></span>공유하기</button
+    >
+  </p>
+
+  <script type="module">
+    const btn = document.getElementById("share-button");
+    // const url = btn.dataset.url;
+    const url = window.location.href;
+    console.log(url);
+
+    function shareContent() {
+      if (navigator.share) {
+        navigator
+          .share({
+            title: "웹페이지 공유",
+            text: "이 페이지를 확인해보세요!",
+            url: url,
+          })
+          .then(() => console.log("공유 성공"))
+          .catch((error) => console.log("공유 실패", error));
+      } else {
+        console.log("Web Share API를 지원하지 않는 브라우저입니다.");
+      }
+    }
+
+    btn && btn.addEventListener("click", shareContent);
+  </script>
 </div>
-			
-		); 	
-		case 'article':
-			return (
-				<p>{frontmatter.category} / {frontmatter.flytitle}</p>
-				<h1>{frontmatter.headline}</h1>
-<p class="rubric">{frontmatter.rubric}</p>
-
-<figure>
-  {frontmatter.image?.length > 0 && (
-    <>
-      <img src={frontmatter.image[0].src} alt={frontmatter.image[0].alt || ''} />
-      <figcaption>{frontmatter.image[0].caption}</figcaption>
-    </>
-  )}
-</figure>
-			);
-</figure>;
-		default:
-			return <p>{frontmatter.category} / {frontmatter.flytitle}</p>;
-
-	}
-})()}
-
-
-
-<p class="time">최종 수정일: {latestRevisionDate}</p>
-
-
-

@@ -1,12 +1,13 @@
 @import "tailwindcss";
 @import "@styles/theme.css";
 
-.plane{
+.paper {
 	@apply bg-paper-600;
 }
 
-.container {
-	@apply max-w-6xl relative;
+.artboard {
+	/* @apply max-w-6xl relative; */
+	@apply relative;
 }
 
 #graphic {
@@ -23,7 +24,7 @@
 }
 
 #vis svg {
-	@apply mx-0 w-full md:max-w-xl aspect-square object-cover;
+	@apply mx-auto w-full md:max-w-xl aspect-square object-cover;
 }
 
 #vis .title {
@@ -35,15 +36,11 @@
 	text-anchor: middle;
 }
 
-/* p {
-	@apply max-w-xl mx-auto;
-} */
-
 .step {
 	@apply max-w-xl h-screen mx-auto items-center justify-center content-start p-10 pb-[50vh] bg-yellow-500/0;
 }
 .step .title {
-	@apply text-2xl font-serif font-bold;
+	@apply text-2xl font-bold;
 }
 
 .axis path,

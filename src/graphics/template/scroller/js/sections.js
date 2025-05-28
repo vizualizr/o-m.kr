@@ -4,6 +4,7 @@
  * using reusable charts pattern:
  * http://bost.ocks.org/mike/chart/
  */
+
 let scrollVis = () => {
   // Keep track of which visualization
   // we are on and which was the last
@@ -61,8 +62,7 @@ let scrollVis = () => {
   // scale, but I will use two separate
   // ones to keep things easy.
   // @v4 using new axis name
-  xAxisBar = d3.axisBottom().scale(xBarScale);
-
+  let xAxisBar;
   // @v4 using new axis name
   let xAxisHist;
 
@@ -109,7 +109,7 @@ let scrollVis = () => {
       .scaleBand()
       .paddingInner(0.05)
       .domain([0, 1, 2])
-      .range([0, height - 50], 0.1, 0.1);
+      .range([0, height - 50]); // d3 v7: .range() does not take extra arguments
 
     xHistScale = d3
       .scaleLinear()
@@ -118,14 +118,8 @@ let scrollVis = () => {
 
     yHistScale = d3.scaleLinear().range([height, 0]);
 
-    xAxisBar = d3.axisBottom().scale(xBarScale);
-
-    xAxisHist = d3
-      .axisBottom()
-      .scale(xHistScale)
-      .tickFormat((d) => {
-        return `${d}`;
-      });
+    xAxisBar = d3.axisBottom(xBarScale); // d3 v7: pass scale as argument
+    xAxisHist = d3.axisBottom(xHistScale).tickFormat((d) => `${d}`);
   };
 
   // When scrolling to a new section
@@ -787,18 +781,13 @@ let scrollVis = () => {
    * @param words
    */
   function groupByWord(words) {
-    return d3
-      .nest()
-      .key(function (d) {
-        return d.word;
-      })
-      .rollup(function (v) {
-        return v.length;
-      })
-      .entries(words)
-      .sort(function (a, b) {
-        return b.value - a.value;
-      });
+    // d3.nest() is removed in v7. Use d3.group and Array.from
+    // Returns [{key: ..., value: ...}, ...]
+    const grouped = d3.group(words, d => d.word);
+    return Array.from(grouped, ([key, values]) => ({
+      key,
+      value: values.length
+    })).sort((a, b) => b.value - a.value);
   }
 
   /**
@@ -809,6 +798,7 @@ let scrollVis = () => {
   chart.activate = function (index) {
     activeIndex = index;
     var sign = activeIndex - lastIndex < 0 ? -1 : 1;
+    // d3.range is fine, but ensure arguments are correct for v7
     var scrolledSections = d3.range(lastIndex + sign, activeIndex + sign, sign);
     scrolledSections.forEach(function (i) {
       activateFunctions[i]();
@@ -874,4 +864,5 @@ function display(data) {
 }
 
 // load data and display
-d3.tsv("/src/graphics/template/scroller/data/words.tsv", display);
+// d3.tsv is removed in v7. Use d3.tsv(url).then(callback)
+d3.tsv("/src/graphics/template/scroller/data/words.tsv").then(display);
