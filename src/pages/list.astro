@@ -2,137 +2,65 @@
 import "@styles/list.css";
 
 import Paper from "@layouts/Paper.astro";
-import CoverStories from "/src/components/CoverStories.astro";
-import {
-  getFirstRevision,
-  getLastRevision,
-  toDate,
-  toKODate,
-  getRelativeTimeDiff,
-  getRelativeTime,
-} from "src/assets/scripts/utils";
+import { getFirstRevision, getRelativeTime } from "src/assets/scripts/utils";
 
 import { getCollection } from "astro:content";
 
 const articles = await getCollection("articles");
 
-const coverStories = await getCollection(
-  "articles",
-  ({ data }) => data.highlight.listed === true
-);
-const coverStoriesSorted = coverStories
-  .sort((a, b) => {
-    const getLatestTimestamp = (revisions) => {
-      if (!Array.isArray(revisions) || revisions.length === 0) return null;
-      return revisions.reduce((latest, current) =>
-        new Date(current.timestamp) > new Date(latest.timestamp)
-          ? current
-          : latest
-      ).timestamp;
-    };
+// Sort articles by latest revision
+const sortedArticles = articles.sort((a, b) => {
+  const getLatestTimestamp = (revisions: any[] | undefined) => {
+    if (!Array.isArray(revisions) || revisions.length === 0) return null;
+    return revisions.reduce((latest, current) =>
+      new Date(current.timestamp) > new Date(latest.timestamp)
+        ? current
+        : latest,
+    ).timestamp;
+  };
 
-    const indexA = a.data.highlight.index ?? 0;
-    const indexB = b.data.highlight.index ?? 0;
-    if (indexA !== indexB) return indexA - indexB;
+  const latestA = getLatestTimestamp(a.data.revisions);
+  const latestB = getLatestTimestamp(b.data.revisions);
 
-    const latestA = getLatestTimestamp(a.data.revisions);
-    const latestB = getLatestTimestamp(b.data.revisions);
+  if (!latestA && !latestB) return 0;
+  if (!latestA) return 1;
+  if (!latestB) return -1;
 
-    if (!latestA && !latestB) return 0;
-    if (!latestA) return 1;
-    if (!latestB) return -1;
-
-    return new Date(latestB) - new Date(latestA);
-  })
-  .slice(0, 5);
-
-const articleList = articles.filter(
-  (article) =>
-    article.data.slug &&
-    !coverStoriesSorted.some((story) => story.data.slug === article.data.slug)
-);
+  return new Date(latestB).getTime() - new Date(latestA).getTime();
+});
 ---
 
-<Paper>
-  <main class="coverStoriesContainer">
-    <section class="coverStories">
+<Paper title="news.app">
+  <main class="">
+    <ul class="">
       {
-        coverStoriesSorted.map((article, index) => (
-          <a href={`/article/${article.data.slug}`}>
-            <div class="coverStoryCard group">
-              <img
-                src={
-                  article.data?.images && article.data.images.length > 0
-                    ? article.data.images[0].src
-                    : ""
-                }
-                alt={article.data.images[0].alt}
-                class="image"
-              />
-
-              <div class="texture" />
-
-              <div class="header">
-                <time class="">
+        sortedArticles.map((article) => (
+          <li class="border-b border-gray-200 py-3 group">
+            <a href={`/article/${article.data.slug}`} class="block">
+              <div class="flex justify-between items-baseline mb-1">
+                <h2 class="text-[20px] text-[#111111] font-semibold leading-tight hover:underline decoration-2 decoration-[#111111]/30">
+                  {article.data.headline}
+                </h2>
+              </div>
+              <div class="flex items-center gap-1 text-[14px] font-sans text-[#7a7a7a] mb-2">
+                  <time>
                   {getRelativeTime(
-                    getFirstRevision(article.data.revisions).getTimestamp()
+                    getFirstRevision(article.data.revisions).getTimestamp(),
                   )}
                 </time>
               </div>
-              <div class="coverStoryCardSpacer relative z-20 grow" />
-              <div class="relative z-10 max-w-full flex-none items-end bg-gradient-to-t from-neutral-950/80 from-7% via-neutral-950/10 via-75% to-neutral-950/0 to-95%">
-                <div class="mt-30 p-4 text-2xl font-bold text-white opacity-95 text-shadow-sm">
-                  <p>{article.data.headline}</p>
-                  <p class="text-sm font-normal">{article.data.rubric}</p>
-                </div>
-              </div>
-            </div>
-          </a>
+              <p class="text-[16px] text-[#7a7a7a] leading-snug line-clamp-2">
+                {article.data.rubric}
+              </p>
+            </a>
+          </li>
         ))
       }
-    </section>
-
-    <section>
-      <h2 class="text-2xl">일반기사 목록</h2>
-      <ul>
-        {
-          articleList.map((article, index) => (
-            <li>
-              <a href={`/article/${article.data.slug}`}>
-                {index === 0 ? (
-                  <strong>{article.data.headline}</strong>
-                ) : (
-                  article.data.headline
-                )}
-              </a>
-              취재: {article.data.authors}
-            </li>
-          ))
-        }
-      </ul>
-      {articleList.length === 0 && <p>No articles</p>}
-    </section>
-
-    <section class="">
-      <h2 class="">전체 기사 목록</h2>
-      <ol>
-        {
-          articles.map((article) => (
-            <li>
-              <a href={`/article/${article.data.slug}`}>
-                {article.data.headline}
-              </a>{" "}
-              취재: {article.data.authors}
-            </li>
-          ))
-        }
-      </ol>
-      {
-        articles.length === 0 && (
-          <p>No articles found in the 'articles' collection.</p>
-        )
-      }
-    </section>
+    </ul>
+    {
+      sortedArticles.length === 0 && (
+        <p class="text-center text-gray-500 mt-10">No articles found.</p>
+      )
+    }
   </main>
-  <CoverStories stories={coverStoriesSorted} />
 </Paper>

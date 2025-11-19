@@ -13,20 +13,23 @@
 @import "@styles/theme.css";
 
 .paper {
-  @apply bg-paper-100;
+  /* @apply bg-paper-100; */
 }
 
+/* this code is only for the landing page. */
 .coverStoriesContainer {
   @apply flex flex-col items-center;
+
   .coverStories {
     .coverStoryCard {
       @apply relative flex flex-col aspect-square m-2 overflow-hidden rounded-[0.2em] border-paper-400 border-[1px];
 
       .image {
-        @apply absolute inset-0 h-full w-full object-cover  saturate-0 brightness-120  contrast-[1.05] blur-[0.18em] opacity-80;
+        @apply absolute inset-0 h-full w-full object-cover saturate-0 brightness-120 contrast-[1.05] blur-[0.18em] opacity-80;
       }
+
       .texture {
-        @apply absolute inset-0 opacity-70 bg-[radial-gradient(circle,_gray_25%,_transparent_75%)] bg-[length:0.4em_0.4em] mix-blend-color-burn pointer-events-none;
+        @apply absolute inset-0 opacity-70 bg-[radial-gradient(circle,_gray_25%\,_transparent_75%)] bg-[length:0.4em_0.4em] mix-blend-color-burn pointer-events-none;
       }
 
       .header {

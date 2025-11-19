@@ -1,13 +1,13 @@
 ---
 import Paper from "@layouts/Paper.astro";
-import CoverStories from "/src/components/CoverStories.astro";
+import CoverStories from "@components/CoverStories.astro";
 import {
   getFirstRevision,
   getLastRevision,
   toDate,
   toKODate,
   getRelativeTimeDiff,
-  getRelativeTime
+  getRelativeTime,
 } from "src/assets/scripts/utils";
 
 import { getCollection } from "astro:content";
@@ -16,16 +16,16 @@ const articles = await getCollection("articles");
 
 const coverStories = await getCollection(
   "articles",
-  ({ data }) => data.highlight.listed === true
+  ({ data }) => data.highlight.listed === true,
 );
 const coverStoriesSorted = coverStories
   .sort((a, b) => {
-    const getLatestTimestamp = (revisions) => {
+    const getLatestTimestamp = (revisions: any[] | undefined) => {
       if (!Array.isArray(revisions) || revisions.length === 0) return null;
       return revisions.reduce((latest, current) =>
         new Date(current.timestamp) > new Date(latest.timestamp)
           ? current
-          : latest
+          : latest,
       ).timestamp;
     };
 
@@ -40,14 +40,14 @@ const coverStoriesSorted = coverStories
     if (!latestA) return 1;
     if (!latestB) return -1;
 
-    return new Date(latestB) - new Date(latestA);
+    return new Date(latestB).getTime() - new Date(latestA).getTime();
   })
   .slice(0, 5);
 
 const articleList = articles.filter(
   (article) =>
     article.data.slug &&
-    !coverStoriesSorted.some((story) => story.data.slug === article.data.slug)
+    !coverStoriesSorted.some((story) => story.data.slug === article.data.slug),
 );
 ---
 
@@ -71,15 +71,16 @@ const articleList = articles.filter(
       </ol>
     </section>
 
-
-
     {
       coverStoriesSorted.map((article, index) => (
         <a href={`/article/${article.data.slug}`}>
           <div class="relative flex size-96 flex-col overflow-hidden rounded-xl  saturate-55 hue-rotate-3 contrast-110 sepia-10">
-            
             <img
-              src={article.data?.images && article.data.images.length > 0 ? article.data.images[0].src : ""}
+              src={
+                article.data?.images && article.data.images.length > 0
+                  ? article.data.images[0].src
+                  : ""
+              }
               alt="Background image"
               class="absolute inset-0 h-full w-full object-cover"
             />
@@ -87,7 +88,7 @@ const articleList = articles.filter(
             <div class="justify-right relative z-30 h-15 max-w-full flex-none items-start px-4 py-2 bg-gradient-to-b from-neutral-950/30 from-0% via-neutral-950/12 via-50% to-neutral-950/0 to-99% text-right">
               <time class="text-sm font-bold invert-100 opacity-70">
                 {getRelativeTime(
-                  getFirstRevision(article.data.revisions).getTimestamp()
+                  getFirstRevision(article.data.revisions).getTimestamp(),
                 )}
               </time>
             </div>
