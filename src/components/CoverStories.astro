@@ -1,0 +1,21 @@
+---
+// filepath: src/components/CoverList.astro
+export interface Props {
+  stories: any[];
+}
+const { stories } = Astro.props;
+---
+<h2>cover stories</h2>
+
+<ul>
+  {stories.map((story) => (
+    <li>
+      <a href={`/article/${story.data.slug}`}>
+        <strong>{story.data.headline}</strong>
+      </a>
+      취재: {story.data.authors}
+    </li>
+  ))}
+  {stories.length === 0 && <li>No cover stories</li>}
+</ul>
+

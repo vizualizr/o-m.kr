@@ -1,0 +1,110 @@
+---
+import { Image } from "astro:assets";
+import { getLastRevision, toDate } from "src/assets/scripts/utils";
+const { frontmatter } = Astro.props;
+
+const firstPublished = frontmatter.revisions?.reduce((earliest, current) => {
+  return new Date(current.timestamp) < new Date(earliest.timestamp)
+    ? current
+    : earliest;
+}, frontmatter.revisions[0]);
+const firstPublishedTimestamp = firstPublished?.timestamp ?? "";
+
+const latestRevision = frontmatter.revisions?.reduce((latest, current) => {
+  return new Date(current.timestamp) > new Date(latest.timestamp)
+    ? current
+    : latest;
+}, frontmatter.revisions[0]);
+
+const latestTimestamp = latestRevision?.timestamp ?? "";
+const pageURL = "https://" + Astro.url.host + "/" + frontmatter.slug;
+
+// 2025-05-30
+const version = frontmatter.revisions.length;
+const lastRevision = getLastRevision(frontmatter.revisions);
+const lastRevisionTimestamp = lastRevision.timestamp;
+const lastRevisionDate = toDate(lastRevisionTimestamp);
+
+const mainPhotoLocation = frontmatter.images[0].src.toString();
+const mainPhotoAlt = frontmatter?.images[0].alt;
+
+
+// Dynamic import for mainPhoto
+let mainPhoto;
+try {
+  mainPhoto = await import(/* @vite-ignore */ mainPhotoLocation);
+  mainPhoto = mainPhoto.default;
+} catch (e) {
+  mainPhoto = "https://picsum.photos/1280/1024​";
+}
+---
+
+<div
+  class={frontmatter.type === "graphics"
+    ? "graphics-header header"
+    : "article-header header"}
+>
+  <p class="runner">
+    {frontmatter.category} / {frontmatter.flytitle}
+  </p>
+
+  <h1>{frontmatter.headline}</h1>
+
+  <p class="rubric">{frontmatter.rubric}</p>
+
+  {
+    frontmatter.type === "article" && (
+      <img src={mainPhotoLocation} alt={mainPhotoAlt} />
+    )
+  }
+
+  <div class="extra-info">
+    <p class="time">
+      <span id="published-time" data-timestamp={firstPublishedTimestamp}
+        >{lastRevisionDate}</span
+      >
+      <!-- <span class="time" id="relative-time"  data-timestamp={latestTimestamp}></span> 수정한 글입니다. -->
+    </p>
+
+    <p class="share-menu">
+      <button
+        class="btn btn-sm rounded-full bg-paper-700/20 border-0 shadow-none text-neutral-500"
+        id="share-button"
+        data-url={pageURL}
+        ><span class="icon-[material-symbols--share] size-4.5 shrink-0"
+        ></span>공유하기</button
+      >
+    </p>
+  </div>
+</div>
+
+<script type="module">
+  import {
+    shareThis,
+    getRelativeTime,
+    toKODate,
+  } from "/src/assets/scripts/utils.js";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("share-button");
+    const url = window.location.href;
+    if (btn) {
+      btn.addEventListener("click", () => shareThis(url));
+    }
+
+    const ft = document.getElementById("published-time");
+    const el = document.getElementById("relative-time");
+
+    if (
+      getRelativeTime(ft.dataset.timestamp) !=
+      getRelativeTime(el.dataset.timestamp)
+    )
+      if (ft && ft.dataset.timestamp) {
+        ft.textContent = toDate(ft.dataset.timestamp);
+      }
+
+    if (el && el.dataset.timestamp) {
+      el.textContent = toDate(el.dataset.timestamp);
+    }
+  });
+</script>

@@ -1,0 +1,14 @@
+---
+const getCurrentYear = () => new Date().getFullYear();
+const currentTime = new Date().toLocaleTimeString();
+---
+
+<div
+    class="block w-full bg-neutral-600 h-32 justify-center items-center text-white"
+>
+    <p class="text-center">
+        &copy;<span is:inline>
+            {getCurrentYear()}
+        </span> Yonggeun
+    </p>
+</div>

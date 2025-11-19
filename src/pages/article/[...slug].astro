@@ -1,14 +1,15 @@
 ---
+import "@styles/article.css";
 import { getCollection, render } from "astro:content";
 
 import Paper from "@layouts/Paper.astro";
-import Header from '@layouts/articleHeader.astro';
+import Header from "@components/ArticleHeader.astro";
 
 export async function getStaticPaths() {
-	const articles = await getCollection("articles");
-	return articles.map((article) => ({
-		params: { slug: article.data.slug },
-	}));
+  const articles = await getCollection("articles");
+  return articles.map((article) => ({
+    params: { slug: article.data.slug },
+  }));
 }
 
 const { params } = Astro;
@@ -18,9 +19,17 @@ const article = articles.find((article) => article.data.slug === slug);
 const { Content } = await render(article);
 ---
 
-<Paper data = {article.data}>
-	<main class="articleBody">
-		<Header frontmatter = {article.data} />
-	    <Content />
-	</main>
+<Paper data={article.data}>
+  <main class="articleBody">
+    <Header frontmatter={article.data} />
+    <Content />
+  </main>
 </Paper>
+
+<script type="module">
+  import { linkifyFootnoteUrls } from "/src/assets/scripts/utils.js";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    linkifyFootnoteUrls();
+  });
+</script>

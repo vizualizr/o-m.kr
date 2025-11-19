@@ -1,6 +1,4 @@
 ---
-import "@styles/list.css";
-
 import Paper from "@layouts/Paper.astro";
 import CoverStories from "/src/components/CoverStories.astro";
 import {
@@ -9,7 +7,7 @@ import {
   toDate,
   toKODate,
   getRelativeTimeDiff,
-  getRelativeTime,
+  getRelativeTime
 } from "src/assets/scripts/utils";
 
 import { getCollection } from "astro:content";
@@ -53,44 +51,57 @@ const articleList = articles.filter(
 );
 ---
 
-<Paper>
-  <main class="coverStoriesContainer">
-    <section class="coverStories">
-      {
-        coverStoriesSorted.map((article, index) => (
-          <a href={`/article/${article.data.slug}`}>
-            <div class="coverStoryCard group">
-              <img
-                src={
-                  article.data?.images && article.data.images.length > 0
-                    ? article.data.images[0].src
-                    : ""
-                }
-                alt={article.data.images[0].alt}
-                class="image"
-              />
+<Paper title="news.app">
+  <main class="flex flex-col gap-10">
+    <section>
+      <h2 class="text-2xl">현재 표지 기사</h2>
 
-              <div class="texture" />
+      <ol>
+        {
+          coverStoriesSorted.map((coverStory) => (
+            <li>
+              <a href={`/article/${coverStory.data.slug}`}>
+                <strong>{coverStory.data.headline}</strong>
+              </a>
+              취재: {coverStory.data.authors}
+            </li>
+          ))
+        }
+        {coverStoriesSorted.length === 0 && <p>No cover stories</p>}
+      </ol>
+    </section>
 
-              <div class="header">
-                <time class="">
-                  {getRelativeTime(
-                    getFirstRevision(article.data.revisions).getTimestamp()
-                  )}
-                </time>
-              </div>
-              <div class="coverStoryCardSpacer relative z-20 grow" />
-              <div class="relative z-10 max-w-full flex-none items-end bg-gradient-to-t from-neutral-950/80 from-7% via-neutral-950/10 via-75% to-neutral-950/0 to-95%">
-                <div class="mt-30 p-4 text-2xl font-bold text-white opacity-95 text-shadow-sm">
-                  <p>{article.data.headline}</p>
-                  <p class="text-sm font-normal">{article.data.rubric}</p>
-                </div>
+
+
+    {
+      coverStoriesSorted.map((article, index) => (
+        <a href={`/article/${article.data.slug}`}>
+          <div class="relative flex size-96 flex-col overflow-hidden rounded-xl  saturate-55 hue-rotate-3 contrast-110 sepia-10">
+            
+            <img
+              src={article.data?.images && article.data.images.length > 0 ? article.data.images[0].src : ""}
+              alt="Background image"
+              class="absolute inset-0 h-full w-full object-cover"
+            />
+
+            <div class="justify-right relative z-30 h-15 max-w-full flex-none items-start px-4 py-2 bg-gradient-to-b from-neutral-950/30 from-0% via-neutral-950/12 via-50% to-neutral-950/0 to-99% text-right">
+              <time class="text-sm font-bold invert-100 opacity-70">
+                {getRelativeTime(
+                  getFirstRevision(article.data.revisions).getTimestamp()
+                )}
+              </time>
+            </div>
+            <div class="relative z-20 grow" />
+            <div class="relative z-10 max-w-full flex-none items-end bg-gradient-to-t from-neutral-950/80 from-7% via-neutral-950/10 via-75% to-neutral-950/0 to-95%">
+              <div class="mt-30 p-4 text-2xl font-bold text-white opacity-95 text-shadow-sm">
+                <p>{article.data.headline}</p>
+                <p class="text-sm font-normal">{article.data.rubric}</p>
               </div>
             </div>
-          </a>
-        ))
-      }
-    </section>
+          </div>
+        </a>
+      ))
+    }
 
     <section>
       <h2 class="text-2xl">일반기사 목록</h2>
@@ -113,7 +124,7 @@ const articleList = articles.filter(
       {articleList.length === 0 && <p>No articles</p>}
     </section>
 
-    <section class="">
+    <section class="hidden">
       <h2 class="">전체 기사 목록</h2>
       <ol>
         {

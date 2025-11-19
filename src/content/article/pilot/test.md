@@ -31,7 +31,10 @@ keywords:
   - "Software Automation"
   - "Tech Innovation"
 
-
+images:
+  - src: "/src/content/article/pilot/image.png"
+    caption: "이재명 대통령 공식 인스타그램에 6월 10일 게재한 사진이다. 부드러운 노란색 조명 아래 대통령 휘장을 뒤로 하고 책상에 앉아 왼손에는 탁상용 전화기를 손에 든 채 책상 위 무언가를 응시하고 있다."
+    alt: "출처: 이재명 대통령 공식 인스타그램"
 
 revisions:
   - authors:
@@ -51,4 +54,3 @@ revisions:
 ## 9차 변론에서 다툴 주요 쟁점은?
 
 변호인 측은 윤 대통령이 결정한 바를 구체적으로 언급하지는 않았다. 하지만 헌재가 추가변론길을 정하지 않을 경우 변호인단이 총사퇴할 가능성이 높음을 시사한다.
-

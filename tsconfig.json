@@ -1,7 +1,12 @@
 {
 	"extends": "astro/tsconfigs/strict",
-	"include": [".astro/types.d.ts", "**/*"],
-	"exclude": ["dist"],
+	"include": [
+		".astro/types.d.ts",
+		"**/*"
+	],
+	"exclude": [
+		"dist"
+	],
 	// https://docs.astro.build/ko/guides/content-collections/#querying-collections
 	// contents collection을 이용하기 위해 아래 두 행을 추가함 2025-04-03
 	"compilerOptions": {
@@ -9,10 +14,24 @@
 		"allowJs": true, // 필수, 모든 Astro 템플릿에 포함
 		"baseUrl": ".",
 		"paths": {
-			"@layouts/*": ["src/layouts/*"],
-			"@styles/*": ["src/styles/*"],
-			"@content/*": ["src/content/*"],
-			"@graphics/*": ["src/graphics/*"],
+			"@layouts/*": [
+				"src/layouts/*"
+			],
+			"@components/*": [
+				"src/components/*"
+			],
+			"@styles/*": [
+				"src/styles/*"
+			],
+			"@content/*": [
+				"src/content/*"
+			],
+			"@graphics/*": [
+				"src/graphics/*"
+			],
+			"@utils/*": [
+				"src/utils/*"
+			],
 		}
 	}
 }

@@ -8,7 +8,8 @@
 @plugin "flyonui";
 @plugin "@iconify/tailwind4";
 @import "flyonui/variants.css";
-@source "../node_modules/flyonui/flyonui.js";
+
+@source "../../node_modules/flyonui/flyonui.js";
 
 @import "@styles/theme.css";
 
@@ -22,6 +23,7 @@ main a {
 
 main {
   @apply pb-10;
+
   /* ----------------------------------- */
   h1,
   h2,
@@ -39,11 +41,12 @@ main {
   h1 {
     @apply text-3xl/normal sm:text-4xl/normal font-[450];
   }
+
   h2 {
     @apply text-2xl/normal sm:text-3xl/normal sm:font-[400];
   }
 
-  p, ul, ol {
+  p {
     font-family: "NanumHuman", "Noto Sans KR", "Noto Sans CJK KR",
       "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
     @apply text-[1.15rem]/9 px-5 py-3 max-w-[36rem] mx-auto text-slate-900;
@@ -63,28 +66,45 @@ main {
   }
 }
 
+.extra-info {
+  @apply flex flex-row max-w-[36rem] mx-auto px-1;
+}
+
+.time {
+  font-family: "Nanum Square Neo", "Noto Sans KR", "Noto Sans CJK KR",
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  /* @apply px-5 pt-7 max-w-[36rem] mx-auto tracking-[-0.05em] sm:tracking-[-0.035em] antialiased sm:pt-10 sm:pb-3 text-cyan-950; */
+  @apply grow inline text-left font-[850] text-slate-950/35 slashed-zero;
+  transform: scaleX(0.8);
+  transform-origin: left;
+}
+
+.share-menu {
+  @apply text-left w-fit inline text-right;
+}
+
 .graphics-header {
   @apply text-center;
+
   h1 {
     transform-origin: center;
   }
 }
+
 .runner {
   @apply text-left;
 }
-.share-menu {
-  @apply text-left;
-}
 
-main > p:last-of-type::after {
+
+
+main>p:last-of-type::after {
   content: "";
   display: inline-block;
   vertical-align: text-bottom;
   width: 1em;
   height: 1em;
   margin: 0.1em;
-  background: no-repeat center/contain
-    url("https://api.iconify.design/tabler/circle-dot-filled.svg?color=%231e1b4b");
+  background: no-repeat center/contain url("https://api.iconify.design/tabler/circle-dot-filled.svg?color=%231e1b4b");
   opacity: 0.3;
 }
 
@@ -100,14 +120,26 @@ main > p:last-of-type::after {
   font-family: "Nanum Square Neo", "Noto Sans KR", "Noto Sans CJK KR",
     "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 
-  @apply mt-20 pb-0 px-5 pt-5 max-w-[36rem] mx-auto tracking-[-0.05em] sm:tracking-[-0.025em] antialiased  text-cyan-950 font-normal text-lg sm:text-xl;
+  @apply mt-20 pb-0 px-5 pt-5 max-w-[36rem] mx-auto tracking-[-0.05em] sm:tracking-[-0.025em] antialiased text-cyan-950 font-normal text-lg sm:text-xl;
+}
 
+.footnotes {
+  @apply max-w-[36rem] py-3 mx-auto;
 }
 
 .footnotes ol {
-  @apply mt-0 pt-0 list-inside;
+  @apply mt-0 pt-0 list-inside list-decimal mx-6;
+}
+
+.footnotes p {
+  font-family: "Noto Sans KR", "Noto Sans CJK KR",
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+.footnotes li {
+  @apply m-0 p-0;
 }
 
 .footnotes a {
-  @apply text-base/tight;
+  @apply overflow-hidden text-clip;
 }

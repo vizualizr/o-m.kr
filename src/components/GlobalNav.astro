@@ -1,5 +1,6 @@
 ---
 import Menu from "./Menu.astro";
+import Logo from "./Logo.astro";
 ---
 
 <div class="navbar-container p-0 border-b-[1px] border-base-content/15">
@@ -14,14 +15,9 @@ import Menu from "./Menu.astro";
       </div>
     </div>
     <div class="navbar-center flex items-center">
-      <a
-        class="link text-base-content link-neutral text-xl font-semibold no-underline"
-        href="/"
-        ><img src="/logo.svg"
-          alt="로고입니다. 클릭하면 첫 페이지로 이동합니다." /></a>
+      <Logo />
     </div>
-    
-    
+
     <div class="navbar-end items-center gap-4">
       <!-- <button
       class="btn btn-sm btn-text btn-circle size-[2.125rem]"
@@ -103,7 +99,6 @@ import Menu from "./Menu.astro";
           </li>
         </ul>
       </div> -->
-  </div>
-    </nav>
-
+    </div>
+  </nav>
 </div>

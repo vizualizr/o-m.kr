@@ -1,0 +1,41 @@
+@import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-barun-pen.css");
+@import url("https://cdn.jsdelivr.net/gh/fonts-archive/NanumSquareNeo/NanumSquareNeo.css");
+@import url("https://cdn.jsdelivr.net/gh/fonts-archive/S-CoreDream/S-CoreDream.css");
+@import url("https://hangeul.pstatic.net/hangeul_static/css/NanumHuman.css");
+
+@import "tailwindcss";
+
+@plugin "flyonui";
+@plugin "@iconify/tailwind4";
+@import "flyonui/variants.css";
+@source "../../node_modules/flyonui/flyonui.js";
+
+@import "@styles/theme.css";
+
+.paper {
+  @apply bg-paper-100;
+}
+
+.coverStoriesContainer {
+  @apply flex flex-col items-center;
+  .coverStories {
+    .coverStoryCard {
+      @apply relative flex flex-col aspect-square m-2 overflow-hidden rounded-[0.2em] border-paper-400 border-[1px];
+
+      .image {
+        @apply absolute inset-0 h-full w-full object-cover  saturate-0 brightness-120  contrast-[1.05] blur-[0.18em] opacity-80;
+      }
+      .texture {
+        @apply absolute inset-0 opacity-70 bg-[radial-gradient(circle,_gray_25%,_transparent_75%)] bg-[length:0.4em_0.4em] mix-blend-color-burn pointer-events-none;
+      }
+
+      .header {
+        @apply relative z-30 h-15 max-w-full flex-none items-start px-4 py-2 bg-gradient-to-b from-neutral-950/30 from-0% via-neutral-950/12 via-50% to-neutral-950/0 to-99% text-right;
+
+        time {
+          @apply text-sm font-bold invert-100;
+        }
+      }
+    }
+  }
+}

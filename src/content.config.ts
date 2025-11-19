@@ -51,10 +51,10 @@ const articleSchema = z.object({
   // **Keywords** for SEO purposes.
   keywords: z.array(z.string()).optional(),
   // **Featured image** [10]. Can include `src` and `alt`.
-  image: z.array(
+  images: z.array(
     z.object({
       src: z.string(),
-      alt: z.string().optional(),
+      alt: z.string(),
       caption: z.string().optional(),
     }),
   ).optional(),
@@ -66,7 +66,7 @@ const articleCollection = defineCollection({
   schema: articleSchema,
   // Specify the loader to fetch .md, .mdx, and .astro files from the specified directory
   loader: glob({
-    pattern: '**/*.{mdx,md}',
+    pattern: ['**/*.{mdx,md}'],
     base: 'src/content/article',
   }),
 });

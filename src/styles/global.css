@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/gh/fonts-archive/NanumSquareNeo/NanumSquareNeo.css");
+
 @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&family=Noto+Serif+KR:wght@200..900&display=swap");
 @import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css");
 
@@ -20,7 +22,9 @@
 @plugin "flyonui";
 @plugin "@iconify/tailwind4";
 @import "flyonui/variants.css";
-@source "/node_modules/flyonui/flyonui.js";
+/* @source "/node_modules/flyonui/flyonui.js"; */
+@source "../../node_modules/flyonui/flyonui.js";
+
 
 @import "@styles/theme.css";
 
@@ -30,14 +34,13 @@
 }
 
 body {
-  @apply text-[#363636] flex flex-col min-h-svh mb-0;
+  @apply text-[#363636] flex flex-col min-h-svh mb-0 items-center h-fit w-full;
   word-break: keep-all;
-
-  font-family: "Minguk", "NanumSquareRound", "Noto Sans KR", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  font-family: "Nanum Square Neo", "Noto Sans KR", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
 }
 
 .paper {
-  @apply m-0 p-0 grow;
+  @apply m-0 p-0 grow w-full;
 }
 
 main {
