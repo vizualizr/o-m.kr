@@ -1,0 +1,31 @@
+# Implement Instapaper-like Themes
+
+The goal is to replicate the reading experience of Instapaper by implementing its four core color themes and adjusting the layout for a focus on readability.
+
+## User Review Required
+
+> [!IMPORTANT]
+> User requested to **postpone** color changes.
+> Prioritized update of [src/pages/list.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list.astro) with layout improvements.
+
+## Proposed Changes
+
+### Styles
+#### [MODIFY] [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css)
+- **POSTPONED**: Define the four Instapaper themes using CSS variables.
+
+#### [MODIFY] [global.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/global.css)
+- **POSTPONED**: Apply the **Coffee** theme variables to the `:root` or `body` by default.
+- **POSTPONED**: Adjust typography.
+
+### Pages
+#### [MODIFY] [list.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list.astro)
+- Updated to use improved semantic layout and structure (similar to [list00.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list00.astro) design).
+- Fixed TypeScript errors.
+
+## Verification Plan
+
+### Manual Verification
+- Start the dev server (`npm run dev`).
+- Check `http://localhost:4321/list`.
+- Verify the new layout structure is applied (even with old colors).

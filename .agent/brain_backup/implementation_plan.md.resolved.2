@@ -1,0 +1,30 @@
+# Implement Instapaper-like Themes
+
+The goal is to replicate the reading experience of Instapaper by implementing its four core color themes and adjusting the layout for a focus on readability.
+
+## User Review Required
+
+> [!NOTE]
+> I will be defining four distinct themes in [src/styles/theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css): `paper`, `coffee`, `gray`, and `midnight`.
+
+## Proposed Changes
+
+### Styles
+#### [MODIFY] [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css)
+- Define the four Instapaper themes using FlyonUI/Tailwind CSS variables:
+  - **Paper**: White background, black text (Classic).
+  - **Coffee**: Sepia/Cream background, dark brown text (Warm).
+  - **Gray**: Light gray background, dark gray text (Low contrast).
+  - **Midnight**: Black/Dark Blue background, white/light gray text (Dark mode).
+- Configure font settings to match Instapaper's focus on typography (serifs for body, sans-serif for UI).
+
+#### [MODIFY] [global.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/global.css)
+- Adjust global layout styles to mimic Instapaper's clean, centered reading column.
+- Ensure proper spacing and line-height for enhanced readability.
+
+## Verification Plan
+
+### Manual Verification
+- Start the dev server (`npm run dev`).
+- Test switching between the four themes (requires a theme switcher mechanism, which might need to be added or manually tested).
+- Verify readability and contrast on sample articles.

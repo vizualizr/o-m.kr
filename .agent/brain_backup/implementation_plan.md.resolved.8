@@ -1,0 +1,44 @@
+# Implement Instapaper-like Themes
+
+The goal is to replicate the reading experience of Instapaper by implementing its four core color themes and adjusting the layout for a focus on readability.
+
+## User Review Required
+
+> [!IMPORTANT]
+> User requested **exact** replication of Instapaper list UI.
+> Removing "Cover Stories" section from [list.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list.astro).
+> Setting container width to `500px`.
+
+## Proposed Changes
+
+### Styles
+#### [MODIFY] [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css)
+- **POSTPONED**: Define the four Instapaper themes using CSS variables.
+
+#### [MODIFY] [global.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/global.css)
+- **POSTPONED**: Apply the **Coffee** theme variables to the `:root` or `body` by default.
+- **POSTPONED**: Adjust typography.
+
+### Pages
+#### [MODIFY] [list.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list.astro)
+- **Remove**: Cover Stories section.
+- **Layout**:
+  - Container max-width: `500px`.
+  - Background: White (or theme default).
+- **Typography**:
+  - Headline: `Georgia, serif`, `20px`, `#111111`.
+  - Summary: `Georgia, serif`, `16px`, `#7a7a7a`.
+  - Metadata: `Helvetica Neue, sans-serif`, `14px`, `#7a7a7a`.
+- **Structure**:
+  - `<article class="border-b border-gray-200 py-3">`
+    - `<div class="flex justify-between items-baseline">`
+      - `<h2 class="text-[20px] font-serif text-[#111111] leading-tight mb-1">`
+    - `<div class="text-[14px] font-sans text-[#7a7a7a] mb-2">` (Domain, Time)
+    - `<div class="text-[16px] font-serif text-[#7a7a7a] leading-snug">` (Summary)
+
+## Verification Plan
+
+### Manual Verification
+- Start the dev server (`npm run dev`).
+- Check `http://localhost:4321/list`.
+- Verify the layout matches Instapaper's minimal list view.

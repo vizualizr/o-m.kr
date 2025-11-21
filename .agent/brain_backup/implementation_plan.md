@@ -1,0 +1,64 @@
+# Implement Instapaper-like Themes
+
+The goal is to replicate the reading experience of Instapaper by implementing its four core color themes and adjusting the layout for a focus on readability.
+
+## User Review Required
+
+> [!IMPORTANT]
+> User requested **exact** replication of Instapaper list UI using **Tailwind CSS**.
+> **NO** changes to font-face (will use existing `font-serif` / `font-sans`).
+> Removing "Cover Stories" section from `list.astro`.
+
+## Proposed Changes
+
+### Styles
+#### [MODIFY] [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css)
+- **POSTPONED**: Define the four Instapaper themes using CSS variables.
+
+#### [MODIFY] [global.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/global.css)
+- **POSTPONED**: Apply the **Coffee** theme variables to the `:root` or `body` by default.
+- **POSTPONED**: Adjust typography.
+
+### Pages
+#### [MODIFY] [list.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list.astro)
+- **Remove**: Cover Stories section.
+- **Layout**:
+  - Container: `max-w-[500px] mx-auto`.
+  - Background: White (or theme default).
+- **Typography** (Using Tailwind classes):
+  - Headline: `text-[20px] font-serif text-[#111111] font-semibold leading-tight`.
+  - Summary: `text-[16px] font-serif text-[#7a7a7a] leading-snug`.
+  - Metadata: `text-[14px] font-sans text-[#7a7a7a]`.
+- **Structure**:
+  - Use Tailwind flexbox and spacing utilities to match the Instapaper row layout.
+  - Example structure:
+    ```astro
+    <ul class="max-w-[500px] mx-auto">
+      {articles.map(article => (
+        <li class="border-b border-gray-200 py-3 group">
+          <a href={...} class="block">
+            <div class="flex justify-between items-baseline mb-1">
+              <h2 class="text-[20px] font-serif text-[#111111] font-semibold hover:underline decoration-2 decoration-[#111111]/30">
+                {article.data.headline}
+              </h2>
+            </div>
+            <div class="flex items-center gap-2 text-[14px] font-sans text-[#7a7a7a] mb-2">
+              <span class="uppercase tracking-wider">DOMAIN.COM</span>
+              <span>•</span>
+              <time>{relativeTime}</time>
+            </div>
+            <p class="text-[16px] font-serif text-[#7a7a7a] line-clamp-2">
+              {article.data.rubric}
+            </p>
+          </a>
+        </li>
+      ))}
+    </ul>
+    ```
+
+## Verification Plan
+
+### Manual Verification
+- Start the dev server (`npm run dev`).
+- Check `http://localhost:4321/list`.
+- Verify the layout matches Instapaper's minimal list view using Tailwind styles.

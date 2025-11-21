@@ -1,0 +1,37 @@
+# Implement Instapaper-like Themes
+
+The goal is to replicate the reading experience of Instapaper by implementing its four core color themes and adjusting the layout for a focus on readability.
+
+## User Review Required
+
+> [!IMPORTANT]
+> Using user-provided hex codes for all themes.
+> Prioritizing update of [src/pages/list00.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list00.astro).
+
+## Proposed Changes
+
+### Styles
+#### [MODIFY] [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css)
+- Define the four Instapaper themes using CSS variables:
+  - **Paper**: Bg `#ffffff`, Text `#000000`
+  - **Coffee**: Bg `#f8f2e4`, Text `#242424`
+  - **Gray**: Bg `#3c3c3c`, Text `#d2d2d2`
+  - **Midnight**: Bg `#111111`, Text `#ffffff`
+
+#### [MODIFY] [global.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/global.css)
+- Apply the **Coffee** theme variables to the `:root` or `body` by default.
+- Adjust typography:
+  - Font: Serif for body.
+  - Line-height: 1.6.
+  - Max-width: 700px.
+
+### Pages
+#### [MODIFY] [list00.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list00.astro)
+- Update to use the new theme variables and layout styles.
+
+## Verification Plan
+
+### Manual Verification
+- Start the dev server (`npm run dev`).
+- Check `http://localhost:4321/list00` (or appropriate URL).
+- Verify the **Coffee** theme is active and colors match the user's request.

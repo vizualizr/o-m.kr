@@ -1,0 +1,40 @@
+# Implement Instapaper-like Themes
+
+The goal is to replicate the reading experience of Instapaper by implementing its four core color themes and adjusting the layout for a focus on readability.
+
+## User Review Required
+
+> [!NOTE]
+> Official hex codes are not public. I have selected the following approximations based on design research. I will set **Coffee** as the default.
+
+## Proposed Changes
+
+### Styles
+#### [MODIFY] [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css)
+- Define the four Instapaper themes using CSS variables.
+- **Paper** (Classic):
+  - Background: `#FDFDFD` (Off-white)
+  - Text: `#333333` (Dark Gray)
+- **Coffee** (Sepia):
+  - Background: `#F8F1E3` (Cream/Sepia)
+  - Text: `#4F321C` (Dark Brown)
+- **Gray** (Dark Gray):
+  - Background: `#333333` (Charcoal)
+  - Text: `#DDDDDD` (Light Gray)
+- **Midnight** (OLED Black):
+  - Background: `#000000` (Pure Black)
+  - Text: `#888888` (Medium Gray)
+
+#### [MODIFY] [global.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/global.css)
+- Apply the **Coffee** theme variables to the `:root` or `body` by default.
+- Adjust typography:
+  - Font: Serif for body (e.g., Georgia or similar system serif).
+  - Line-height: 1.6.
+  - Max-width: 700px (approximate reading width).
+
+## Verification Plan
+
+### Manual Verification
+- Start the dev server (`npm run dev`).
+- Verify the **Coffee** theme is active.
+- Check contrast and readability against the "Instapaper feel".

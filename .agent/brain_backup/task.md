@@ -1,0 +1,28 @@
+# List UI Refinement
+
+- [ ] Refine `list.astro` layout <!-- id: 11 -->
+    - [ ] Add horizontal margin (mx-5)
+    - [ ] Fix li item height (uniform, em units)
+    - [ ] Move image to right end
+    - [ ] Add container padding
+- [ ] Apply list layout to landing page <!-- id: 12 -->
+
+# Project Restructuring
+
+- [/] Review `src/layouts` and `src/components` <!-- id: 0 -->
+
+- [x] Move files and update imports <!-- id: 3 -->
+- [x] Report findings to user <!-- id: 2 -->
+
+# Visual Theme Testing
+
+- [x] Create and switch to branch `theme/pure-matcha-latte` <!-- id: 4 -->
+- [x] Research Instapaper color schemes <!-- id: 7 -->
+- [x] Update `src/pages/list.astro` <!-- id: 8 -->
+- [x] Verify themes and layout <!-- id: 6 -->
+- [x] Replicate Instapaper list UI in `list.astro` <!-- id: 9 -->
+- [ ] Implement Instapaper themes (Paper, Coffee, Gray, Midnight) <!-- id: 5 -->
+
+# Agentic Workflow Setup
+
+- [x] Create `.agent/templates/daily_log.md` <!-- id: 10 -->

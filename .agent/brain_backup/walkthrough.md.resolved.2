@@ -1,0 +1,48 @@
+# Project Walkthrough
+
+**Project Overview**: This project is an independent data journalism site. It provides insight on current issues via interactive data storytelling technology. The site delivers content on the **Astro framework**, utilizing **d3.js** and other client-side scripting technologies.
+
+## 1. Site Structure Summary
+
+The project is organized into clear directories for pages, layouts, and reusable components.
+
+### Pages (`src/pages`)
+The core routing of the application is handled here:
+- **`index.astro`**: The main landing page.
+- **`list.astro`**: A minimal, text-focused article list view (modeled after Instapaper).
+- **`list00.astro`**: An alternative list view with cover stories and visual elements.
+- **`article/`**: Directory for individual article pages.
+- **`about.astro`**: Information about the site/project.
+
+### Layouts (`src/layouts`)
+Wrapper components that define the overall page structure:
+- **`Paper.astro`**: The primary layout used for most pages, likely providing the "paper-like" reading environment.
+- **`articlePlane.astro`**: A layout specific to article content.
+- **`Layout.astro`**: A base layout component.
+
+### Components (`src/components`)
+Reusable UI elements used across pages and layouts:
+- **Navigation**: `GlobalNav.astro`, `Menu.astro` (drawer menu).
+- **Footer**: `Footer.astro` (main footer), `Footer.original.astro`.
+- **Content**: `ArticleHeader.astro`, `CoverStories.astro`, `PostList.astro`, `Bookmarks.astro`.
+- **Branding**: `Logo.astro`.
+
+## 2. Configuration Analysis
+
+The project utilizes modern tooling for styling and content management.
+
+### Tailwind CSS Settings
+- **Configuration**: Defined in `tailwind.config.mjs`.
+- **Content Scanning**: Scans all `.astro`, `.html`, `.js`, `.jsx`, `.md`, `.mdx`, `.svelte`, `.ts`, `.tsx`, and `.vue` files in `src/`.
+- **Plugins**: Integrates **FlyonUI** (`node_modules/flyonui/dist/js/*.js`) for pre-styled UI components.
+- **Theme Extension**: Currently empty, relying on default Tailwind and FlyonUI tokens.
+
+### Astro Framework Settings
+- **Configuration**: Defined in `astro.config.mjs`.
+- **Integrations**:
+  - **`@astrojs/mdx`**: Enables MDX support for writing content with components.
+  - **`@tailwindcss/vite`**: Uses the Vite plugin for Tailwind CSS (v4 approach) for high-performance styling.
+- **Vite Plugins**:
+  - **`basicSsl`**: Enables HTTPS for local development.
+- **Markdown Processing**:
+  - **`rehype-citation`**: Configured to handle academic citations and bibliographies using a local `.bib` file (`src/assets/references.bib`) and CSL style.

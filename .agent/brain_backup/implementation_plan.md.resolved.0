@@ -1,0 +1,53 @@
+# Move Layout Components to Components Directory
+
+The goal is to restructure the project by moving reusable UI components from `src/layouts` to `src/components`, leaving only actual page layouts in `src/layouts`.
+
+## User Review Required
+
+> [!WARNING]
+> `src/components/Footer.astro` already exists. I plan to rename the existing one to `Footer.original.astro` and replace it with the one from `src/layouts/Footer.astro`, which seems to be the main one used by the layouts.
+
+## Proposed Changes
+
+### Components
+#### [NEW] [ArticleHeader.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/components/ArticleHeader.astro)
+- Move from `src/layouts/ArticleHeader.astro`.
+
+#### [NEW] [GlobalNav.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/components/GlobalNav.astro)
+- Move from `src/layouts/GlobalNav.astro`.
+- Update import of `Logo` to be relative to components directory.
+
+#### [NEW] [Menu.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/components/Menu.astro)
+- Move from `src/layouts/Menu.astro`.
+
+#### [MODIFY] [Footer.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/components/Footer.astro)
+- Rename existing `Footer.astro` to `Footer.original.astro`.
+- Move `src/layouts/Footer.astro` to `src/components/Footer.astro`.
+
+### Layouts
+#### [DELETE] [ArticleHeader.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/layouts/ArticleHeader.astro)
+- Moved to components.
+
+#### [DELETE] [GlobalNav.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/layouts/GlobalNav.astro)
+- Moved to components.
+
+#### [DELETE] [Menu.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/layouts/Menu.astro)
+- Moved to components.
+
+#### [DELETE] [Footer.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/layouts/Footer.astro)
+- Moved to components.
+
+#### [MODIFY] [Paper.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/layouts/Paper.astro)
+- Update imports for `GlobalNav` and `Footer` to point to `@components`.
+
+#### [MODIFY] [articlePlane.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/layouts/articlePlane.astro)
+- Update imports for `GlobalNav` and `Footer` to point to `../components`.
+
+## Verification Plan
+
+### Automated Tests
+- Run `npm run build` to ensure all imports are resolved correctly.
+
+### Manual Verification
+- Start the dev server with `npm run dev`.
+- Visit the landing page and an article page to ensure the header, footer, and navigation still render correctly.

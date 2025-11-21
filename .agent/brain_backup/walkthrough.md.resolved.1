@@ -1,0 +1,50 @@
+# Walkthrough: Component Refactoring & Instapaper List UI
+
+**Project Overview**: This project is an independent data journalism site. It provides insight on current issues via interactive data storytelling technology. The site delivers content on the **Astro framework**, utilizing **d3.js** and other client-side scripting technologies.
+
+This walkthrough documents the recent changes made to the project, focusing on the component refactoring and the implementation of the Instapaper-like list view to enhance the reading experience.
+
+## 1. Component Refactoring
+
+We moved reusable UI components from `src/layouts` to `src/components` to improve project structure and reusability.
+
+### Moved Components
+- `src/layouts/ArticleHeader.astro` -> `src/components/ArticleHeader.astro`
+- `src/layouts/GlobalNav.astro` -> `src/components/GlobalNav.astro`
+- `src/layouts/Menu.astro` -> `src/components/Menu.astro`
+- `src/layouts/Footer.astro` -> `src/components/Footer.astro` (Renamed original simple footer to `Footer.original.astro`)
+
+### Configuration Updates
+- **`tsconfig.json`**: Added `"@components/*": ["src/components/*"]` alias for cleaner imports.
+- **Imports**: Updated all references in pages and layouts to use the new paths or alias.
+
+## 2. Instapaper-like List UI (`src/pages/list.astro`)
+
+We updated the `list.astro` page to replicate the minimal, text-focused design of the Instapaper reading list.
+
+### Key Changes
+- **Layout**:
+  - Removed the "Cover Stories" section to focus on a single vertical list.
+  - Set a fixed max-width of `500px` to match Instapaper's reading column.
+  - Used a clean white background.
+- **Typography & Styling**:
+  - **Headline**: `20px`, dark gray (`#111111`), serif font (via `font-serif` class).
+  - **Summary**: `16px`, medium gray (`#7a7a7a`), serif font.
+  - **Metadata**: `14px`, sans-serif, showing only the relative time.
+  - **Interactions**: Added hover effects (underline) to headlines.
+- **Code Structure**:
+  - Simplified the data fetching logic to just sort articles by date.
+  - Used Tailwind CSS utility classes directly in the markup for styling, avoiding external CSS dependencies for this specific view.
+
+### Current State
+- The `list.astro` page now closely resembles the Instapaper interface.
+- **Note**: The broader "Visual Theme" implementation (Paper, Coffee, etc.) was **postponed** per user request to focus on this layout first.
+
+## 3. Verification
+
+### Build Status
+- The project builds successfully (`npm run build`).
+- The dev server runs without errors.
+
+### Visual Check
+- `http://localhost:4321/list` displays the new minimal list layout.

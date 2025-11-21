@@ -1,0 +1,57 @@
+# Development Guide for Agentic Workflow
+
+This document provides essential knowledge for AI agents and developers working on the **o-m.kr** project. It covers data visualization standards, design system specifics, and deployment procedures.
+
+## 1. Data Visualization Standards
+
+The project utilizes **D3.js (v7)** for interactive data storytelling.
+
+### Integration Pattern
+- **Loading**: D3 is typically loaded via CDN (e.g., `https://d3js.org/d3.v7.min.js`) in specific component scripts or HTML files (e.g., [src/pages/graph.html](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/graph.html), [Scroller.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/graphics/template/scroller/Scroller.astro)).
+- **Data Source**: Data is often loaded from local CSV/TSV files (e.g., `d3.csv("data.csv")`) or embedded JSON.
+- **Selection & Scaling**: Standard D3 patterns are used:
+  ```javascript
+  const svg = d3.select("svg");
+  const x = d3.scaleLinear().domain([...]).range([...]);
+  const y = d3.scaleLinear().domain([...]).range([...]);
+  ```
+- **Styling**: Axes and shapes are styled via CSS or D3 attributes.
+
+### Key Components
+- **[Scroller.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/graphics/template/scroller/Scroller.astro)**: Implements scrollytelling features using D3 for dynamic visualizations triggered by scroll events.
+- **[graph.html](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/graph.html)**: Example of standalone D3 graph implementation (Contour Density).
+
+## 2. Design System & Theming
+
+The project aims for a high-readability, "paper-like" aesthetic, leveraging **Tailwind CSS (v4)** and **FlyonUI**.
+
+### Color Palette ([src/styles/theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css))
+- **Paper Scale**: A custom `oklch` color scale (`--color-paper-50` to `--color-paper-950`) is defined to simulate paper textures and ink colors.
+  - `paper-50`: Backgrounds (Off-white)
+  - `paper-900/950`: Text (Deep gray/black)
+
+### Typography
+- **Sans-serif**: `ui-sans-serif`, `system-ui`, `Noto Sans KR`, `Apple SD Gothic Neo`.
+- **Serif**: Used for body text in reading views (e.g., [list.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list.astro)), typically `Georgia` or similar browser defaults via Tailwind's `font-serif`.
+
+### Component Styling
+- **Tailwind Utility Classes**: Primary method for styling (e.g., `max-w-[500px]`, `text-[20px]`).
+- **FlyonUI**: Pre-styled components are available via the FlyonUI plugin in [tailwind.config.mjs](file:///d:/yonggeun/porter/git/o-m.kr/tailwind.config.mjs).
+
+## 3. Deployment & Environment
+
+### Build System
+- **Framework**: Astro 5.x
+- **Build Command**: `npm run build` (executes `astro build`).
+- **Output**: Static site generation (SSG) by default.
+
+### Environment
+- **Node.js**: Required for development and build.
+- **HTTPS**: Local development uses `@vitejs/plugin-basic-ssl` for HTTPS support (`npm run dev`).
+
+### Directory Structure
+- **`src/pages`**: Routes and entry points.
+- **`src/content`**: Markdown/MDX content collections.
+- **`src/components`**: Reusable UI blocks.
+- **`src/layouts`**: Page wrappers.
+- **`src/assets`**: Static assets (images, bib files).
