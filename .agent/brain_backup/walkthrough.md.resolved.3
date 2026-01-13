@@ -1,48 +1,32 @@
-# Project Walkthrough: o-m.kr
+# Walkthrough: Landing Page Layout Migration
 
-**Project Overview**: This project is an independent data journalism site. It provides insight on current issues via interactive data storytelling technology. The site delivers content on the **Astro framework**, utilizing **d3.js** and other client-side scripting technologies.
+이 문서는 [landing.html](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/usr/prototypes/landing.html) 프로토타입의 레이아웃을 [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)로 성공적으로 이식한 과정을 설명합니다.
 
-## 1. Site Structure Summary
+- **디자인 프로토타입**: [Google Stitch 초안](https://stitch.withgoogle.com/projects/7255791708643777871)
 
-The project is organized into clear directories for pages, layouts, and reusable components.
+## 작업 내역
 
-### Pages (`src/pages`)
-The core routing of the application is handled here:
-- **`index.astro`**: The main landing page.
-- **`list.astro`**: A minimal, text-focused article list view (modeled after Instapaper).
-- **`list00.astro`**: An alternative list view with cover stories and visual elements.
-- **`article/`**: Directory for individual article pages.
-- **`about.astro`**: Information about the site/project.
+4.  **동적 벤토 그리드 전환**:
+    *   [src/utils/scoring.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/scoring.js): `listed`, `index`, `authors`, `dateDiff`, `type`를 기반으로 기사의 중요도 점수를 계산하는 엔진을 구현했습니다.
+    *   [src/utils/grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js): 점수를 바탕으로 기사를 정렬하고, 동일 점수 시 최신순/ID순으로 Tie-breaking을 수행하며 레이아웃 클래스(`col-span-x`)를 할다하는 로직을 구축했습니다.
+    *   [src/components/BentoCell.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/components/BentoCell.astro): 계산된 점수와 데이터에 따라 카드의 크기와 스타일(배경 이미지 등)을 결정하는 공용 컴포넌트를 제작했습니다.
+    *   [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro): 하드코딩된 내용을 제거하고 `getCollection`과 [gridMapper](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#15-45)를 연동하여 실시간 데이터 기반의 그리드를 완성했습니다.
 
-### Layouts (`src/layouts`)
-Wrapper components that define the overall page structure:
-- **`Paper.astro`**: The primary layout used for most pages, likely providing the "paper-like" reading environment.
-- **`articlePlane.astro`**: A layout specific to article content.
-- **`Layout.astro`**: A base layout component.
+## 검증 결과
 
-### Components (`src/components`)
-Reusable UI elements used across pages and layouts:
-- **Navigation**: `GlobalNav.astro`, `Menu.astro` (drawer menu).
-- **Footer**: `Footer.astro` (main footer), `Footer.original.astro`.
-- **Content**: `ArticleHeader.astro`, `CoverStories.astro`, `PostList.astro`, `Bookmarks.astro`.
-- **Branding**: `Logo.astro`.
+브라우저 도구를 통해 `localhost:4321`에서 실제 아티클들이 중요도 점수에 따라 올바른 위치와 크기로 배치되는 것을 확인했습니다.
 
-## 2. Configuration Analysis
+### 주요 확인 사항:
+- [x] "내가 만든 기린 그림" 등의 고득점 기사가 Hero 섹션으로 자동 배치됨.
+- [x] `type: page`인 기사들이 그리드에서 정상적으로 제외됨.
+- [x] 페이지 새로고침 시에도 동일한 데이터이면 레이아웃이 항상 일정하게 유지됨(Deterministic).
 
-The project utilizes modern tooling for styling and content management.
+### 스크린샷
 
-### Tailwind CSS Settings
-- **Configuration**: Defined in `tailwind.config.mjs`.
-- **Content Scanning**: Scans all `.astro`, `.html`, `.js`, `.jsx`, `.md`, `.mdx`, `.svelte`, `.ts`, `.tsx`, and `.vue` files in `src/`.
-- **Plugins**: Integrates **FlyonUI** (`node_modules/flyonui/dist/js/*.js`) for pre-styled UI components.
-- **Theme Extension**: Currently empty, relying on default Tailwind and FlyonUI tokens.
+![Dynamic Bento Grid Verification](C:\Users\onlin\.gemini\antigravity\brain\645cba2a-944d-4222-a93c-d3ba98f4d4f2\bento_grid_articles_1768294813797.png)
+![Landing Page Design Verification](C:\Users\onlin\.gemini\antigravity\brain\645cba2a-944d-4222-a93c-d3ba98f4d4f2\landing_page_stitching_verification_1768289480865.png)
 
-### Astro Framework Settings
-- **Configuration**: Defined in `astro.config.mjs`.
-- **Integrations**:
-  - **`@astrojs/mdx`**: Enables MDX support for writing content with components.
-  - **`@tailwindcss/vite`**: Uses the Vite plugin for Tailwind CSS (v4 approach) for high-performance styling.
-- **Vite Plugins**:
-  - **`basicSsl`**: Enables HTTPS for local development.
-- **Markdown Processing**:
-  - **`rehype-citation`**: Configured to handle academic citations and bibliographies using a local `.bib` file (`src/assets/references.bib`) and CSL style.
+## 다음 단계
+- [x] 정적 콘텐츠를 Astro Content Collections 데이터로 연동
+- [ ] 다크 모드 지원 최적화
+- [ ] 모바일 반응형 세부 조정

@@ -2,6 +2,8 @@
 
 이 문서는 `landing.html` 프로토타입의 레이아웃을 `index.astro`로 성공적으로 이식한 과정을 설명합니다.
 
+- **디자인 프로토타입**: [Google Stitch 초안](https://stitch.withgoogle.com/projects/7255791708643777871)
+
 ## 작업 내역
 
 4.  **동적 벤토 그리드 전환**:
