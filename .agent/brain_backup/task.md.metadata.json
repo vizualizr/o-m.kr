@@ -1,6 +1,5 @@
 {
-  "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Added task for setting up agent templates.",
-  "updatedAt": "2025-11-19T15:11:17.303373700Z",
-  "version": "21"
+  "artifactType":  "ARTIFACT_TYPE_TASK",
+  "summary":  "A detailed checklist for information architecture analysis, documentation, and git management.",
+  "updatedAt":  "2026-01-13T02:39:56.010523800Z"
 }

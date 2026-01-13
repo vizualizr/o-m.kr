@@ -1,7 +1,56 @@
-@import "tailwindcss";
+.grid-dot {
+    width: 4px;
+    height: 4px;
+    background-color: var(--color-primary);
+    position: absolute;
+    z-index: 10;
+}
 
-.articleCard {
-    img {
-        @apply aspect-square object-cover rounded-md;
-    }
+.condensed-title {
+    letter-spacing: -0.05em;
+    line-height: 0.85;
+    font-stretch: condensed;
+}
+
+.dark .grid-dot {
+    background-color: #ffffff;
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1px;
+    background-color: var(--color-grid-color);
+    border: 1px solid var(--color-grid-color);
+}
+
+.bento-card {
+    background-color: var(--color-background-light);
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.dark .bento-card {
+    background-color: var(--color-background-dark);
+}
+
+.korean-condensed {
+    font-family: var(--font-gothic);
+    font-weight: 900;
+    transform: scaleX(0.85);
+    transform-origin: left;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.korean-condensed-block {
+    font-family: var(--font-gothic);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 0.9;
 }

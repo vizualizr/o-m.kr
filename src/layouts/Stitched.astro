@@ -1,0 +1,28 @@
+---
+import "@styles/global.css";
+import "@styles/landing.css";
+
+const { title = "o-m.kr" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ko" class="light">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{title}</title>
+    </head>
+    <body
+        class="bg-background-light dark:bg-background-dark font-gothic text-primary transition-colors duration-300"
+    >
+        <slot />
+        <script is:inline src="/node_modules/flyonui/flyonui.js"></script>
+    </body>
+</html>
+
+<style is:global>
+    :root {
+        --primary-color: #013466;
+    }
+</style>

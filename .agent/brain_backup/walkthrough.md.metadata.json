@@ -1,6 +1,5 @@
 {
-  "artifactType": "ARTIFACT_TYPE_WALKTHROUGH",
-  "summary": "Rewritten walkthrough with project overview, structure, and configuration analysis.",
-  "updatedAt": "2025-11-19T11:23:04.600894300Z",
-  "version": "2"
+  "artifactType":  "ARTIFACT_TYPE_WALKTHROUGH",
+  "summary":  "Walkthrough of the landing page layout migration from a static HTML prototype to an Astro component in the 'stitching' branch.",
+  "updatedAt":  "2026-01-13T07:31:38.037308400Z"
 }

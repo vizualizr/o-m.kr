@@ -1,0 +1,5 @@
+{
+  "artifactType":  "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
+  "summary":  "A plan to dynamically populate the bento grid in index.astro using articles from Content Collections, mapping metadata like 'highlight.index' to grid cell sizes.",
+  "updatedAt":  "2026-01-13T08:43:49.639677500Z"
+}

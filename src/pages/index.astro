@@ -1,102 +1,178 @@
 ---
-import Paper from "@layouts/Paper.astro";
+import { getCollection } from "astro:content";
+import Stitched from "@layouts/Stitched.astro";
+import BentoCell from "@components/BentoCell.astro";
+import { gridMapper } from "@utils/grid-mapper";
 import "@styles/landing.css";
-const { title } = Astro.props;
+
+const allArticles = await getCollection("articles");
+const mappedArticles = gridMapper(allArticles);
+
+// The prototype uses Anton, Lora, and Noto Sans KR.
+// These are imported in global.css.
 ---
 
-<Paper title="news.app">
-  <div
-    class="articleList grid grid-cols-1 max-w-6xl mx-auto w-full md:grid-cols-10"
-  >
-    <div class="card image-full aspect-square m-5 sm:max-w-sm">
-      <figure>
-        <img
-          <img
-          src="https://flexible.img.hani.co.kr/flexible/normal/806/504/imgdb/original/2025/0117/20250117502492.webp"
-          src="https://static01.nytimes.com/newsgraphics/2025-01-08-trump-conflicts/ce9c96eb-c51c-482e-8453-ad9aeb06dd31/_assets/topper-medium.jpg"
-          src="https://static.beijinghikers.com/photos/QilianMountainsYuguSnowMountain/QilianMountainsYuguSnowMountain-beijing-hikers-china-hiking_1024x576.jpg"
-          alt="overlay image"
-        />
-      </figure>
-      <div class="card-body">
-        <!-- <h2 class="card-title mb-2.5 text-white">Marketing</h2> -->
-        <p class="text-white">
-          Boost your brand's visibility and engagement through targeted
-          marketing strategies.
-        </p>
+<Stitched title="o-m.kr | 주요 이야기">
+  <div class="relative z-10 min-h-screen flex flex-col items-center w-full">
+    <div class="fixed inset-0 pointer-events-none z-0">
+      <div class="h-full w-full mx-auto border-x border-grid-color relative">
+        sdfasdf
       </div>
     </div>
 
-    <!-- 1st card -->
-    <div
-      class="articleCard flex flex-col m-5 gap-1 relative
-				md:col-span-7 md:row-span-3"
+    <header
+      class="w-full flex justify-center border-b border-grid-color bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-xl sticky top-0 z-50"
     >
-      <figure>
-        <img
-          src="https://flexible.img.hani.co.kr/flexible/normal/806/504/imgdb/original/2025/0117/20250117502492.webp"
-          src="https://static01.nytimes.com/newsgraphics/2025-01-08-trump-conflicts/ce9c96eb-c51c-482e-8453-ad9aeb06dd31/_assets/topper-medium.jpg"
-          src="https://static.beijinghikers.com/photos/QilianMountainsYuguSnowMountain/QilianMountainsYuguSnowMountain-beijing-hikers-china-hiking_1024x576.jpg"
-          alt=""
-        />
-      </figure>
-
-      <a href="#">
-        <div class="absolute top-0 left-0 w-full">
-          <div
-            class="block p-3 border-0
-					rounded-t-md bg-gray-50/10
-					mix-blend-difference backdrop-blur-lg
-					hover:mix-blend-exclusion"
-          >
-            <span class="badge badge-neutral badge-sm">
-              <span class="icon-[tabler--clock] size-3.5"></span>
-              3시간 전</span
-            >
-            <span class="text-[0.9rem] text-black/90 invert">
-              홍장원 차장 직접 작성한 메모를 증거로 제출
-            </span>
-          </div>
-        </div></a
+      <div
+        class="max-w-[1400px] w-full flex items-center justify-between px-8 py-6"
       >
-
-      <h3 class="text-2xl font-bold my-3">
-        <a href="">12.3 내란: 누가 무엇을 실행에 옮겼나</a>
-      </h3>
-      <p class="text-base">
-        탄핵 심리에서 드러나는 계엄의 규모가 점점 더 커지고 있다. 최정예
-        군부대는 물론 군경의 핵심 인력과 행정력을 동원했다는 증언이 계속되고
-        있다. 계엄에 동조한 조직과 개인을 망라해 그림으로 정리했다.
-      </p>
-      <p class="mt-2 pt-2 text-xs text-gray-600">
-        2024.12.3부터 3시간 전까지 <span class="">27번</span> 수정함
-      </p>
-    </div>
-
-    <div class="card max-w-auto min-h-10 m-5 md:col-span-3 bg-gray-200"></div>
-    <div class="card max-w-auto min-h-10 m-5 md:col-span-3 bg-gray-200"></div>
-    <div class="card max-w-auto min-h-10 m-5 md:col-span-3 bg-gray-200"></div>
-
-    <div class="divider row-span-1 md:col-span-10 border-0 my-0"></div>
-
-    <div class="flex flex-row m-5 gap-2
-		md:gap-0 md:col-span-2">
-      <div class="flex flex-col">
-        <h3 class="text-xl font-bold md:hidden">
-          이스라엘, 15일까지 인질 석방되지 않으면 가자지구 휴전 종결
-        </h3>
-        <p class="text-base mt-5 md:hidden">
-          베냐민 네타냐후 총리는 이스라엘군에 가자지구 병력 집결을 명령했다고
-          밝혔다
-        </p>
+        <div
+          class="flex items-center gap-4 text-primary dark:text-white relative"
+        >
+          <div class="grid-dot -top-[25px] -left-[9px]"></div>
+          <h2 class="font-anton text-4xl font-normal uppercase tracking-tight">
+            O-M.KR
+          </h2>
+        </div>
+        <div class="flex items-center gap-12">
+          <nav
+            class="hidden md:flex items-center gap-10 uppercase text-[10px] font-bold tracking-[0.2em] text-primary dark:text-white"
+          >
+            <a class="hover:opacity-60 transition-opacity" href="#">이야기</a>
+            <a class="hover:opacity-60 transition-opacity" href="#">아카이브</a>
+            <a class="hover:opacity-60 transition-opacity" href="#">임팩트</a>
+          </nav>
+          <button
+            class="bg-primary text-white text-[10px] font-bold uppercase tracking-[0.2em] px-8 py-3 rounded-full hover:scale-105 transition-transform"
+          >
+            연결하기
+          </button>
+        </div>
       </div>
+    </header>
 
-      <figure class="w-52 md:size-full">
-        <img
-          src="https://static01.nytimes.com/newsgraphics/2025-01-08-trump-conflicts/ce9c96eb-c51c-482e-8453-ad9aeb06dd31/_assets/topper-medium.jpg"
-          class="aspect-square object-cover rounded-md opacity-50"
-        />
-      </figure>
-    </div>
+    <main class="w-full flex-1 border-1 mx-0">
+      <section class="p-8 md:p-16 border-b border-grid-color">
+        <div class="">
+          <span
+            class="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/50 dark:text-white/40 block mb-6 italic"
+            >제 24호 — 01</span
+          >
+          <h1
+            class="korean-condensed-block text-7xl md:text-[140px] text-primary dark:text-white mb-12"
+          >
+            근본적<br />명료함.
+          </h1>
+          <p
+            class="text-primary dark:text-white/80 text-xl md:text-2xl max-w-2xl leading-relaxed font-light"
+          >
+            스위스 기능주의와 엄격한 수학적 시각화를 통해 사회의 시스템적 패턴을
+            탐구합니다.
+          </p>
+        </div>
+      </section>
+
+      <section class="bento-grid">
+        {mappedArticles.map((article) => <BentoCell article={article} />)}
+
+        <div
+          class="bento-card col-span-12 md:col-span-6 border-t border-grid-color bg-primary text-white"
+        >
+          <div class="flex flex-col justify-between h-full">
+            <h3 class="korean-condensed-block text-5xl uppercase leading-none">
+              연구소<br />참여하기
+            </h3>
+            <div>
+              <p class="text-sm font-light italic opacity-80 mb-8 max-w-xs">
+                데이터 과학자 및 비주얼 스토리텔러와 협력하여 다음 서사를
+                발견하세요.
+              </p>
+              <button
+                class="w-full border border-white/30 text-white px-6 py-4 font-bold uppercase text-[10px] tracking-[0.3em] hover:bg-white hover:text-primary transition-all rounded-full flex justify-between items-center"
+              >
+                방법론 보기
+                <span class="material-symbols-outlined text-sm"
+                  >arrow_forward</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer
+      class="w-full max-w-[1400px] border-t border-grid-color py-24 px-8 mt-auto"
+    >
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+        <div class="col-span-1 md:col-span-2">
+          <h2
+            class="korean-condensed-block text-5xl text-primary dark:text-white mb-8"
+          >
+            O-M.KR 데이터 스토리텔링
+          </h2>
+          <p
+            class="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 dark:text-white/40"
+          >
+            스위스 취리히 • 2024년 설립<br />데이터 엄밀성을 통한 사회적 임팩트
+          </p>
+        </div>
+        <div>
+          <span
+            class="text-[9px] font-bold uppercase tracking-[0.2em] text-primary/30 block mb-6"
+            >디렉토리</span
+          >
+          <nav
+            class="flex flex-col gap-4 uppercase text-[10px] font-bold tracking-widest text-primary/70 dark:text-white/70"
+          >
+            <a
+              class="hover:text-primary dark:hover:text-white transition-colors"
+              href="#">저장소</a
+            >
+            <a
+              class="hover:text-primary dark:hover:text-white transition-colors"
+              href="#">임팩트 보고서</a
+            >
+            <a
+              class="hover:text-primary dark:hover:text-white transition-colors"
+              href="#">윤리 강령</a
+            >
+          </nav>
+        </div>
+        <div>
+          <span
+            class="text-[9px] font-bold uppercase tracking-[0.2em] text-primary/30 block mb-6"
+            >소셜</span
+          >
+          <div class="flex gap-6">
+            <span
+              class="material-symbols-outlined text-primary dark:text-white cursor-pointer hover:opacity-50 transition-opacity"
+              >alternate_email</span
+            >
+            <span
+              class="material-symbols-outlined text-primary dark:text-white cursor-pointer hover:opacity-50 transition-opacity"
+              >rss_feed</span
+            >
+            <span
+              class="material-symbols-outlined text-primary dark:text-white cursor-pointer hover:opacity-50 transition-opacity"
+              >terminal</span
+            >
+          </div>
+        </div>
+      </div>
+      <div
+        class="mt-24 pt-8 border-t border-grid-color/30 flex justify-between items-center text-[9px] font-bold uppercase tracking-[0.3em] text-primary/30"
+      >
+        <span>© 2024 o-m.kr</span>
+        <span>개인정보 처리방침 및 거버넌스</span>
+      </div>
+    </footer>
   </div>
-</Paper>
+</Stitched>
+
+<style>
+  /* Any page-specific overrides can go here */
+  body {
+    background-color: transparent !important; /* Let the internal div handle it if Paper has a background */
+  }
+</style>

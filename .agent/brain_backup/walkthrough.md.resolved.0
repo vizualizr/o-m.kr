@@ -1,48 +1,32 @@
-# Walkthrough: Component Refactoring & Instapaper List UI
+# Walkthrough: Landing Page Layout Migration
 
-This walkthrough documents the recent changes made to the project, focusing on the component refactoring and the implementation of the Instapaper-like list view.
+이 문서는 [landing.html](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/usr/prototypes/landing.html) 프로토타입의 레이아웃을 [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)로 성공적으로 이식한 과정을 설명합니다.
 
-## 1. Component Refactoring
+## 작업 내역
 
-We moved reusable UI components from `src/layouts` to `src/components` to improve project structure and reusability.
+1.  **브랜치 관리**: 기존 `theme/pure-matcha-latte` 브랜치를 `stitching`으로 이름을 변경하고 작업을 시작했습니다.
+2.  **디자인 시스템 통합**:
+    *   [src/styles/theme.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/theme.css): 프로토타입에 정의된 색상(`primary`, `background-light` 등)과 폰트(`Anton`, `Lora`)를 Tailwind v4 테마로 추가했습니다.
+    *   [src/styles/global.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/global.css): Google Fonts 및 Material Symbols Outlined 임포트를 추가했습니다.
+    *   [src/styles/landing.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/landing.css): `.bento-grid`, `.bento-card` 등 프로토타입 전용 스타일을 별도 파일로 추출했습니다.
+3.  **레이아웃 컴포넌트 생성**: [src/layouts/Stitched.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/layouts/Stitched.astro)를 새로 만들어 프로토타입에 최적화된 기본 구조를 정의했습니다.
+4.  **페이지 구현**: [src/pages/index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)를 업데이트하여 [landing.html](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/usr/prototypes/landing.html)의 벤토 그리드 구조와 헤더/푸터를 이식했습니다.
 
-### Moved Components
-- `src/layouts/ArticleHeader.astro` -> `src/components/ArticleHeader.astro`
-- `src/layouts/GlobalNav.astro` -> `src/components/GlobalNav.astro`
-- `src/layouts/Menu.astro` -> `src/components/Menu.astro`
-- `src/layouts/Footer.astro` -> `src/components/Footer.astro` (Renamed original simple footer to `Footer.original.astro`)
+## 검증 결과
 
-### Configuration Updates
-- **`tsconfig.json`**: Added `"@components/*": ["src/components/*"]` alias for cleaner imports.
-- **Imports**: Updated all references in pages and layouts to use the new paths or alias.
+브라우저 도구를 통해 `localhost:4321`에서 레이아웃이 정확히 적용되었음을 확인했습니다.
 
-## 2. Instapaper-like List UI (`src/pages/list.astro`)
+### 주요 확인 사항:
+- [x] "O-M.KR" 로고 및 상단 네비게이션 스타일 적용
+- [x] "근본적 명료함." 대형 헤드라인 및 폰트 적용
+- [x] 벤토 그리드(Bento Grid) 레이아웃 및 카드 스타일 적용
+- [x] 이미지 및 아이콘 노출 확인
 
-We updated the `list.astro` page to replicate the minimal, text-focused design of the Instapaper reading list.
+### 스크린샷
 
-### Key Changes
-- **Layout**:
-  - Removed the "Cover Stories" section to focus on a single vertical list.
-  - Set a fixed max-width of `500px` to match Instapaper's reading column.
-  - Used a clean white background.
-- **Typography & Styling**:
-  - **Headline**: `20px`, dark gray (`#111111`), serif font (via `font-serif` class).
-  - **Summary**: `16px`, medium gray (`#7a7a7a`), serif font.
-  - **Metadata**: `14px`, sans-serif, showing only the relative time.
-  - **Interactions**: Added hover effects (underline) to headlines.
-- **Code Structure**:
-  - Simplified the data fetching logic to just sort articles by date.
-  - Used Tailwind CSS utility classes directly in the markup for styling, avoiding external CSS dependencies for this specific view.
+![Landing Page Verification](/C:/Users/onlin/.gemini/antigravity/brain/645cba2a-944d-4222-a93c-d3ba98f4d4f2/landing_page_stitching_verification_1768289480865.png)
 
-### Current State
-- The `list.astro` page now closely resembles the Instapaper interface.
-- **Note**: The broader "Visual Theme" implementation (Paper, Coffee, etc.) was **postponed** per user request to focus on this layout first.
-
-## 3. Verification
-
-### Build Status
-- The project builds successfully (`npm run build`).
-- The dev server runs without errors.
-
-### Visual Check
-- `http://localhost:4321/list` displays the new minimal list layout.
+## 다음 단계
+- [ ] 정적 콘텐츠를 Astro Content Collections 데이터로 연동
+- [ ] 다크 모드 지원 최적화
+- [ ] 모바일 반응형 세부 조정

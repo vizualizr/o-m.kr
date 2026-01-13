@@ -1,0 +1,50 @@
+# [PLAN] 동적 벤토 그리드(Dynamic Bento Grid) 구현 계획
+
+[index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)의 정적 레이아웃을 유지하면서, `src/content/article`에 저장된 실제 아티클 데이터를 읽어와 "중요도"에 따라 그리드 셀 크기를 동적으로 결정하는 시스템을 구축합니다.
+
+## 핵심 목표
+- **데이터 연동**: `astro:content`를 사용하여 실시간으로 아티클 목록 수집.
+- **가중치 매핑**: 아티클의 특정 메타데이터 값을 기반으로 `col-span` 결정.
+- **최소 수정**: 기존 기사의 Frontmatter(메타데이터) 수정을 최소화하거나 생략.
+
+## 가중치 매핑 및 정렬 전략 (Importance & Sorting)
+
+단순히 중요도만 따지는 것이 아니라, 동일한 중요도 값을 가질 경우를 대비한 **'다단계 정렬 로직'**을 적용합니다.
+
+1.  **1순위: `highlight.index` (가중치)**
+    - 값이 작을수록 더 큰 그리드 점유 (1-8칸, 2/3-4칸 등).
+2.  **2순위: `releaseDate` (최신성)**
+    - 중요도가 같다면, 더 최근에 발행된 기사가 상단 혹은 더 눈에 띄는 위치를 선점합니다.
+3.  **3순위: `id` 또는 `headline` (확정성)**
+    - 위 두 조건이 모두 같을 경우, 알파벳 순서 등으로 정렬하여 빌드 때마다 레이아웃이 바뀌지 않도록(Deterministic) 보장합니다.
+
+### 레이아웃 일관성 보장 (Deterministic Rendering)
+- **SSG(Static Site Generation) 특성**: Astro는 빌드 시점에 HTML을 생성하므로, 새로운 빌드(글 추가/수정)가 발생하기 전까지 사용자는 100% 동일한 정적 파일을 보게 됩니다.
+- **순수 함수(`grid-mapper.js`)**: 정렬 로직 내에 `Math.random()`이나 현재 시간(`new Date()`) 등 실행 시점마다 변하는 로직을 철저히 배제합니다. 오직 기사의 데이터에만 기반하여 정렬하므로 결과 값은 언제나 동일합니다.
+
+### 그리드 배치 규칙 (Grid Fitting)
+- **Level 1 (가장 중요)**: `col-span-12` 또는 `col-span-8` (대형 카드)
+- **Level 2-3 (중간 중요)**: `col-span-6` 또는 `col-span-4` (중형 카드)
+- **Level 4-5 (일반)**: `col-span-4` (소형 카드)
+- **자동 밀림 방지**: 12컬럼의 합이 맞지 않아 발생하는 빈 공간은 '통계 요약형 카드'나 '여백 카드'로 자동 채움 처리.
+
+## 제안하는 변경 사항
+
+### [Component] `src/utils/grid-mapper.js` [NEW]
+- 입력받은 아티클 배열을 그리드 레이아웃 순서에 맞게 재배열하고, 각 아티클에 적용될 Tailwind 클래스(`col-span-X`)를 계산하는 순수 함수 logic 구축.
+
+### [Page] [MODIFY] [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)
+- 하드코딩된 `<div class="bento-card">`들을 `getCollection`으로 가져온 데이터 기반의 루프문으로 변경.
+- 데이터 포인트(영향력 지표, 검증 데이터 등)는 특수 태그(예: `tag: ['stats']`)를 가진 아티클을 자동으로 매핑하거나 별도의 데이터 파일로 분리.
+
+### [Component] [NEW] `src/components/BentoCell.astro`
+- 각기 다른 테마(배경 이미지형, 텍스트형, 지표형)를 `importance` 값에 따라 분기하여 렌더링하는 통합 컴포넌트 구현.
+
+## 검증 계획
+### 자동화 테스트
+- `localhost:4321` 접속 시 `src/content/article` 내의 파일 개수와 화면에 그려진 그리드 셀의 개수가 일치하는지 확인.
+- 임의의 아티클 `highlight.index`를 수정했을 때 실시간으로 그리드 크기가 변하는지 브라우저에서 시각적으로 확인.
+
+---
+> [!NOTE]
+> 기존 `highlight.index`가 없는 기사들은 기본적으로 가장 작은 단위인 `col-span-4`로 배치되도록 설계하여 데이터 수정을 방지합니다.

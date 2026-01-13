@@ -4,6 +4,15 @@
     "Noto Sans CJK KR", "Apple SD Gothic Neo", "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
+  --color-primary: #013466;
+  --color-background-light: #f5f7f8;
+  --color-background-dark: #0a0a1a;
+  --color-grid-color: #d1d1da;
+
+  --font-display: "Lora", serif;
+  --font-gothic: "Noto Sans KR", sans-serif;
+  --font-anton: "Anton", sans-serif;
+
   --color-paper-50: oklch(98.32% 0.002 325.59);
   --color-paper-100: oklch(96.73% 0.005 325.62);
   --color-paper-200: oklch(93.57% 0.011 339.34);

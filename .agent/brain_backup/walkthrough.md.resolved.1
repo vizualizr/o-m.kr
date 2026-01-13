@@ -1,50 +1,29 @@
-# Walkthrough: Component Refactoring & Instapaper List UI
+# Walkthrough: Landing Page Layout Migration
 
-**Project Overview**: This project is an independent data journalism site. It provides insight on current issues via interactive data storytelling technology. The site delivers content on the **Astro framework**, utilizing **d3.js** and other client-side scripting technologies.
+이 문서는 [landing.html](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/usr/prototypes/landing.html) 프로토타입의 레이아웃을 [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)로 성공적으로 이식한 과정을 설명합니다.
 
-This walkthrough documents the recent changes made to the project, focusing on the component refactoring and the implementation of the Instapaper-like list view to enhance the reading experience.
+## 작업 내역
 
-## 1. Component Refactoring
+4.  **동적 벤토 그리드 전환**:
+    *   [src/utils/scoring.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/scoring.js): `listed`, `index`, `authors`, `dateDiff`, `type`를 기반으로 기사의 중요도 점수를 계산하는 엔진을 구현했습니다.
+    *   [src/utils/grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js): 점수를 바탕으로 기사를 정렬하고, 동일 점수 시 최신순/ID순으로 Tie-breaking을 수행하며 레이아웃 클래스(`col-span-x`)를 할다하는 로직을 구축했습니다.
+    *   [src/components/BentoCell.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/components/BentoCell.astro): 계산된 점수와 데이터에 따라 카드의 크기와 스타일(배경 이미지 등)을 결정하는 공용 컴포넌트를 제작했습니다.
+    *   [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro): 하드코딩된 내용을 제거하고 `getCollection`과 [gridMapper](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#15-45)를 연동하여 실시간 데이터 기반의 그리드를 완성했습니다.
 
-We moved reusable UI components from `src/layouts` to `src/components` to improve project structure and reusability.
+## 검증 결과
 
-### Moved Components
-- `src/layouts/ArticleHeader.astro` -> `src/components/ArticleHeader.astro`
-- `src/layouts/GlobalNav.astro` -> `src/components/GlobalNav.astro`
-- `src/layouts/Menu.astro` -> `src/components/Menu.astro`
-- `src/layouts/Footer.astro` -> `src/components/Footer.astro` (Renamed original simple footer to `Footer.original.astro`)
+브라우저 도구를 통해 `localhost:4321`에서 실제 아티클들이 중요도 점수에 따라 올바른 위치와 크기로 배치되는 것을 확인했습니다.
 
-### Configuration Updates
-- **`tsconfig.json`**: Added `"@components/*": ["src/components/*"]` alias for cleaner imports.
-- **Imports**: Updated all references in pages and layouts to use the new paths or alias.
+### 주요 확인 사항:
+- [x] "내가 만든 기린 그림" 등의 고득점 기사가 Hero 섹션으로 자동 배치됨.
+- [x] `type: page`인 기사들이 그리드에서 정상적으로 제외됨.
+- [x] 페이지 새로고침 시에도 동일한 데이터이면 레이아웃이 항상 일정하게 유지됨(Deterministic).
 
-## 2. Instapaper-like List UI (`src/pages/list.astro`)
+### 스크린샷
 
-We updated the `list.astro` page to replicate the minimal, text-focused design of the Instapaper reading list.
+![Landing Page Verification](/C:/Users/onlin/.gemini/antigravity/brain/645cba2a-944d-4222-a93c-d3ba98f4d4f2/landing_page_stitching_verification_1768289480865.png)
 
-### Key Changes
-- **Layout**:
-  - Removed the "Cover Stories" section to focus on a single vertical list.
-  - Set a fixed max-width of `500px` to match Instapaper's reading column.
-  - Used a clean white background.
-- **Typography & Styling**:
-  - **Headline**: `20px`, dark gray (`#111111`), serif font (via `font-serif` class).
-  - **Summary**: `16px`, medium gray (`#7a7a7a`), serif font.
-  - **Metadata**: `14px`, sans-serif, showing only the relative time.
-  - **Interactions**: Added hover effects (underline) to headlines.
-- **Code Structure**:
-  - Simplified the data fetching logic to just sort articles by date.
-  - Used Tailwind CSS utility classes directly in the markup for styling, avoiding external CSS dependencies for this specific view.
-
-### Current State
-- The `list.astro` page now closely resembles the Instapaper interface.
-- **Note**: The broader "Visual Theme" implementation (Paper, Coffee, etc.) was **postponed** per user request to focus on this layout first.
-
-## 3. Verification
-
-### Build Status
-- The project builds successfully (`npm run build`).
-- The dev server runs without errors.
-
-### Visual Check
-- `http://localhost:4321/list` displays the new minimal list layout.
+## 다음 단계
+- [ ] 정적 콘텐츠를 Astro Content Collections 데이터로 연동
+- [ ] 다크 모드 지원 최적화
+- [ ] 모바일 반응형 세부 조정
