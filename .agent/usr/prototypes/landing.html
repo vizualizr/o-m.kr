@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>o-m.kr | 주요 이야기</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Anton&amp;family=Noto+Sans+KR:wght@100..900&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class", 
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#013466", 
+                        "background-light": "#f5f7f8", 
+                        "background-dark": "#0a0a1a", 
+                        "grid-color": "#d1d1da"
+                    }, 
+                    fontFamily: {
+                        display: ["'Lora'", "serif"], 
+                        gothic: ["'Noto Sans KR'", "sans-serif"],
+                        anton: ["'Anton'", "sans-serif"]
+                    }, 
+                    borderRadius: {
+                        'apple': '1.25rem',
+                        'swiss': '0.125rem'
+                    }
+                }
+            }
+        };
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --primary-color: #013466;
+        }
+        .grid-dot {
+            width: 4px;
+            height: 4px;
+            background-color: var(--primary-color);
+            position: absolute;
+            z-index: 10;
+        }
+        .condensed-title {
+            letter-spacing: -0.05em;
+            line-height: 0.85;
+            font-stretch: condensed;
+        }
+        .dark .grid-dot {
+            background-color: #ffffff;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1px;
+            background-color: #d1d1da;
+            border: 1px solid #d1d1da;
+        }
+        .bento-card {
+            background-color: #f5f7f8;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .dark .bento-card {
+            background-color: #0a0a1a;
+        }.korean-condensed {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 900;
+            transform: scaleX(0.85);
+            transform-origin: left;
+            display: inline-block;
+            white-space: nowrap;
+        }
+        .korean-condensed-block {
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: 900;
+            letter-spacing: -0.04em;
+            line-height: 0.9;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-gothic text-primary transition-colors duration-300">
+<div class="fixed inset-0 pointer-events-none z-0">
+<div class="h-full w-full max-w-[1400px] mx-auto border-x border-grid-color relative"></div>
+</div>
+<div class="relative z-10 min-h-screen flex flex-col items-center">
+<header class="w-full flex justify-center border-b border-grid-color bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-xl sticky top-0 z-50">
+<div class="max-w-[1400px] w-full flex items-center justify-between px-8 py-6">
+<div class="flex items-center gap-4 text-primary dark:text-white relative">
+<div class="grid-dot -top-[25px] -left-[9px]"></div>
+<h2 class="font-anton text-4xl font-normal uppercase tracking-tight">O-M.KR</h2>
+</div>
+<div class="flex items-center gap-12">
+<nav class="hidden md:flex items-center gap-10 uppercase text-[10px] font-bold tracking-[0.2em] text-primary dark:text-white">
+<a class="hover:opacity-60 transition-opacity" href="#">이야기</a>
+<a class="hover:opacity-60 transition-opacity" href="#">아카이브</a>
+<a class="hover:opacity-60 transition-opacity" href="#">임팩트</a>
+</nav>
+<button class="bg-primary text-white text-[10px] font-bold uppercase tracking-[0.2em] px-8 py-3 rounded-full hover:scale-105 transition-transform">
+                        연결하기
+                    </button>
+</div>
+</div>
+</header>
+<main class="w-full max-w-[1400px] flex-1">
+<section class="p-8 md:p-16 border-b border-grid-color">
+<div class="max-w-4xl">
+<span class="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/50 dark:text-white/40 block mb-6 italic">제 24호 — 01</span>
+<h1 class="korean-condensed-block text-7xl md:text-[140px] text-primary dark:text-white mb-12">
+                        근본적<br/>명료함.
+                    </h1>
+<p class="text-primary dark:text-white/80 text-xl md:text-2xl max-w-2xl leading-relaxed font-light">
+                        스위스 기능주의와 엄격한 수학적 시각화를 통해 사회의 시스템적 패턴을 탐구합니다.
+                    </p>
+</div>
+</section>
+<section class="bento-grid">
+<div class="bento-card col-span-12 lg:col-span-8 min-h-[600px] group">
+<div class="relative z-10 h-full flex flex-col justify-between">
+<div>
+<span class="bg-primary text-white text-[9px] px-3 py-1 font-bold uppercase tracking-widest rounded-full mb-8 inline-block">분석</span>
+<h3 class="korean-condensed-block text-6xl md:text-8xl text-primary dark:text-white leading-[0.9] max-w-xl group-hover:translate-x-2 transition-transform duration-500">
+                                글로벌 교육 격차: 2024
+                            </h3>
+</div>
+<div class="max-w-md">
+<p class="text-lg text-primary/80 dark:text-white/70 mb-8 font-light italic leading-relaxed">
+                                개발도상국의 초등 교육 내 시스템적 장벽에 대한 심층 분석. 고주파 위성 데이터를 활용한 인프라 추적.
+                            </p>
+<div class="flex items-center gap-4 text-[11px] font-bold uppercase tracking-widest opacity-40">
+<span>12분 분량</span>
+<span class="size-1 bg-primary rounded-full"></span>
+<span>추천 분석</span>
+</div>
+</div>
+</div>
+<div class="absolute inset-0 z-0 grayscale opacity-40 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700 ease-in-out scale-105 group-hover:scale-100" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAhfE-BdvAW3l54hmEzjBSMmJWGtze2PdsNpfF--fN59UyMzbeXfeaLrX2OJOQpP72hs4_YHqV-7ZtrXYqxEFWsZN5JnhYWdD_DeTfz3EqJ6cpO4c_9DsoXZmOkvH3UJuKyelzny6h5DyW8O92qPvUKXfpe1ctqd0De3twg2c1GMtU4EUGqiFQJ45H6GCma_LaTxA2Wu4KVpv2-lgJlRIqyWRx9CPaDt7_g7gs1BklnNCs_FEcEOrgoI1stpNnV2IMhM8H-0fqUt1I"); background-size: cover; background-position: center;'></div>
+</div>
+<div class="bento-card col-span-12 md:col-span-6 lg:col-span-4 min-h-[600px] group">
+<div class="relative z-10 h-full flex flex-col justify-between">
+<div>
+<span class="border border-primary text-primary dark:border-white dark:text-white text-[9px] px-3 py-1 font-bold uppercase tracking-widest rounded-full mb-8 inline-block">기후</span>
+<h3 class="korean-condensed-block text-5xl text-primary dark:text-white leading-[0.95]">
+                                메탄<br/>배출량
+                            </h3>
+</div>
+<div class="aspect-square bg-primary/5 dark:bg-white/5 border border-grid-color flex items-center justify-center relative overflow-hidden group-hover:bg-primary/10 transition-colors">
+<div class="absolute inset-4 border border-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-6xl text-primary/20">data_exploration</span>
+</div>
+<div class="absolute inset-0 grayscale opacity-30 group-hover:opacity-100 transition-opacity" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDvrvekuNc2dhNdNqWIK7GHFqrZ_0PvWBF-5Nqp9l_MBkIk02P6HvhSo__Hu5kVZdtDx48uyRB_woSwGLxCQtfanXmDrUfHMWBpMmKQ7nfNgoSJ2nzO7D6xrpwUBneLgeXnOWVtCuOYABU0jbnlhW2CbgZtILNDj4m0GexcY6YngvxtHrDbJDQJLa3dAoU6_nlMF3PivhQKUQYx0PiWOJK9r6gLw-23U9NOhw2kGSpWm1gXvFuDcgiO7_HllY28fzB5xHQCeQYw_XE'); background-size: cover;"></div>
+</div>
+<p class="text-sm text-primary/70 dark:text-white/60 font-light italic mt-6">
+                            공공 공개 데이터셋을 통해 산업 배출 패턴의 실체를 밝힙니다.
+                        </p>
+</div>
+</div>
+<div class="bento-card col-span-12 md:col-span-6 lg:col-span-4 border-t border-grid-color group hover:bg-primary hover:text-white transition-colors">
+<div class="flex flex-col justify-between h-full">
+<span class="text-[10px] font-bold uppercase tracking-widest opacity-50">영향력 지표</span>
+<div class="my-12">
+<p class="font-anton text-8xl leading-none">4.2M</p>
+<p class="text-[10px] font-bold uppercase tracking-[0.2em] mt-2">전 세계에 전달된 정보</p>
+</div>
+<div class="flex items-center gap-2 text-[#078841] font-bold text-[10px] uppercase tracking-widest group-hover:text-white/80">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+<span>연간 +12.4% 증가</span>
+</div>
+</div>
+</div>
+<div class="bento-card col-span-12 lg:col-span-8 border-t border-grid-color group">
+<div class="flex flex-col md:flex-row gap-12 h-full items-center">
+<div class="flex-1">
+<span class="text-[9px] font-bold uppercase tracking-widest opacity-50 block mb-4">공공 보건</span>
+<h3 class="korean-condensed-block text-5xl text-primary dark:text-white leading-none mb-6">
+                                의료 사막 매핑
+                            </h3>
+<p class="text-sm text-primary/70 dark:text-white/70 max-w-xs font-light italic">
+                                농어촌 지역 응급 의료 접근성의 50마일 반경 격차를 분석합니다.
+                            </p>
+</div>
+<div class="w-full md:w-1/2 aspect-video bg-cover bg-center border border-grid-color grayscale group-hover:grayscale-0 transition-all duration-700" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuApWvezEo_CafjGMEn40PDKAlwXVZWkBysidR9MXkH6RCdBHrksajSlLp02y6eikaYb8g2qcKdr2yebxAT7a3BM3d-i6yEpNqMtU1tkDt2tBbYK79wPao1nx-PCGgdkrxMvXlzsG4dkbJMnaO1R9LqWV5AHYNmTrgNoEdzQ3U0bTQGmoOKYRq6_q57Ht_yry0kBu3qZnynmX01dvHlV88nr58q6wDgNSUQWOTRpoFcTiMlLZ9cS9503fpra3L6gqxYBtZreKyFFl48');"></div>
+</div>
+</div>
+<div class="bento-card col-span-12 md:col-span-6 border-t border-grid-color">
+<div class="flex flex-col justify-between h-full">
+<span class="text-[10px] font-bold uppercase tracking-widest opacity-50">검증</span>
+<div class="my-8">
+<p class="font-anton text-7xl leading-none">1.8B</p>
+<p class="text-[10px] font-bold uppercase tracking-[0.2em] mt-2">검증된 데이터 포인트</p>
+</div>
+<p class="text-[10px] leading-relaxed opacity-50 uppercase tracking-widest">반복적인 교차 참조와 오픈 소스 감사를 통해 통계적 유의성을 확보합니다.</p>
+</div>
+</div>
+<div class="bento-card col-span-12 md:col-span-6 border-t border-grid-color bg-primary text-white">
+<div class="flex flex-col justify-between h-full">
+<h3 class="korean-condensed-block text-5xl uppercase leading-none">연구소<br/>참여하기</h3>
+<div>
+<p class="text-sm font-light italic opacity-80 mb-8 max-w-xs">데이터 과학자 및 비주얼 스토리텔러와 협력하여 다음 서사를 발견하세요.</p>
+<button class="w-full border border-white/30 text-white px-6 py-4 font-bold uppercase text-[10px] tracking-[0.3em] hover:bg-white hover:text-primary transition-all rounded-full flex justify-between items-center">
+                                방법론 보기
+                                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="w-full max-w-[1400px] border-t border-grid-color py-24 px-8 mt-auto">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+<div class="col-span-1 md:col-span-2">
+<h2 class="korean-condensed-block text-5xl text-primary dark:text-white mb-8">O-M.KR 데이터 스토리텔링</h2>
+<p class="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/40 dark:text-white/40">
+                        스위스 취리히 • 2024년 설립<br/>데이터 엄밀성을 통한 사회적 임팩트
+                    </p>
+</div>
+<div>
+<span class="text-[9px] font-bold uppercase tracking-[0.2em] text-primary/30 block mb-6">디렉토리</span>
+<nav class="flex flex-col gap-4 uppercase text-[10px] font-bold tracking-widest text-primary/70 dark:text-white/70">
+<a class="hover:text-primary dark:hover:text-white transition-colors" href="#">저장소</a>
+<a class="hover:text-primary dark:hover:text-white transition-colors" href="#">임팩트 보고서</a>
+<a class="hover:text-primary dark:hover:text-white transition-colors" href="#">윤리 강령</a>
+</nav>
+</div>
+<div>
+<span class="text-[9px] font-bold uppercase tracking-[0.2em] text-primary/30 block mb-6">소셜</span>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-primary dark:text-white cursor-pointer hover:opacity-50 transition-opacity">alternate_email</span>
+<span class="material-symbols-outlined text-primary dark:text-white cursor-pointer hover:opacity-50 transition-opacity">rss_feed</span>
+<span class="material-symbols-outlined text-primary dark:text-white cursor-pointer hover:opacity-50 transition-opacity">terminal</span>
+</div>
+</div>
+</div>
+<div class="mt-24 pt-8 border-t border-grid-color/30 flex justify-between items-center text-[9px] font-bold uppercase tracking-[0.3em] text-primary/30">
+<span>© 2024 o-m.kr</span>
+<span>개인정보 처리방침 및 거버넌스</span>
+</div>
+</footer>
+</div>
+
+</body></html>
