@@ -1,0 +1,99 @@
+---
+/**
+ * Scroller2.astro
+ * 데이터 주입형 스크롤리텔링 컴포넌트
+ */
+import "./css/scroller2.css";
+
+interface Step {
+  title?: string;
+  content: string;
+}
+
+interface Props {
+  id?: string;
+  steps: Step[];
+  class?: string;
+}
+
+const { 
+  id = "scroller2-" + Math.random().toString(36).substring(2, 9), 
+  steps, 
+  class: className 
+} = Astro.props;
+---
+
+<div id={id} class={`scroller2-container ${className || ''}`} data-scroller2>
+  <!-- 고정된 시각화 영역 (Sticky) -->
+  <div class="scroller2-graphic">
+    <div class="scroller2-vis">
+      <slot name="vis" />
+    </div>
+  </div>
+
+  <!-- 정보를 표시하는 오버레이 (디버깅/정보용, 필요시 사용) -->
+  <div class="scroller2-info hidden" data-scroller-info></div>
+
+  <!-- 스크롤되는 콘텐츠 단계들 -->
+  <div class="scroller2-steps">
+    {steps.map((step, index) => (
+      <section class="scroller2-step" data-index={index}>
+        <div class="scroller2-step-content">
+          {step.title && <h3 class="scroller2-step-title">{step.title}</h3>}
+          <div class="scroller2-step-body" set:html={step.content} />
+        </div>
+      </section>
+    ))}
+  </div>
+</div>
+
+<script>
+  import { ScrollerController } from "./js/ScrollerController.js";
+  
+  function initScrollers() {
+    const scrollerElements = document.querySelectorAll('[data-scroller2]');
+    
+    scrollerElements.forEach((el) => {
+      // 이미 초기화되었는지 확인
+      if (el.getAttribute('data-initialized')) return;
+
+      const controller = new ScrollerController({
+        container: el as HTMLElement,
+        sectionSelector: '.scroller2-step'
+      });
+
+      const steps = el.querySelectorAll('.scroller2-step');
+      const infoEl = el.querySelector('[data-scroller-info]');
+
+      // 활성 섹션 변경 이벤트 처리
+      controller.on('active', ({ index }) => {
+        steps.forEach((step, i) => {
+          step.classList.toggle('active', i === index);
+        });
+        
+        if (infoEl) infoEl.textContent = `Step: ${index}`;
+
+        // 외부(D3 등)에서 감지할 수 있도록 표준 DOM 이벤트 발생
+        el.dispatchEvent(new CustomEvent('scroller:active', { 
+          detail: { index },
+          bubbles: true 
+        }));
+      });
+
+      // 스크롤 진행률 이벤트 처리
+      controller.on('progress', ({ index, progress }) => {
+        el.dispatchEvent(new CustomEvent('scroller:progress', { 
+          detail: { index, progress },
+          bubbles: true 
+        }));
+      });
+
+      controller.init();
+      el.setAttribute('data-initialized', 'true');
+    });
+  }
+
+  // 페이지 로드 및 Astro 페이지 전환 시 초기화
+  initScrollers();
+  document.addEventListener('astro:page-load', initScrollers);
+</script>

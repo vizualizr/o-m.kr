@@ -1,0 +1,78 @@
+
+.scroller2-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Graphic area - stays fixed while scrolling */
+.scroller2-graphic {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  pointer-events: none; /* Let clicks pass through if needed, or adjust as per UI */
+}
+
+/* Visualization container within graphic */
+.scroller2-vis {
+  width: 100%;
+  max-width: 800px;
+  height: 80vh;
+  background: transparent;
+  pointer-events: all;
+}
+
+/* Overlay info (optional) */
+.scroller2-info {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  font-family: monospace;
+  z-index: 10;
+}
+
+/* Steps area - scrolls over/under the graphic */
+.scroller2-steps {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Individual step */
+.scroller2-step {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.3;
+  transition: opacity 0.5s ease;
+  pointer-events: none; /* Default to none, enable for content if needed */
+}
+
+.scroller2-step.active {
+  opacity: 1;
+}
+
+.scroller2-step-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  max-width: 400px;
+  pointer-events: all;
+}
+
+/* Adjust for mobile if needed */
+@media (max-width: 768px) {
+  .scroller2-step-content {
+    margin: 0 1rem;
+  }
+}
