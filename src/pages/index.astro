@@ -2,10 +2,10 @@
 import { getCollection } from "astro:content";
 import SwissLayout from "@layouts/swiss/SwissLayout.astro";
 import Patchwork from "@components/swiss/Patchwork.astro";
-import { patchworkMapper } from "@utils/swiss/patchwork-logic";
+import { gridMapper12 } from "@utils/grid-mapper-12";
 
 const allArticles = await getCollection("articles");
-const mappedArticles = patchworkMapper(allArticles);
+const mappedArticles = gridMapper12(allArticles);
 
 // The prototype uses Anton, Lora, and Noto Sans KR.
 // These are imported in global.css.

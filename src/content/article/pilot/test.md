@@ -15,9 +15,9 @@ createdDate: "2025-04-01T17:23:40.8920000+08:00"
 releaseDate: "2025-04-10T17:23:49.5050000+08:00"
 
 authors:
-  - "Alice Johnson"
-  - "Bob Smith"
-  - "Charlie Lee"
+  - "국지수"
+  - "송지영"
+  - "임하람"
 
 tags:
   - "AI"
@@ -42,7 +42,7 @@ revisions:
     timestamp: "2025-04-02T10:30:00.0000000+08:00"
     message: "Updated introduction with additional details on AI capabilities."
   - authors:
-      - "Charlie Lee"
+      - "임하람"
     timestamp: "2025-04-03T08:45:00.0000000+08:00"
     message: "Refined conclusion with industry expert comments."
   - authors:
