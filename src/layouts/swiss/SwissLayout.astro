@@ -1,0 +1,32 @@
+---
+/**
+ * SwissLayout.astro
+ * Specialized layout for the Swiss theme (Modernist/Grid-heavy).
+ * Inherits from DefaultLayout.
+ */
+import DefaultLayout from "../default/DefaultLayout.astro";
+import "@styles/swiss/theme.css";
+import "@styles/swiss/patchwork.css";
+
+const { title } = Astro.props;
+---
+
+<DefaultLayout title={title}>
+    <!-- Swiss-specific Head enhancements -->
+    <Fragment slot="head">
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Anton&family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
+            rel="stylesheet"
+        />
+        <slot name="head" />
+    </Fragment>
+
+    <!-- Swiss Content Wrapper -->
+    <main
+        class="bg-base-100 text-base-content font-sans transition-colors duration-500"
+    >
+        <slot />
+    </main>
+</DefaultLayout>

@@ -1,0 +1,30 @@
+---
+/**
+ * DefaultLayout.astro
+ * The foundational wrapper for all themes in the project.
+ * Handles common head tags, SEO, and base structure.
+ */
+import "@styles/default/global.css";
+
+const { title = "o-m.kr" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content={Astro.generator} />
+
+        <!-- Google Fonts & External Assets common to all themes can be moved here if needed -->
+        <slot name="head" />
+
+        <title>{title}</title>
+    </head>
+    <body class="transition-colors duration-300">
+        <slot />
+
+        <!-- FlyonUI Runtime - Note: In a production build, this might be handled by an Astro optimization -->
+        <script is:inline src="/node_modules/flyonui/flyonui.js"></script>
+    </body>
+</html>

@@ -1,0 +1,32 @@
+@theme {
+    /* [Swiss Theme] Semantic Color Tokens (FlyonUI + Material Roles) */
+    --color-primary: var(--color-blue-900);
+    --color-primary-content: oklch(100% 0 0);
+    /* White text on primary */
+
+    --color-secondary: var(--color-blue-600);
+    --color-accent: var(--color-amber-500);
+
+    --color-base-100: var(--color-stone-50);
+    /* Surface / Light background */
+    --color-base-200: var(--color-stone-100);
+    --color-base-content: var(--color-stone-900);
+    /* On-Surface / Dark text */
+
+    --color-outline: var(--color-stone-200);
+    /* Semantic grid line */
+
+    /* [Swiss Theme] Typography Tokens (Semantic Extensions) */
+    --font-display: "Anton", "Apple SD Gothic Neo", "Malgun Gothic", var(--font-sans);
+    /* Display: Bold short headers */
+    --font-headline: "Lora", "Pretendard", "Noto Serif KR", serif;
+    /* Headline: Section titles */
+}
+
+@utility font-display {
+    font-family: var(--font-display);
+}
+
+@utility font-headline {
+    font-family: var(--font-headline);
+}

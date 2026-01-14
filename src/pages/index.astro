@@ -1,42 +1,44 @@
 ---
 import { getCollection } from "astro:content";
-import Stitched from "@layouts/Stitched.astro";
-import BentoCell from "@components/BentoCell.astro";
-import { gridMapper } from "@utils/grid-mapper";
-import "@styles/landing.css";
+import SwissLayout from "@layouts/swiss/SwissLayout.astro";
+import Patchwork from "@components/swiss/Patchwork.astro";
+import { patchworkMapper } from "@utils/swiss/patchwork-logic";
 
 const allArticles = await getCollection("articles");
-const mappedArticles = gridMapper(allArticles);
+const mappedArticles = patchworkMapper(allArticles);
 
 // The prototype uses Anton, Lora, and Noto Sans KR.
 // These are imported in global.css.
 ---
 
-<Stitched title="o-m.kr | 주요 이야기">
+<SwissLayout title="o-m.kr | Swiss Patchwork">
   <div class="relative z-10 min-h-screen flex flex-col items-center w-full">
     <div class="fixed inset-0 pointer-events-none z-0">
-      <div class="h-full w-full mx-auto border-x border-grid-color relative">
-        sdfasdf
-      </div>
+      <div class="h-full w-full mx-auto border-x border-outline relative"></div>
     </div>
 
     <header
-      class="w-full flex justify-center border-b border-grid-color bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-xl sticky top-0 z-50"
+      class="w-full flex justify-center border-b border-outline bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-xl sticky top-0 z-50"
     >
       <div
         class="max-w-[1400px] w-full flex items-center justify-between px-8 py-6"
       >
-        <div
-          class="flex items-center gap-4 text-primary dark:text-white relative"
-        >
+        <div class="flex items-center gap-4 text-base-content relative">
           <div class="grid-dot -top-[25px] -left-[9px]"></div>
-          <h2 class="font-anton text-4xl font-normal uppercase tracking-tight">
+          <h2
+            class="font-display text-4xl font-normal uppercase tracking-tight"
+          >
             O-M.KR
           </h2>
+          <span
+            class="bg-primary text-primary-content text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-widest ml-2"
+          >
+            Swiss Patchwork v1
+          </span>
         </div>
         <div class="flex items-center gap-12">
           <nav
-            class="hidden md:flex items-center gap-10 uppercase text-[10px] font-bold tracking-[0.2em] text-primary dark:text-white"
+            class="hidden md:flex items-center gap-10 uppercase text-[10px] font-bold tracking-[0.2em] text-base-content"
           >
             <a class="hover:opacity-60 transition-opacity" href="#">이야기</a>
             <a class="hover:opacity-60 transition-opacity" href="#">아카이브</a>
@@ -52,19 +54,19 @@ const mappedArticles = gridMapper(allArticles);
     </header>
 
     <main class="w-full flex-1 border-1 mx-0">
-      <section class="p-8 md:p-16 border-b border-grid-color">
+      <section class="p-8 md:p-16 border-b border-outline hidden">
         <div class="">
           <span
             class="text-[10px] font-bold uppercase tracking-[0.5em] text-primary/50 dark:text-white/40 block mb-6 italic"
             >제 24호 — 01</span
           >
           <h1
-            class="korean-condensed-block text-7xl md:text-[140px] text-primary dark:text-white mb-12"
+            class="korean-condensed-block text-7xl md:text-[140px] text-base-content mb-12"
           >
             근본적<br />명료함.
           </h1>
           <p
-            class="text-primary dark:text-white/80 text-xl md:text-2xl max-w-2xl leading-relaxed font-light"
+            class="text-base-content/80 text-xl md:text-2xl max-w-2xl leading-relaxed font-light"
           >
             스위스 기능주의와 엄격한 수학적 시각화를 통해 사회의 시스템적 패턴을
             탐구합니다.
@@ -72,43 +74,17 @@ const mappedArticles = gridMapper(allArticles);
         </div>
       </section>
 
-      <section class="bento-grid">
-        {mappedArticles.map((article) => <BentoCell article={article} />)}
-
-        <div
-          class="bento-card col-span-12 md:col-span-6 border-t border-grid-color bg-primary text-white"
-        >
-          <div class="flex flex-col justify-between h-full">
-            <h3 class="korean-condensed-block text-5xl uppercase leading-none">
-              연구소<br />참여하기
-            </h3>
-            <div>
-              <p class="text-sm font-light italic opacity-80 mb-8 max-w-xs">
-                데이터 과학자 및 비주얼 스토리텔러와 협력하여 다음 서사를
-                발견하세요.
-              </p>
-              <button
-                class="w-full border border-white/30 text-white px-6 py-4 font-bold uppercase text-[10px] tracking-[0.3em] hover:bg-white hover:text-primary transition-all rounded-full flex justify-between items-center"
-              >
-                방법론 보기
-                <span class="material-symbols-outlined text-sm"
-                  >arrow_forward</span
-                >
-              </button>
-            </div>
-          </div>
-        </div>
+      <section class="patchwork-grid">
+        {mappedArticles.map((article) => <Patchwork article={article} />)}
       </section>
     </main>
 
     <footer
-      class="w-full max-w-[1400px] border-t border-grid-color py-24 px-8 mt-auto"
+      class="w-full max-w-[1400px] border-t border-outline py-24 px-8 mt-auto"
     >
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
         <div class="col-span-1 md:col-span-2">
-          <h2
-            class="korean-condensed-block text-5xl text-primary dark:text-white mb-8"
-          >
+          <h2 class="korean-condensed-block text-5xl text-base-content mb-8">
             O-M.KR 데이터 스토리텔링
           </h2>
           <p
@@ -146,29 +122,29 @@ const mappedArticles = gridMapper(allArticles);
           >
           <div class="flex gap-6">
             <span
-              class="material-symbols-outlined text-primary dark:text-white cursor-pointer hover:opacity-50 transition-opacity"
+              class="material-symbols-outlined text-base-content cursor-pointer hover:opacity-50 transition-opacity"
               >alternate_email</span
             >
             <span
-              class="material-symbols-outlined text-primary dark:text-white cursor-pointer hover:opacity-50 transition-opacity"
+              class="material-symbols-outlined text-base-content cursor-pointer hover:opacity-50 transition-opacity"
               >rss_feed</span
             >
             <span
-              class="material-symbols-outlined text-primary dark:text-white cursor-pointer hover:opacity-50 transition-opacity"
+              class="material-symbols-outlined text-base-content cursor-pointer hover:opacity-50 transition-opacity"
               >terminal</span
             >
           </div>
         </div>
       </div>
       <div
-        class="mt-24 pt-8 border-t border-grid-color/30 flex justify-between items-center text-[9px] font-bold uppercase tracking-[0.3em] text-primary/30"
+        class="mt-24 pt-8 border-t border-outline/30 flex justify-between items-center text-[9px] font-bold uppercase tracking-[0.3em] text-primary/30"
       >
         <span>© 2024 o-m.kr</span>
         <span>개인정보 처리방침 및 거버넌스</span>
       </div>
     </footer>
   </div>
-</Stitched>
+</SwissLayout>
 
 <style>
   /* Any page-specific overrides can go here */

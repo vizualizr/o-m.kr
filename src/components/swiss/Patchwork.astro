@@ -1,0 +1,77 @@
+---
+/**
+ * Patchwork.astro (formerly BentoCell.astro)
+ * Renders an article as a grid unit in the Swiss Patchwork system.
+ */
+const { article } = Astro.props;
+const { data, _gridClass, _score } = article;
+
+const isHero = _score >= 2500;
+const hasImage = data.images && data.images.length > 0;
+const mainImage = hasImage ? data.images[0].src : null;
+---
+
+<div
+    class={`patchwork-card group ${_gridClass} ${isHero ? "min-h-[600px]" : "min-h-[400px]"}`}
+>
+    <!-- Visual Dots for Patchwork Aesthetic -->
+    <div class="grid-dot top-0 left-0"></div>
+    <div class="grid-dot top-0 right-0"></div>
+    <div class="grid-dot bottom-0 left-0"></div>
+    <div class="grid-dot bottom-0 right-0"></div>
+
+    <div class="relative z-10 h-full flex flex-col justify-between">
+        <div>
+            <span
+                class={`text-[10px] px-3 py-1 font-bold uppercase tracking-widest rounded-full mb-8 inline-block ${isHero ? "bg-primary text-primary-content" : "border border-primary text-primary"}`}
+            >
+                {data.category || data.type}
+            </span>
+            <h3
+                class={`font-display leading-[0.9] group-hover:translate-x-2 transition-transform duration-500 mb-6 ${isHero ? "text-6xl md:text-8xl max-w-xl" : "text-4xl md:text-5xl"}`}
+            >
+                {data.headline}
+            </h3>
+        </div>
+
+        <div class="max-w-md">
+            <p
+                class={`text-base-content/70 mb-8 font-light italic leading-relaxed ${isHero ? "text-lg" : "text-sm"}`}
+            >
+                {data.rubric}
+            </p>
+            <div
+                class="flex items-center gap-4 text-[11px] font-bold uppercase tracking-widest opacity-40"
+            >
+                <span
+                    >{
+                        new Date(data.releaseDate).toLocaleDateString("ko-KR")
+                    }</span
+                >
+                <span class="size-1 bg-primary rounded-full"></span>
+                <span>{data.authors?.join(", ")}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Images -->
+    {
+        hasImage && isHero && (
+            <div
+                class="absolute inset-0 z-0 grayscale opacity-40 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700 ease-in-out scale-105 group-hover:scale-100"
+                style={`background-image: url("${mainImage}"); background-size: cover; background-position: center;`}
+            />
+        )
+    }
+
+    {
+        hasImage && !isHero && (
+            <div class="aspect-video mt-6 bg-primary/5 border border-outline flex items-center justify-center relative overflow-hidden group-hover:bg-primary/10 transition-colors">
+                <div
+                    class="absolute inset-0 grayscale opacity-30 group-hover:opacity-100 transition-opacity"
+                    style={`background-image: url("${mainImage}"); background-size: cover; background-position: center;`}
+                />
+            </div>
+        )
+    }
+</div>

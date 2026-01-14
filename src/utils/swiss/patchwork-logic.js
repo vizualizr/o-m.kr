@@ -1,4 +1,4 @@
-import { getArticleScore } from './scoring.js';
+import { getArticleScore } from '../scoring.js';
 
 /**
  * Maps a calculated score and its position to a CSS grid col-span class.
@@ -7,7 +7,7 @@ import { getArticleScore } from './scoring.js';
  * @param {number} index
  * @returns {string} Tailwind CSS class for grid column spanning.
  */
-function mapScoreToGridClass(score, index) {
+function mapScoreToPatchworkClass(score, index) {
     if (score >= 2500) {
         if (index === 0) return 'col-span-12'; // Highest score item takes full width
         return 'col-span-12 lg:col-span-8'; // Secondary heroes take 2/3 width
@@ -17,12 +17,12 @@ function mapScoreToGridClass(score, index) {
 }
 
 /**
- * Sorts and maps articles to grid-ready objects.
+ * Sorts and maps articles to patchwork-ready objects.
  * 
  * @param {import('astro:content').CollectionEntry<'articles'>[]} articles 
  * @returns {Array} Array of articles with assigned scores and grid classes.
  */
-export function gridMapper(articles) {
+export function patchworkMapper(articles) {
     return articles
         .filter(article => article.data.type !== 'page')
         .map(article => ({
@@ -43,6 +43,6 @@ export function gridMapper(articles) {
         })
         .map((article, index) => ({
             ...article,
-            _gridClass: mapScoreToGridClass(article._score, index),
+            _gridClass: mapScoreToPatchworkClass(article._score, index),
         }));
 }
