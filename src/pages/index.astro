@@ -2,10 +2,20 @@
 import { getCollection } from "astro:content";
 import SwissLayout from "@layouts/swiss/SwissLayout.astro";
 import Patchwork from "@components/swiss/Patchwork.astro";
-import { gridMapper12 } from "@utils/grid-mapper-12";
+import { gridMapper12 } from "@utils/grid-mapper-12 JSON";
 
 const allArticles = await getCollection("articles");
 const mappedArticles = gridMapper12(allArticles);
+
+// Group articles by row index
+const articlesByRow = mappedArticles.reduce((acc, article) => {
+  const rowIndex = article._gridInfo?.rowIndex ?? 0;
+  if (!acc[rowIndex]) acc[rowIndex] = [];
+  acc[rowIndex].push(article);
+  return acc;
+}, {});
+
+const rows = Object.values(articlesByRow);
 
 // The prototype uses Anton, Lora, and Noto Sans KR.
 // These are imported in global.css.
@@ -75,7 +85,15 @@ const mappedArticles = gridMapper12(allArticles);
       </section>
 
       <section class="patchwork-grid">
-        {mappedArticles.map((article) => <Patchwork article={article} />)}
+        {
+          rows.map((rowArticles) => (
+            <div class="patchwork-row">
+              {rowArticles.map((article) => (
+                <Patchwork article={article} />
+              ))}
+            </div>
+          ))
+        }
       </section>
     </main>
 

@@ -4,16 +4,22 @@
  * Renders an article as a grid unit in the Swiss Patchwork system.
  */
 const { article } = Astro.props;
-const { data, _gridClass, _score } = article;
+const { data, _gridInfo, _score } = article;
 
 const isGraphic = data.type === "graphics";
-const isHero = _score >= 2500;
+const isHero = _score >= 3000;
 const hasImage = data.images && data.images.length > 0;
 const mainImage = hasImage ? data.images[0].src : null;
+
+// Extract grid info for flex-based layout
+const flexRatio = _gridInfo?.flexRatio || 1;
+const rowHeight = _gridInfo?.rowHeight || 4;
+const aspectRatio = `${flexRatio} / ${rowHeight}`;
 ---
 
 <div
-    class={`patchwork-card group ${_gridClass} ${isHero ? "min-h-[600px]" : "min-h-[400px]"}`}
+    class={`patchwork-card group ${isHero ? "min-h-[600px]" : "min-h-[400px]"}`}
+    style={`flex: ${flexRatio}; aspect-ratio: ${aspectRatio};`}
 >
     <!-- Visual Dots for Patchwork Aesthetic -->
     <div class="grid-dot top-0 left-0"></div>

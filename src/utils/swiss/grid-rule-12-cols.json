@@ -1,0 +1,73 @@
+{
+    "colCount": 12,
+    "minColsCount": 3,
+    "rowCount": 0,
+    "rows": [
+        {
+            "order": 1,
+            "variants": [
+                {
+                    "cellCount": 1,
+                    "rowHeight": [
+                        4,
+                        6
+                    ]
+                },
+                {
+                    "cellCount": 2,
+                    "rowHeight": 6
+                }
+            ]
+        },
+        {
+            "order": [
+                2,
+                3,
+                4
+            ],
+            "variants": [
+                {
+                    "cellCount": 2,
+                    "rowHeight": [
+                        2,
+                        3,
+                        4
+                    ]
+                },
+                {
+                    "cellCount": 3,
+                    "rowHeight": [
+                        3,
+                        4,
+                        6
+                    ]
+                }
+            ]
+        },
+        {
+            "order": 0,
+            "variants": [
+                {
+                    "cellCount": 2,
+                    "rowHeight": [
+                        4,
+                        3
+                    ]
+                },
+                {
+                    "cellCount": 3,
+                    "rowHeight": [
+                        4
+                    ]
+                },
+                {
+                    "cellCount": 4,
+                    "rowHeight": [
+                        2,
+                        3
+                    ]
+                }
+            ]
+        }
+    ]
+}
