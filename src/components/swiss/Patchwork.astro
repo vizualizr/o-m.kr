@@ -1,17 +1,24 @@
 ---
 /**
  * Patchwork.astro (formerly BentoCell.astro)
- * Renders an article as a grid unit in the Swiss Patchwork system.
+ * 스위스 패치워크(Swiss Patchwork) 시스템의 핵심 그리드 단위 컴포넌트입니다.
+ * grid-mapper.js에서 계산된 레이아웃 정보와 아티클 데이터를 결합하여 렌더링합니다.
  */
 const { article } = Astro.props;
+
+// data: 아티클 원본 데이터
+// _gridInfo: grid-mapper.js가 주입한 레이아웃 정보 (위치, 크기 등)
+// _score: scoring.js가 계산한 중요도 점수
 const { data, _gridInfo, _score } = article;
 
+// 콘텐츠 타입 및 시각적 계층 구조 결정을 위한 상태 변수
 const isGraphic = data.type === "graphics";
-const isHero = _score >= 3000;
+const isHero = _score >= 2000; // 점수를 기반으로 히어로 섹션 여부 결정
 const hasImage = data.images && data.images.length > 0;
 const mainImage = hasImage ? data.images[0].src : null;
 
-// Extract grid info for flex-based layout
+// Flex 기반의 유동적인 레이아웃을 위한 수치 계산
+// grid-mapper.js에서 전달받은 flexRatio와 rowHeight를 조합하여 셀의 비율(aspect-ratio)을 설정
 const flexRatio = _gridInfo?.flexRatio || 1;
 const rowHeight = _gridInfo?.rowHeight || 4;
 const aspectRatio = `${flexRatio} / ${rowHeight}`;
@@ -21,7 +28,7 @@ const aspectRatio = `${flexRatio} / ${rowHeight}`;
     class={`patchwork-card group ${isHero ? "min-h-[600px]" : "min-h-[400px]"}`}
     style={`flex: ${flexRatio}; aspect-ratio: ${aspectRatio};`}
 >
-    <!-- Visual Dots for Patchwork Aesthetic -->
+    <!-- 스위스 미학(Swiss Aesthetic) 구현을 위한 모서리 디자인 도트 -->
     <div class="grid-dot top-0 left-0"></div>
     <div class="grid-dot top-0 right-0"></div>
     <div class="grid-dot bottom-0 left-0"></div>
@@ -33,7 +40,9 @@ const aspectRatio = `${flexRatio} / ${rowHeight}`;
                 class={`text-[10px] px-3 py-1 font-bold uppercase tracking-widest rounded-full mb-8 inline-block ${isHero ? "bg-primary text-primary-content" : "border border-primary text-primary"}`}
             >
                 {data.category || data.type}
+                <span class="opacity-70 ml-1">• {Math.round(_score)}</span>
             </span>
+            <!-- 히어로 여부에 따른 타이포그래피 크기 및 계층 구조 차별화 -->
             <h3
                 class={`font-display leading-[0.9] group-hover:translate-x-2 transition-transform duration-500 mb-6 ${isHero ? "text-6xl md:text-8xl max-w-xl" : "text-4xl md:text-5xl"}`}
             >
@@ -61,7 +70,7 @@ const aspectRatio = `${flexRatio} / ${rowHeight}`;
         </div>
     </div>
 
-    <!-- Background Images -->
+    <!-- 이미지 처리: graphics 타입은 전체 배경에, 일반 아티클은 카드 내 특정 영역에 배치 -->
     {
         hasImage && isGraphic && (
             <div

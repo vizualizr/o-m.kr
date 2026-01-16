@@ -1,121 +1,284 @@
 import { getArticleScore } from './scoring.js';
+import gridRules from './swiss/grid-rule.json';
 
 /**
- * 계산된 점수와 인덱스를 바탕으로 CSS 그리드 컬럼 스팬(col-span) 클래스를 반환합니다.
- * (참고: 현재 gridMapper 함수에서는 이 함수 대신 직접 내부 로직으로 처리하고 있으나, 
- * 하위 호환성이나 단순 매핑을 위해 유지합니다.)
- * 
- * @param {number} score - 기사의 중요도 점수
- * @param {number} index - 리스트에서의 순서
- * @returns {string} Tailwind CSS 그리드 컬럼 스팬 클래스
+ * ==========================================
+ * 1. 유틸리티 (Utilities)
+ * ==========================================
  */
-function mapScoreToGridClass(score, index) {
-    if (score >= 2500) {
-        if (index === 0) return 'col-span-12'; // 최고 점수 기사는 전체 너비 점유
-        return 'col-span-12 lg:col-span-8'; // 보조 히어로 기사는 2/3 너비 점유
+
+const RngUtils = {
+    // DJB2 Hash for Seed
+    generateSeed(str) {
+        let hash = 5381;
+        for (let i = 0; i < str.length; i++) {
+            hash = ((hash << 5) + hash) + str.charCodeAt(i);
+        }
+        return hash >>> 0;
+    },
+
+    // Mulberry32 PRNG
+    createRng(seed) {
+        let state = seed;
+        return function () {
+            let t = state += 0x6D2B79F5;
+            t = Math.imul(t ^ (t >>> 15), t | 1);
+            t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+    },
+
+    getItem(rng, arr) {
+        return arr[Math.floor(rng() * arr.length)];
     }
-    if (score >= 1800) return 'col-span-12 md:col-span-6 lg:col-span-4'; // 주요 기사
-    return 'col-span-12 md:col-span-6 lg:col-span-4'; // 표준 기사
+};
+
+const ArrayUtils = {
+    isEqual(a, b) {
+        if (a === b) return true;
+        if (Array.isArray(a) && Array.isArray(b)) {
+            return a.length === b.length && a.every((v, i) => v === b[i]);
+        }
+        return false;
+    },
+
+    toArray(val) {
+        if (val === null || val === undefined) return [];
+        return Array.isArray(val) ? val : [val];
+    }
+};
+
+/**
+ * ==========================================
+ * 2. 그리드 생성 엔진 (Grid Generation Engine)
+ * ==========================================
+ */
+
+const GridEngine = {
+    /**
+     * 특정 행(rowIndex)에 적용할 규칙을 찾습니다.
+     */
+    getRule(rules, rowIndex) {
+        const order = rowIndex + 1;
+        const specific = rules.rows.find(row =>
+            Array.isArray(row.order) ? row.order.includes(order) : row.order === order
+        );
+        return specific || rules.rows.find(row => row.order === 0);
+    },
+
+    /**
+     * 가능한 Divider 조합을 계산합니다. (메모이제이션 가능)
+     */
+    calculateDividerOptions(totalCols, cellCount, minWidth) {
+        const results = [];
+
+        function distribute(widths, remain, k) {
+            if (k === 1) {
+                if (remain >= minWidth) results.push([...widths, remain]);
+                return;
+            }
+            const maxW = remain - (minWidth * (k - 1));
+            for (let w = minWidth; w <= maxW; w++) {
+                distribute([...widths, w], remain - w, k - 1);
+            }
+        }
+
+        distribute([], totalCols, cellCount);
+
+        // 너비 배열([3,3,6])을 Divider 위치([3,6])로 변환
+        return results.map(widths => {
+            const dividers = [];
+            let sum = 0;
+            for (let i = 0; i < widths.length - 1; i++) {
+                sum += widths[i];
+                dividers.push(sum);
+            }
+            return dividers.length === 1 ? dividers[0] : dividers;
+        });
+    },
+
+    /**
+     * 중복을 최소화하여 Divider를 선택합니다.
+     */
+    selectDivider(rng, options, history) {
+        const candidates = Array.isArray(options) ? options : [options];
+        const allPrevDividers = history.flatMap(d => ArrayUtils.toArray(d));
+
+        // 1순위: 이전 기록들과 겹치지 않는 것
+        const noOverlap = candidates.filter(opt => {
+            const current = ArrayUtils.toArray(opt);
+            return !current.some(d => allPrevDividers.includes(d));
+        });
+        if (noOverlap.length > 0) return RngUtils.getItem(rng, noOverlap);
+
+        // 2순위: 바로 직전 행과 똑같지 않은 것
+        const lastVal = history[0] || null;
+        const notSame = candidates.filter(opt => !ArrayUtils.isEqual(opt, lastVal));
+        if (notSame.length > 0) return RngUtils.getItem(rng, notSame);
+
+        // 3순위: 랜덤
+        return RngUtils.getItem(rng, candidates);
+    },
+
+    /**
+     * 이전 값과 다른 옵션을 선택합니다 (rowHeight 용)
+     */
+    selectDistinct(rng, options, prevValue) {
+        const candidates = ArrayUtils.toArray(options);
+        const valid = candidates.filter(v => !ArrayUtils.isEqual(v, prevValue));
+        return valid.length > 0 ? RngUtils.getItem(rng, valid) : RngUtils.getItem(rng, candidates);
+    }
+};
+
+/**
+ * ==========================================
+ * 3. 메인 로직 (Main Logic)
+ * ==========================================
+ */
+
+/**
+ * 그리드의 논리적 구조(Cells)를 생성합니다.
+ * 아티클 데이터 없이 순수하게 '공간'만 생성합니다.
+ */
+function generateGridStructure(rng, targetCount, rules) {
+    const cells = [];
+    let currentCount = 0;
+    let rowIndex = 0;
+
+    // State Tracking
+    let prevRowState = { cellCount: null, rowHeight: null };
+    const dividerHistory = []; // [recent, old]
+
+    while (currentCount < targetCount) {
+        const rule = GridEngine.getRule(rules, rowIndex);
+
+        // 1. Variant (Cell Count) 선택
+        let variants = rule.variants;
+        let validVariants = variants.filter(v => v.cellCount !== prevRowState.cellCount);
+        if (validVariants.length === 0) validVariants = variants;
+
+        const selectedVariant = RngUtils.getItem(rng, validVariants);
+        const { cellCount, rowHeight: heightOpts, dividerPositions } = selectedVariant;
+
+        // 2. Row Height 선택
+        const rowHeight = GridEngine.selectDistinct(rng, heightOpts, prevRowState.rowHeight);
+
+        // 3. Divider & Flex Ratios 계산
+        let flexRatios = [];
+        let selectedDivider = null;
+
+        if (cellCount === 1) {
+            flexRatios = [rules.colCount];
+            selectedDivider = 0;
+        } else {
+            // dividerPositions가 JSON에 없으면 동적 계산 (minColsCount 사용)
+            const options = dividerPositions
+                ? dividerPositions
+                : GridEngine.calculateDividerOptions(rules.colCount, cellCount, rules.minColsCount);
+
+            selectedDivider = GridEngine.selectDivider(rng, options, dividerHistory);
+
+            // Flex Ratio 변환
+            const dividers = ArrayUtils.toArray(selectedDivider).slice().sort((a, b) => a - b);
+            const points = [0, ...dividers, rules.colCount];
+            for (let i = 0; i < points.length - 1; i++) {
+                flexRatios.push(points[i + 1] - points[i]);
+            }
+        }
+
+        // 4. 셀 생성
+        for (let i = 0; i < cellCount; i++) {
+            const ratio = flexRatios[i];
+            cells.push({
+                rowIndex,
+                cellIndex: i,
+                flexRatio: ratio,
+                rowHeight: rowHeight,
+                totalCellsInRow: cellCount,
+                area: ratio * rowHeight // 중요: 우선순위 결정 요인
+            });
+        }
+
+        // 상태 업데이트
+        currentCount += cellCount;
+        prevRowState = { cellCount, rowHeight };
+        dividerHistory.unshift(selectedDivider);
+        if (dividerHistory.length > 2) dividerHistory.pop();
+        rowIndex++;
+    }
+
+    return cells;
 }
 
 /**
- * '탐욕적 행 채우기(Greedy Row Packing)' 알고리즘을 사용하여 기사들을 12열 그리드에 배치합니다.
- * 이 알고리즘은 각 행의 가로 너비 합이 반드시 12가 되도록 조정하여 레이아웃에 빈 공간(Gap)이 생기지 않게 합니다.
- * 
- * @param {import('astro:content').CollectionEntry<'articles'>[]} articles - 기사 컬렉션 배열
- * @returns {Array} 점수와 갭 없는 그리드 클래스가 할당된 기사 객체 배열
+ * 생성된 셀들을 '좋은 자리' 순서대로 정렬합니다.
+ * 기준: 면적(Large) > 상단(Top) > 좌측(Left)
  */
-export function gridMapper(articles) {
-    // 1. 데이터 전처리 및 정렬
-    const scoredArticles = articles
-        .filter(article => article.data.type !== 'page') // 'page' 타입은 그리드에서 제외
-        .map(article => ({
-            ...article,
-            _score: getArticleScore(article), // scoring.js를 통해 중요도 점수 산출
-        }))
-        .sort((a, b) => {
-            // 정렬 우선순위: 1. 점수(내림차순) -> 2. 발행일(내림차순) -> 3. ID(오름차순, 결정론적 정렬)
-            if (b._score !== a._score) return b._score - a._score;
-            const dateA = new Date(a.data.releaseDate).getTime();
-            const dateB = new Date(b.data.releaseDate).getTime();
-            if (dateB !== dateA) return dateB - dateA;
-            return a.id.localeCompare(b.id);
-        });
+function rankCellsByQuality(cells) {
+    return cells.slice().sort((a, b) => {
+        if (b.area !== a.area) return b.area - a.area;      // 면적 큰 순
+        if (a.rowIndex !== b.rowIndex) return a.rowIndex - b.rowIndex; // 상단 행 우선
+        return a.cellIndex - b.cellIndex;                   // 좌측 열 우선
+    });
+}
 
-    const result = [];
-    let currentRow = [];       // 현재 채워지고 있는 행의 기사들
-    let currentRowWidth = 0;   // 현재 행에 누적된 너비 합계 (최대 12)
-
-    scoredArticles.forEach((article, index) => {
-        // [단계 1] 점수에 따른 초기 선호 너비(Preferred Width) 할당
-        let preferredWidth = 4; // 기본값: 1/3 너비 (4/12)
-        if (article._score >= 2500) preferredWidth = 12;      // 최상위: 전체 너비 (12/12)
-        else if (article._score >= 2000) preferredWidth = 8;  // 우수: 2/3 너비 (8/12)
-        else if (article._score >= 1800) preferredWidth = 6;  // 보통: 1/2 너비 (6/12)
-
-        const isLastItem = index === scoredArticles.length - 1;
-
-        // [단계 2] 현재 행에 추가했을 때 12열을 초과하는지 또는 마지막 아이템인지 확인
-        if (currentRowWidth + preferredWidth > 12 || isLastItem) {
-
-            if (isLastItem) {
-                // 마지막 아이템인 경우: 남은 공간을 모두 채워야 함 (새 행이든 기존 행이든)
-                const remainingSpace = 12 - currentRowWidth;
-
-                // 만약 현재 아이템이 기존 행의 남은 공간에 들어가기 너무 크다면 (이미 행이 꽤 차 있다면)
-                if (preferredWidth > remainingSpace && currentRowWidth > 0) {
-                    // 1) 기존 행을 마무리(확장)하여 12를 채움
-                    finalizeRow(currentRow, 12 - currentRowWidth);
-                    // 2) 마지막 아이템은 새 행에서 전체 너비(12)를 가짐
-                    article._gridClass = 'col-span-12';
-                    result.push(article);
-                } else {
-                    // 남은 공간에 들어가거나, 아예 새 행의 첫 아이템인 경우
-                    // 남은 공간(remainingSpace)이 있으면 그것을 다 쓰고, 없으면 자기 선호 너비 사용
-                    article._gridClass = `col-span-${remainingSpace || preferredWidth}`;
-                    result.push(article);
-                }
-            } else {
-                // 일반적인 상황에서 행이 꽉 찬 경우: 현재 행 마무리 및 새 행 시작
-                // 기존 행의 빈 공간(12 - currentRowWidth)을 계산하여 이전 아이템들을 확장
-                finalizeRow(currentRow, 12 - currentRowWidth);
-
-                // 새로운 행의 첫 번째 아이템 설정
-                currentRow = [article];
-                currentRowWidth = preferredWidth;
-                article._gridClass = `col-span-${preferredWidth}`;
-                result.push(article);
-            }
-        } else {
-            // [단계 3] 현재 행에 여유 공간이 있어 아이템 추가 가능
-            currentRow.push(article);
-            currentRowWidth += preferredWidth;
-            article._gridClass = `col-span-${preferredWidth}`;
-            result.push(article);
-        }
+/**
+ * 메인 Export 함수
+ * 아티클을 받아 결정론적 그리드를 생성하고 매핑 정보를 주입합니다.
+ */
+export function gridMapper12(articles) {
+    // Debug: Check input length and metadata
+    console.log(`[GridMapper] Input articles: ${articles.length}`);
+    articles.forEach(a => {
+        console.log(`[GridMapper] Loaded: ID=${a.id} | Slug=${a.data.slug} | Type=${a.data.type}`);
     });
 
-    return result;
-}
+    // 1. 데이터 준비 (필터링 및 점수 계산)
+    const validArticles = articles
+        .filter(a => {
+            const isPage = a.data.type === 'page';
+            // listed가 명시적으로 false인 경우 제외 (undefined는 true로 간주하거나 스키마 기본값 따름)
+            const isUnlisted = a.data.highlight?.listed === false;
 
-/**
- * 특정 행의 남은 공간(gap)을 채우기 위해 행 내 아이템의 너비를 확장합니다.
- * 
- * @param {Array} row - 현재 행에 포함된 기사 객체 배열
- * @param {number} gap - 채워야 할 남은 그리드 컬럼 수
- */
-function finalizeRow(row, gap) {
-    // 채울 공간이 없거나 행이 비어있으면 종료
-    if (gap <= 0 || row.length === 0) return;
+            if (isPage) console.log(`[GridMapper] Filtered out (page): ${a.id}`);
+            if (isUnlisted) console.log(`[GridMapper] Filtered out (unlisted): ${a.id}`);
 
-    // 가장 단순하고 효과적인 전략: 해당 행의 첫 번째(가장 점수가 높은) 아이템에게 남은 공간을 몰아줌
-    const firstItem = row[0];
+            return !isPage && !isUnlisted;
+        })
+        .map(a => ({ ...a, _score: getArticleScore(a) }))
+        .sort((a, b) => b._score - a._score); // 점수 높은 순 정렬
 
-    // 정규표현식을 사용하여 기존 'col-span-X' 클래스에서 숫자 X를 추출
-    const match = firstItem._gridClass.match(/col-span-(\d+)/);
-    if (match) {
-        const currentSpan = parseInt(match[1]);
-        // 기존 너비에 gap을 더해 12열이 되도록 업데이트
-        firstItem._gridClass = `col-span-${currentSpan + gap}`;
-    }
+    console.log(`[GridMapper] Valid articles: ${validArticles.length}`);
+
+    if (validArticles.length === 0) return [];
+
+    // 2. RNG 초기화 (결정론적 레이아웃을 위해 아티클 ID 기반 시드 사용)
+    const seedStr = validArticles.map(a => a.id).join('');
+    const seed = RngUtils.generateSeed(seedStr);
+    const rng = RngUtils.createRng(seed);
+
+    // 3. 그리드 구조 생성 (아티클 수만큼 공간 확보)
+    const rawCells = generateGridStructure(rng, validArticles.length, gridRules);
+
+    // 4. 셀 품질 순위 매기기
+    // (생성된 셀이 아티클보다 많을 경우, 품질이 낮은 뒤쪽 셀들이 버려짐)
+    const rankedCells = rankCellsByQuality(rawCells).slice(0, validArticles.length);
+
+    // 5. 매핑 (High Score Article <-> High Quality Cell)
+    return validArticles.map((article, index) => {
+        const cell = rankedCells[index];
+
+        // 원본 객체를 변경하기보다 새 객체/속성을 반환하는 것이 안전하지만,
+        // 기존 로직 유지를 위해 속성 주입 방식을 사용
+        article._gridInfo = {
+            rowIndex: cell.rowIndex,
+            cellIndex: cell.cellIndex,
+            flexRatio: cell.flexRatio,
+            rowHeight: cell.rowHeight,
+            totalCellsInRow: cell.totalCellsInRow,
+            area: cell.area
+        };
+
+        return article;
+    });
 }

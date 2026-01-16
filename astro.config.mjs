@@ -22,7 +22,7 @@ export default defineConfig({
       [
         rehypeCitation,
         {
-          // this is a symlink via mklink. the source file is "D:\yonggeun\zotero\references.bib"
+          // this is a symlink via mklink. the source file is "D:\yonggeun\porter\zotero\references.bib"
           bibliography: "./src/assets/references.bib",
           csl: "https://raw.githubusercontent.com/citation-style-language/styles/refs/heads/master/chicago-notes-bibliography.csl",
           linkCitations: true,
