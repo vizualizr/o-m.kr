@@ -140,6 +140,7 @@ trigger: always_on
 
 ### Documentation (주석 및 문서화)
 
+- **사용자 주석 보존 (User-Provided Context)**: `src/content.config.ts`와 같이 데이터 구조나 프로젝트의 철학이 담긴 파일에서 사용자가 직접 작성한 주석은 절대 삭제하거나 수정하지 않는다. 코드 교체 시 `replace_file_content` 등을 사용할 때 기존 주석이 포함되도록 각별히 유의한다.
 - JSDoc 준수: 모든 자바스크립트 코드는 JSDoc 형식에 맞게 주석을 추가한다.
 - 모듈 헤더 기록: 각 모듈(파일)의 시작 부분에 반드시 다음 내용을 기재한다.
   - 목적 (Purpose)
