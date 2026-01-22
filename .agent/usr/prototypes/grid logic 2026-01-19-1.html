@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refactored Grid Generator with RowSpan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #111;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        #generate-btn {
+            background-color: #111;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+
+        #generate-btn:hover {
+            background-color: #333;
+            transform: translateY(-1px);
+        }
+
+        #status-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #666;
+        }
+
+        #grid-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #808080;
+            border: 1px solid #808080;
+            
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1px;
+            
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .grid-cell {
+            background-color: white;
+            position: relative;
+            overflow: hidden;
+            transition: background-color 0.2s ease;
+            display: flex;
+            padding: 10px;
+        }
+
+        .grid-cell:hover {
+            background-color: #fafafa;
+        }
+
+        .grid-cell.thick-top {
+            border-top: 2px solid #808080; 
+        }
+
+        /* 셀 번호 */
+        .cell-number {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #e0e0e0; 
+            position: absolute;
+            bottom: -5px;
+            right: 5px;
+            line-height: 1;
+            letter-spacing: -1px;
+            user-select: none;
+        }
+        
+        /* 점수 */
+        .cell-score {
+            font-size: 0.75rem;
+            color: #888;
+            font-family: monospace;
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            font-weight: 500;
+        }
+
+        /* [추가] 면적 표시 (디버깅용) */
+        .cell-area {
+            font-size: 0.7rem;
+            color: #ff5555;
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Grid System Generator</h1>
+        <div class="controls">
+            <button id="generate-btn">Randomize Layout</button>
+            <span id="status-text">Ready</span>
+        </div>
+    </header>
+
+    <div id="grid-container">
+        <!-- 그리드가 여기에 생성됩니다 -->
+    </div>
+
+    <script>
+        // ==========================================
+        // 0. 설정 (Configuration)
+        // ==========================================
+        const gridRules = {
+            "colCount": 12,
+            "minColsCount": 3,
+            "minArea": 9,
+            "ratioRange": [[3, 1], [1, 2]], // [수정됨] [1:2] -> [1, 2] 로 문법 오류 수정
+            "rowCount": 0,
+            "rows": [
+                {
+                    "order": 1,
+                    "variants": [
+                        { "cellCount": 1, "rowHeight": [4, 6], "rowSpan": [1, 2] },
+                        { "cellCount": 2, "rowHeight": 6, "rowSpan": [2] }
+                    ]
+                },
+                {
+                    "order": [2, 3, 4],
+                    "variants": [
+                        { "cellCount": 2, "rowHeight": [2, 3, 4], "rowSpan": [1] },
+                        { "cellCount": 3, "rowHeight": [3, 4, 6], "rowSpan": [1, 2] }
+                    ]
+                },
+                {
+                    "order": 0,
+                    "variants": [
+                        { "cellCount": 2, "rowHeight": [4, 3], "rowSpan": [2] },
+                        { "cellCount": 3, "rowHeight": [4], "rowSpan": [2, 3] },
+                        { "cellCount": 4, "rowHeight": [2, 3], "rowSpan": [3, 4] }
+                    ]
+                }
+            ]
+        };
+
+        // ==========================================
+        // 1. 유틸리티 (Utilities)
+        // ==========================================
+
+        const RngUtils = {
+            createRng(seed) {
+                let state = seed;
+                return function () {
+                    let t = state += 0x6D2B79F5;
+                    t = Math.imul(t ^ (t >>> 15), t | 1);
+                    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+                    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+                };
+            },
+            getItem(rng, arr) {
+                return arr[Math.floor(rng() * arr.length)];
+            },
+            getInt(rng, min, max) {
+                return Math.floor(rng() * (max - min + 1)) + min;
+            }
+        };
+
+        const ArrayUtils = {
+            isEqual(a, b) {
+                if (a === b) return true;
+                if (Array.isArray(a) && Array.isArray(b)) {
+                    return a.length === b.length && a.every((v, i) => v === b[i]);
+                }
+                return false;
+            },
+            toArray(val) {
+                if (val === null || val === undefined) return [];
+                return Array.isArray(val) ? val : [val];
+            }
+        };
+
+        // ==========================================
+        // 2. 그리드 생성 엔진 (Grid Engine)
+        // ==========================================
+
+        const GridEngine = {
+            getRule(rules, rowIndex) {
+                const order = rowIndex + 1;
+                const specific = rules.rows.find(row => 
+                    Array.isArray(row.order) ? row.order.includes(order) : row.order === order
+                );
+                return specific || rules.rows.find(row => row.order === 0);
+            },
+
+            calculateDividersForWidth(width, cellCount, minWidth) {
+                const maxCells = Math.floor(width / minWidth);
+                let targetCount = cellCount;
+
+                if (targetCount > maxCells) {
+                    targetCount = Math.max(1, maxCells);
+                }
+
+                const results = [];
+                function distribute(widths, remain, k) {
+                    if (k === 1) {
+                        if (remain >= minWidth) results.push([...widths, remain]);
+                        else if (widths.length === 0) results.push([remain]); 
+                        return;
+                    }
+                    const maxW = remain - (minWidth * (k - 1));
+                    for (let w = minWidth; w <= maxW; w++) {
+                        distribute([...widths, w], remain - w, k - 1);
+                    }
+                }
+                
+                distribute([], width, targetCount);
+                if (results.length === 0) return [[width]];
+                return results; 
+            },
+
+            selectDistinct(rng, options, prevValue) {
+                const candidates = ArrayUtils.toArray(options);
+                const valid = candidates.filter(v => !ArrayUtils.isEqual(v, prevValue));
+                return valid.length > 0 ? RngUtils.getItem(rng, valid) : RngUtils.getItem(rng, candidates);
+            },
+
+            selectWidthsWithLeastOverlap(rng, widthOptions, currentStartCol, dividerHistory, rowIndex) {
+                const previousDividers = new Set();
+                
+                if (dividerHistory[rowIndex - 1]) {
+                    dividerHistory[rowIndex - 1].forEach(d => previousDividers.add(d));
+                }
+                if (dividerHistory[rowIndex - 2]) {
+                    dividerHistory[rowIndex - 2].forEach(d => previousDividers.add(d));
+                }
+
+                const noOverlapCandidates = widthOptions.filter(widths => {
+                    let currentSum = currentStartCol;
+                    for (let i = 0; i < widths.length - 1; i++) {
+                        currentSum += widths[i];
+                        if (previousDividers.has(currentSum)) return false; 
+                    }
+                    return true;
+                });
+
+                if (noOverlapCandidates.length > 0) {
+                    return RngUtils.getItem(rng, noOverlapCandidates);
+                }
+
+                return RngUtils.getItem(rng, widthOptions);
+            }
+        };
+
+        // ==========================================
+        // 3. 메인 로직 (Main Logic)
+        // ==========================================
+
+        function generateGridStructure(rng, targetCount, rules) {
+            const cells = [];
+            let generatedCount = 0;
+            const occupied = [];
+            const rowHeights = []; 
+            const dividerHistory = {}; 
+            
+            let maxOccupiedRowIndex = -1;
+
+            let rowIndex = 0;
+            let prevRowState = { cellCount: null, rowHeight: null };
+
+            function isOccupied(r, c) {
+                if (!occupied[r]) return false;
+                return !!occupied[r][c];
+            }
+            function setOccupied(r, c, val) {
+                if (!occupied[r]) occupied[r] = [];
+                occupied[r][c] = val;
+                if (val) maxOccupiedRowIndex = Math.max(maxOccupiedRowIndex, r);
+            }
+            function addDivider(r, colIndex) {
+                if (!dividerHistory[r]) dividerHistory[r] = [];
+                dividerHistory[r].push(colIndex);
+            }
+
+            while (generatedCount < targetCount || rowIndex <= maxOccupiedRowIndex) {
+                const isFillMode = generatedCount >= targetCount;
+                const rule = GridEngine.getRule(rules, rowIndex);
+                
+                let currentRowHeightUnit;
+                let activeVariant; 
+                let effectiveTotalHeight;
+                
+                if (rowHeights[rowIndex] !== undefined) {
+                    currentRowHeightUnit = rowHeights[rowIndex];
+                    let variants = rule.variants;
+                    activeVariant = RngUtils.getItem(rng, variants);
+                    // 이미 결정된 Unit Height가 있다면, 현재 행의 높이 기여분은 Unit Height * 1
+                    effectiveTotalHeight = currentRowHeightUnit; 
+                } else {
+                    let variants = rule.variants;
+                    let validVariants = variants.filter(v => v.cellCount !== prevRowState.cellCount);
+                    if (validVariants.length === 0) validVariants = variants;
+                    activeVariant = RngUtils.getItem(rng, validVariants);
+
+                    const rowHeightOpts = activeVariant.rowHeight;
+                    const totalHeight = GridEngine.selectDistinct(rng, rowHeightOpts, prevRowState.rowHeight);
+                    effectiveTotalHeight = totalHeight;
+                    
+                    const rowSpanOpts = ArrayUtils.toArray(activeVariant.rowSpan || 1);
+                    const selectedSpan = isFillMode ? 1 : RngUtils.getItem(rng, rowSpanOpts);
+
+                    currentRowHeightUnit = totalHeight / selectedSpan;
+
+                    for (let i = 0; i < selectedSpan; i++) {
+                        if (rowHeights[rowIndex + i] === undefined) {
+                            rowHeights[rowIndex + i] = currentRowHeightUnit;
+                        }
+                    }
+
+                    prevRowState = { 
+                        cellCount: activeVariant.cellCount, 
+                        rowHeight: totalHeight 
+                    };
+                }
+
+                // 예상 최소 너비 계산 (참고용)
+                const requiredMinWidth = Math.ceil(rules.minArea / Math.max(1, effectiveTotalHeight));
+                const effectiveMinWidth = Math.max(rules.minColsCount, requiredMinWidth);
+
+                let holes = [];
+                let currentHoleStart = -1;
+                
+                for (let c = 0; c < rules.colCount; c++) {
+                    if (!isOccupied(rowIndex, c)) {
+                        if (currentHoleStart === -1) currentHoleStart = c;
+                    } else {
+                        if (currentHoleStart !== -1) {
+                            holes.push({ start: currentHoleStart, length: c - currentHoleStart });
+                            currentHoleStart = -1;
+                        }
+                    }
+                }
+                if (currentHoleStart !== -1) {
+                    holes.push({ start: currentHoleStart, length: rules.colCount - currentHoleStart });
+                }
+
+                holes.forEach(hole => {
+                    let targetHoleCells = Math.max(1, Math.round(activeVariant.cellCount * (hole.length / rules.colCount)));
+                    
+                    const maxCellsPossible = Math.floor(hole.length / rules.minColsCount);
+                    if (targetHoleCells > maxCellsPossible) targetHoleCells = Math.max(1, maxCellsPossible);
+
+                    const widthOptions = GridEngine.calculateDividersForWidth(hole.length, targetHoleCells, effectiveMinWidth);
+                    
+                    const selectedWidths = GridEngine.selectWidthsWithLeastOverlap(
+                        rng, 
+                        widthOptions, 
+                        hole.start, 
+                        dividerHistory, 
+                        rowIndex
+                    );
+
+                    let currentCol = hole.start;
+                    selectedWidths.forEach((w, index) => {
+                        const spanOpts = ArrayUtils.toArray(activeVariant.rowSpan || 1);
+                        let selectedSpan = isFillMode ? 1 : RngUtils.getItem(rng, spanOpts);
+                        
+                        // [면적 보정 로직]
+                        let estimatedArea = w * (currentRowHeightUnit * selectedSpan);
+                        
+                        // 면적이 부족하다면 RowSpan 강제 확장
+                        if (estimatedArea < rules.minArea) {
+                            const requiredHeight = rules.minArea / w;
+                            let requiredSpan = Math.ceil(requiredHeight / currentRowHeightUnit);
+                            
+                            const maxSpanLimit = 4;
+                            for (let s = selectedSpan + 1; s <= Math.min(requiredSpan, maxSpanLimit); s++) {
+                                let canExpand = true;
+                                const checkRow = rowIndex + s - 1;
+                                for (let c = currentCol; c < currentCol + w; c++) {
+                                    if (isOccupied(checkRow, c)) {
+                                        canExpand = false;
+                                        break;
+                                    }
+                                }
+                                if (canExpand) {
+                                    selectedSpan = s;
+                                    if (rowHeights[checkRow] === undefined) {
+                                        rowHeights[checkRow] = currentRowHeightUnit;
+                                    }
+                                } else {
+                                    break; 
+                                }
+                            }
+                            estimatedArea = w * (currentRowHeightUnit * selectedSpan);
+                        }
+
+                        cells.push({
+                            rowIndex: rowIndex,
+                            colIndex: currentCol,
+                            width: w,
+                            height: selectedSpan, 
+                            globalIndex: generatedCount + 1,
+                            score: RngUtils.getInt(rng, 1500, 3000),
+                            area: parseFloat(estimatedArea.toFixed(1)) // 디스플레이용
+                        });
+
+                        for (let r = rowIndex; r < rowIndex + selectedSpan; r++) {
+                            const dividerPos = currentCol + w;
+                            if (dividerPos < rules.colCount) { 
+                                addDivider(r, dividerPos);
+                            }
+
+                            for (let c = currentCol; c < currentCol + w; c++) {
+                                setOccupied(r, c, true);
+                            }
+                        }
+
+                        currentCol += w;
+                        generatedCount++;
+                    });
+                });
+
+                rowIndex++;
+            }
+
+            return { cells, rowHeights, totalRows: rowIndex };
+        }
+
+
+        function renderGrid(gridData) {
+            const container = document.getElementById('grid-container');
+            container.innerHTML = '';
+            
+            const { cells, rowHeights } = gridData;
+
+            const containerWidth = container.clientWidth || 800;
+            const colWidth = containerWidth / 12;
+            
+            const pixelHeights = rowHeights.map(val => {
+                if (!val) return colWidth;
+                const ratio = 12 / val; 
+                return containerWidth / ratio; 
+            });
+
+            let templateRows = '';
+            for(let i=0; i<rowHeights.length; i++) {
+                let px = pixelHeights[i];
+                if (!px) px = colWidth * 2; 
+                templateRows += `${px}px `;
+            }
+            container.style.gridTemplateRows = templateRows;
+
+            cells.forEach(cell => {
+                const div = document.createElement('div');
+                div.className = 'grid-cell';
+                
+                if (cell.rowIndex > 0) {
+                    div.classList.add('thick-top');
+                }
+                
+                div.style.gridColumnStart = cell.colIndex + 1;
+                div.style.gridColumnEnd = `span ${cell.width}`;
+                div.style.gridRowStart = cell.rowIndex + 1;
+                div.style.gridRowEnd = `span ${cell.height}`;
+                
+                const numSpan = document.createElement('span');
+                numSpan.className = 'cell-number';
+                numSpan.textContent = String(cell.globalIndex).padStart(2, '0'); 
+                div.appendChild(numSpan);
+                
+                const scoreSpan = document.createElement('span');
+                scoreSpan.className = 'cell-score';
+                scoreSpan.textContent = cell.score;
+                div.appendChild(scoreSpan);
+
+                // [추가] 면적 표시
+                const areaSpan = document.createElement('span');
+                areaSpan.className = 'cell-area';
+                areaSpan.textContent = `A:${cell.area}`;
+                div.appendChild(areaSpan);
+                
+                container.appendChild(div);
+            });
+        }
+
+        // ==========================================
+        // 4. 실행 (Execution)
+        // ==========================================
+
+        const statusText = document.getElementById('status-text');
+        const generateBtn = document.getElementById('generate-btn');
+
+        function handleGenerate() {
+            const seed = Math.floor(Math.random() * 1000000);
+            const rng = RngUtils.createRng(seed);
+            
+            const targetCount = RngUtils.getInt(rng, 15, 24);
+            
+            statusText.textContent = `Generated Cells: ${targetCount}`;
+            
+            const gridData = generateGridStructure(rng, targetCount, gridRules);
+            
+            renderGrid(gridData);
+        }
+
+        generateBtn.addEventListener('click', handleGenerate);
+        window.addEventListener('resize', () => {
+             generateBtn.click(); 
+        });
+        
+        handleGenerate();
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Grid Generator with Dynamic Rules</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f0f2f5;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        #generate-btn {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: bold;
+        }
+
+        #generate-btn:hover {
+            background-color: #2563eb;
+        }
+
+        #status-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #4b5563;
+        }
+
+        /* 그리드 컨테이너 스타일 */
+        #grid-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 행 공통 스타일 */
+        .grid-row {
+            display: flex;
+            width: 100%;
+            /* border-bottom: 1px solid #eee; */
+        }
+
+        /* 셀 공통 스타일 */
+        .grid-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            background-color: white;
+            border: 1px solid #808080; /* 50% 회색 */
+            /* 인접한 셀의 border 겹침 방지를 위해 마진 조정 */
+            margin-right: -1px;
+            margin-bottom: -1px;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>동적 규칙 그리드 생성기</h1>
+        <div class="controls">
+            <button id="generate-btn">Randomizer</button>
+            <span id="status-text">버튼을 눌러주세요</span>
+        </div>
+    </header>
+
+    <div id="grid-container">
+        <!-- 그리드가 여기에 생성됩니다 -->
+    </div>
+
+    <script>
+        const gridContainer = document.getElementById('grid-container');
+        const statusText = document.getElementById('status-text');
+        const generateBtn = document.getElementById('generate-btn');
+
+        // 사용자 정의 JSON 규칙 (dividerPositions 제거, minColsCount 추가)
+        const gridRules = {
+            "colCount": 12,
+            "minColsCount": 3, // 최소 셀 너비 (3칸)
+            "rowCount": 0,
+            "rows": [
+                {
+                    "order": 1,
+                    "variants": [
+                        { "cellCount": 1, "rowHeight": [4, 6] },
+                        { "cellCount": 2, "rowHeight": 6 }
+                    ]
+                },
+                {
+                    "order": [2, 3, 4],
+                    "variants": [
+                        { "cellCount": 2, "rowHeight": [2, 3, 4] },
+                        { "cellCount": 3, "rowHeight": [3, 4, 6] }
+                    ]
+                },
+                {
+                    "order": 0,
+                    "variants": [
+                        { "cellCount": 2, "rowHeight": [4, 3] },
+                        { "cellCount": 3, "rowHeight": [4] },
+                        { "cellCount": 4, "rowHeight": [2, 3] }
+
+                    ]
+                }
+            ]
+        };
+
+        // 랜덤 유틸리티
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        // 값 비교 함수 (숫자 또는 배열 비교)
+        function isEqual(a, b) {
+            if (a === null || b === null) return false;
+            if (Array.isArray(a) && Array.isArray(b)) {
+                if (a.length !== b.length) return false;
+                for(let i=0; i<a.length; i++) {
+                    if(a[i] !== b[i]) return false;
+                }
+                return true;
+            }
+            return a === b;
+        }
+
+        // Divider 값을 배열로 변환하는 헬퍼 함수
+        function getDividerArray(val) {
+            if (val === null || val === undefined) return [];
+            return Array.isArray(val) ? val : [val];
+        }
+
+        // 가능한 Divider 조합을 동적으로 계산하는 함수
+        // 예: total=12, count=3, min=3 -> [[3,6], [3,7], [3,8], [3,9], [4,7], ... ] 반환
+        function getPossibleDividers(totalCols, cellCount, minWidth) {
+            const validWidthConfigs = [];
+
+            // 재귀적으로 너비 분할 조합 찾기
+            function distribute(currentWidths, remainingWidth, cellsLeft) {
+                if (cellsLeft === 1) {
+                    // 마지막 셀은 남은 너비를 모두 가져감
+                    if (remainingWidth >= minWidth) {
+                        validWidthConfigs.push([...currentWidths, remainingWidth]);
+                    }
+                    return;
+                }
+
+                // 현재 셀이 가질 수 있는 최대 너비 계산
+                // 남은 셀들이 최소 minWidth만큼은 가져가야 하므로
+                const maxPossibleWidth = remainingWidth - (minWidth * (cellsLeft - 1));
+
+                for (let w = minWidth; w <= maxPossibleWidth; w++) {
+                    distribute([...currentWidths, w], remainingWidth - w, cellsLeft - 1);
+                }
+            }
+
+            distribute([], totalCols, cellCount);
+
+            // 너비([3, 3, 6])를 Divider 위치([3, 6])로 변환
+            return validWidthConfigs.map(widths => {
+                const dividers = [];
+                let sum = 0;
+                // 마지막 너비 직전까지만 더함 (마지막 Divider는 끝점이므로 제외)
+                for (let i = 0; i < widths.length - 1; i++) {
+                    sum += widths[i];
+                    dividers.push(sum);
+                }
+                // 결과가 1개면 숫자, 여러개면 배열 반환 (기존 로직 호환성)
+                return dividers.length === 1 ? dividers[0] : dividers;
+            });
+        }
+
+        // Divider 선택 로직: 바로 위 행과 겹치지 않는 것을 우선 선택
+        function selectDividerWithLeastOverlap(options, prevValue) {
+            let candidates;
+            if (Array.isArray(options)) {
+                candidates = options;
+            } else {
+                candidates = [options];
+            }
+            
+            const prevDividers = getDividerArray(prevValue);
+
+            // 1. 겹치지 않는 후보 찾기 (우선순위 1)
+            const noOverlapCandidates = candidates.filter(opt => {
+                const optDividers = getDividerArray(opt);
+                const hasIntersection = optDividers.some(d => prevDividers.includes(d));
+                return !hasIntersection;
+            });
+
+            if (noOverlapCandidates.length > 0) {
+                return getRandomItem(noOverlapCandidates);
+            }
+
+            // 2. 겹치더라도 완전히 똑같지는 않은 것 찾기 (우선순위 2)
+            const notSameCandidates = candidates.filter(opt => !isEqual(opt, prevValue));
+            if (notSameCandidates.length > 0) {
+                return getRandomItem(notSameCandidates);
+            }
+
+            // 3. 대안이 없으면 아무거나 선택
+            return getRandomItem(candidates);
+        }
+
+        // 옵션 중에서 이전 값과 다른 것을 선택 (없으면 랜덤) - rowHeight용
+        function selectDifferentOption(options, prevValue) {
+            let candidates;
+            if (Array.isArray(options)) {
+                candidates = options;
+            } else {
+                candidates = [options];
+            }
+            
+            const validCandidates = candidates.filter(opt => !isEqual(opt, prevValue));
+            
+            if (validCandidates.length > 0) {
+                return getRandomItem(validCandidates);
+            } else {
+                return getRandomItem(candidates);
+            }
+        }
+
+        // 현재 행(rowIndex)에 해당하는 규칙 찾기
+        function getRuleForIndex(rowIndex, rules) {
+            const currentOrder = rowIndex + 1; 
+
+            const specificRule = rules.rows.find(row => {
+                if (Array.isArray(row.order)) {
+                    return row.order.includes(currentOrder);
+                }
+                return row.order === currentOrder;
+            });
+
+            if (specificRule) return specificRule;
+            return rules.rows.find(row => row.order === 0);
+        }
+
+        // 메인 로직 함수
+        function generateGrid() {
+            gridContainer.innerHTML = '';
+            
+            const totalCellsTarget = getRandomInt(6, 24); 
+
+            let currentTotalCells = 0;
+            let rowIndex = 0;
+            
+            let prevRowState = {
+                cellCount: null,
+                dividerPositions: null, 
+                rowHeight: null
+            };
+
+            statusText.textContent = `목표 셀 갯수: ${totalCellsTarget} (생성 중...)`;
+
+            while (currentTotalCells < totalCellsTarget) {
+                const rule = getRuleForIndex(rowIndex, gridRules);
+                
+                // 1. Variant 선택
+                const variantCandidates = rule.variants;
+                
+                // 이전 행과 cellCount가 다른 것 선호
+                let validVariants = variantCandidates.filter(v => v.cellCount !== prevRowState.cellCount);
+                if (validVariants.length === 0) validVariants = variantCandidates;
+                
+                const selectedVariant = getRandomItem(validVariants);
+                const cellCount = selectedVariant.cellCount;
+
+                // 2. Row Height 선택
+                const rowHeightOptions = selectedVariant.rowHeight;
+                const selectedRowHeight = selectDifferentOption(rowHeightOptions, prevRowState.rowHeight);
+
+                // 3. Divider Position 선택 (동적 계산)
+                let selectedDivider = null;
+                let flexRatios = [];
+
+                if (cellCount === 1) {
+                    flexRatios = [gridRules.colCount]; 
+                    selectedDivider = 0; 
+                } else {
+                    // JSON에서 읽는 대신, 계산하여 후보군 생성
+                    // gridRules.minColsCount 활용
+                    const dividerOptions = getPossibleDividers(gridRules.colCount, cellCount, gridRules.minColsCount);
+                    
+                    selectedDivider = selectDividerWithLeastOverlap(dividerOptions, prevRowState.dividerPositions);
+                    
+                    // Flex 비율(구간 너비) 계산
+                    let dividers = [];
+                    if (Array.isArray(selectedDivider)) {
+                        dividers = [...selectedDivider];
+                    } else {
+                        dividers = [selectedDivider];
+                    }
+                    dividers.sort((a, b) => a - b);
+                    
+                    const points = [0, ...dividers, gridRules.colCount];
+                    
+                    for (let i = 0; i < points.length - 1; i++) {
+                        flexRatios.push(points[i+1] - points[i]);
+                    }
+                }
+
+                // --- DOM 생성 ---
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'grid-row';
+                
+                rowDiv.style.aspectRatio = `${gridRules.colCount} / ${selectedRowHeight}`;
+
+                for (let i = 0; i < cellCount; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    cell.style.flex = `${flexRatios[i]}`;
+                    cell.textContent = currentTotalCells + i + 1;
+                    rowDiv.appendChild(cell);
+                }
+
+                gridContainer.appendChild(rowDiv);
+
+                // --- 상태 업데이트 ---
+                currentTotalCells += cellCount;
+                prevRowState = {
+                    cellCount: cellCount,
+                    rowHeight: selectedRowHeight,
+                    dividerPositions: selectedDivider
+                };
+                rowIndex++;
+            }
+            
+            statusText.textContent = `생성 완료! 총 셀 갯수: ${currentTotalCells}`;
+        }
+
+        generateBtn.addEventListener('click', generateGrid);
+        
+        generateGrid();
+
+    </script>
+</body>
+</html>
