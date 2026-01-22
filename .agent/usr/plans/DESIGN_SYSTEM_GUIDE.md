@@ -12,5 +12,9 @@
 - **Typography**: `--font-display` (Display), `--font-headline` (Headline), `--font-sans` (Body/Standard)
 
 ## 3. Patchwork 그리드
-- 컴포넌트: `Patchwork.astro`
-- 로직: `patchwork-logic.js`
+- **컴포넌트**: `src/components/swiss/Patchwork.astro`
+- **핵심 로직**: `src/utils/swiss/patchwork-logic.js`
+- **레이아웃 규칙**: `src/utils/swiss/grid-rule.json`
+- **구현 원칙 (2026-01-22)**:
+  - **Span-Only Height**: 그리드 아이템의 높이는 개별 `height` 픽셀 값이 아닌, 그리드 단위인 `rowSpan`을 기준으로 계산하여 레이아웃 무너짐을 방지함.
+  - **Dynamic Layout**: `articles.json`의 데이터를 `grid-rule.json`에 정의된 매퍼(`type` -> `span`)를 통해 동적으로 그리드에 배치함.

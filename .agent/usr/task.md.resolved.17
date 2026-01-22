@@ -1,0 +1,12 @@
+# o-m.kr 프로젝트 작업 현황
+
+## 에이전트 행동 지침 및 보호 조치 (재발 방지)
+- [ ] [development-rules.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/development-rules.md)에 "파일 변경 및 커밋 권한" 명시적 제한 추가
+- [ ] [instructions.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/instructions.md)에 "사용자 개입 필수 체크포인트" 정의
+- [ ] "커밋 전 사용자 확인" 프로세스 정례화
+- [ ] 최종 대책 보고 및 사용자 승인
+
+## 이전 작업 (참고)
+- [x] Google Sheets CMS 파이프라인 구축 및 연동
+- [x] Grid Mapper 리팩토링 (Span-Only Height)
+- [x] 워크플로우(`daily_summary`, `logseq`) 정형화

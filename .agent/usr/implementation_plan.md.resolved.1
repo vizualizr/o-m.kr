@@ -1,0 +1,46 @@
+# Refactor Grid Mapper to Span-Only Height
+
+변함없는 행 트랙 높이를 기반으로, 오직 `rowSpan`(트랙 점유 수)에 의해서만 세로 크기가 결정되도록 시스템을 단순화합니다.
+
+## User Review Required
+
+> [!IMPORTANT]
+> - [grid-rule.json](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/swiss/grid-rule.json)에서 `rowHeight` 설정이 영구적으로 제거됩니다.
+> - 모든 행 트랙은 동일한 높이 비율을 갖게 되며, 특정 행만 높게 설정하는 기능은 사라집니다 (대신 `rowSpan`을 늘려 대응).
+> - [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)에서 계산하던 복잡한 `grid-template-rows` 수식은 더 이상 사용하지 않습니다.
+
+## Proposed Changes
+
+### [Component] Grid Configuration (JSON)
+
+#### [MODIFY] [grid-rule.json](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/swiss/grid-rule.json)
+- [DELETE] 모든 `variants` 내의 `rowHeight` 필드 삭제.
+
+---
+
+### [Component] Grid Mapper Logic (JS)
+
+#### [MODIFY] [grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js)
+- **[generateGridStructure](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#218-393) 내부 로직 단순화**:
+    - `currentRowHeightUnit`을 상수로 `1` 고정.
+    - `rowHeight` 관련 변수(`totalHeight`, `rowHeightOpts` 등) 삭제.
+    - `area` 계산식을 `width * height(span)`으로 변경.
+    - `minArea` 보장을 위한 `requiredSpan` 계산 시 `rowHeight` 보정 제거.
+- **JSDoc 업데이트**: 변경된 입출력 구조 반영.
+
+---
+
+### [Component] Display & Styles
+
+#### [MODIFY] [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)
+- 주석 처리된 `grid-template-rows` 관련 코드 영구 삭제 또는 정리.
+
+#### [MODIFY] [patchwork.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/swiss/patchwork.css)
+- `.patchwork-grid`에 `grid-auto-rows` 속성을 추가하여 균일한 트랙 높이 확보 (예: `150px` 또는 `10vw`).
+
+## Verification Plan
+
+### Manual Verification
+1. `npm run dev` 실행 후 레이아웃 깨짐 확인.
+2. 모든 셀의 높이가 `rowSpan`의 배수로 정직하게 렌더링되는지 확인.
+3. 빈틈(Holes)이 발생하지 않는지 전수 검사.

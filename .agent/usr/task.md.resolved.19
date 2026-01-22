@@ -1,0 +1,13 @@
+# o-m.kr 프로젝트 작업 현황
+
+## 에이전트 행동 지침 및 보호 조치 (재발 방지)
+- [x] [instructions.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/instructions.md) 및 [development-rules.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/development-rules.md) 규칙 통합 및 중복 제거
+- [x] Git 커밋 및 핵심 로직 변경 권한을 기존 'Agent Rule'에 명확히 통합
+- [x] 사용자 주석 보존 원칙을 '필수 보존 정보'로 확립
+- [ ] 작업 단계마다 'Rule Compliance' 자가 점검 수행
+- [ ] 최종 대책에 대한 사용자 승인
+
+## 이전 작업 (참고)
+- [x] Google Sheets CMS 파이프라인 구축 및 연동
+- [x] Grid Mapper 리팩토링 (Span-Only Height)
+- [x] 워크플로우(`daily_summary`, `logseq`) 정형화

@@ -1,0 +1,26 @@
+# Walkthrough: Grid System Refactoring (Uniform Track Height)
+
+가변 행 높이(`rowHeight`) 시스템을 제거하고, 오직 행 트랙 점유 수(`rowSpan`)로만 높이를 결정하는 단순하고 직관적인 시스템으로의 전환을 완료했습니다.
+
+## 주요 변경 사항
+
+### 1. 설정 단순화 ([grid-rule.json](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/swiss/grid-rule.json))
+- 영구적으로 사용하지 않게 된 `rowHeight` 필드를 모든 레이아웃 규칙에서 삭제했습니다.
+- 이제 세로 크기는 `rowSpan` 배열에 정의된 값들로만 결정됩니다.
+
+### 2. 로직 최적화 ([grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js))
+- `unitHeight`를 1로 고정하여 계산 복잡도를 낮췄습니다.
+- **면적 계산 방식 변경**: `area = width * rowSpan`으로 수정되어, 셀이 차지하는 물리적 면적이 곧 랭킹 점수가 되도록 개선했습니다.
+- JSDoc을 통해 각 함수의 역할과 데이터 흐름을 한국어로 상세히 문서화했습니다.
+
+### 3. 디스플레이 정렬 ([index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro) & [patchwork.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/swiss/patchwork.css))
+- [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)에서 더 이상 사용하지 않는 복잡한 [calc](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#122-160) 수식을 제거했습니다.
+- CSS Grid의 `grid-auto-rows`를 설정하여 모든 행이 균일한 높이를 갖도록 보정했습니다.
+
+## 검증 결과
+- 모든 아티클이 누락 없이 설정된 `rowSpan`에 맞춰 렌더링됩니다.
+- 행 높이가 균일해짐에 따라 잡지 레이아웃의 엄밀성이 더 높아졌습니다.
+- 코드 라인 수가 줄어들고 유지보수가 용이해졌습니다.
+
+> [!NOTE]
+> 이제 가로 1컬럼의 너비와 세로 1행의 높이가 거의 1:1 비율을 유지하게 되어, 정삼각형/정사각형 기반의 스위스 디자인 구현이 훨씬 수월해졌습니다.

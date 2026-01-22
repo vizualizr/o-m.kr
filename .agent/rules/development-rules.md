@@ -67,6 +67,9 @@ trigger: always_on
 │       ├── prototypes/          # 그리드 로직 등 HTML 실험실
 │       └── templates/           # Logseq 등 각종 문서 서식
 ├── public/                      # 정적 에셋 (favicon 등)
+├── scripts/                     # [중요] 빌드 타임 및 관리 도구용 Node.js 스크립트 (Astro 번들링 제외)
+│   ├── fetch-data.js            # Sheets API 연동 및 데이터 수집
+│   └── sync-to-sheets.js        # 로컬 MDX 변경사항 시트 동기화 (Admin 도구)
 ├── src/
 │   ├── assets/                  # 최적화가 필요한 이미지 및 로컬 에셋
 │   ├── components/              # .astro UI 컴포넌트
@@ -89,10 +92,25 @@ trigger: always_on
 - **원칙**: 모든 아티클 및 정보성 데이터는 Astro Content Collections를 통해 관리하며, 수동 관리 대신 자동화된 파이프라인을 지향한다.
 - **Flow**: 
   1. **Source**: Google Sheets (데이터 관리 주체)
-  2. **Fetch**: `fetch-data.js` (Node.js를 통한 API 호출 및 Raw 데이터 수집)
-  3. **Validate**: Zod를 사용하여 기술 스키마와 콘텐츠 규칙(flytitle 길이 등) 검증
-  4. **Emit**: `src/data/*.json` (Astro 빌드 시 참조될 정적 에셋 생성)
-  5. **Render**: Astro components에서 Type-safe하게 데이터 접근 및 렌더링
+  2. **Fetch**: `scripts/fetch-data.js` (Node.js를 통한 API 호출 및 데이터 수집)
+  3. **Validate**: Zod를 사용하여 기술 스키마와 콘텐츠 규칙 검증
+  4. **Emit**: `src/data/articles.json` (Astro 빌드 시 참조될 정적 에셋 생성)
+  5. **Render**: `src/content.config.ts`에서 JSON과 MDX를 병합하여 콘텐츠 컬렉션 생성
+
+#### CMS Pipeline & Data Flow
+
+```mermaid
+graph TD
+    A["Google Sheets (Metadata)"] -->|"scripts/fetch-data.js"| B["src/data/articles.json"]
+    B -->|"Merge by UID"| C["Astro Content Collections"]
+    D["src/content/articles/*.mdx"] -->|"Source Context"| C
+    C --> E["Dynamic Article Pages"]
+    E -.->|"Admin Tooling"| F["scripts/sync-to-sheets.js"]
+    F -.->|"Sync Back"| A
+```
+
+- **Data Sourcing Strategy**: 모든 정적 메타데이터(flytitle, headline 등)는 Google Sheets에서 관리하며, 문학적/창의적 본문 컨텍스트는 local MDX에서 관리한다. 
+- **UID Matching**: 시트의 `uid`와 MDX의 `id`가 일치해야 정상적으로 병합된다.
 
 #### 콘텐츠 소스
 

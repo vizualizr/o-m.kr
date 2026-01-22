@@ -1,0 +1,12 @@
+# o-m.kr 프로젝트 작업 현황
+
+## 에이전트 행동 지침 및 보호 조치 (재발 방지)
+- [x] [instructions.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/instructions.md) 및 [development-rules.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/development-rules.md) 수정: 권한 범위 확대 (파일 생성/삭제/커밋)
+- [x] 주석 보존(Sacred Context) 원칙 명문화 및 중복 제거
+- [ ] 에이전트 월권 방지를 위한 'Check-before-Action' 습관 정착
+- [ ] 최종 대책 보고 및 사용자 최종 확인
+
+## 이전 작업 (참고)
+- [x] Google Sheets CMS 파이프라인 구축 및 연동
+- [x] Grid Mapper 리팩토링 (Span-Only Height)
+- [x] 워크플로우(`daily_summary`, `logseq`) 정형화

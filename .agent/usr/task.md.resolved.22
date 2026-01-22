@@ -1,0 +1,13 @@
+# o-m.kr 프로젝트 작업 현황
+
+## 에이전트 행동 지침 및 보호 조치 (재발 방지)
+- [x] [instructions.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/instructions.md) 최상위 대원칙 및 자가 검증 절차 수립
+- [x] 대화창 지시 자의적 해석 금지 조항 구체화
+- [x] [development-rules.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/development-rules.md) 중복 제거 및 기술적 성격 강화
+- [x] 작업 단계마다 'Rule Compliance' 및 'Propose-First' 자가 점검 수행
+- [x] 최종 대책 및 규칙 통합에 대한 사용자 승인 완료
+
+## 작업 완료 사항
+- [x] Google Sheets CMS 파이프라인 구축 및 연동 ([fetch-data.js](file:///d:/yonggeun/porter/git/o-m.kr/production/scripts/fetch-data.js), [content.config.ts](file:///d:/yonggeun/porter/git/o-m.kr/production/src/content.config.ts))
+- [x] Grid Mapper 리팩토링 및 픽스 (`patchwork-logic.js`, [grid-rule.json](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/swiss/grid-rule.json))
+- [x] 에이전트 행동 지침(Sacred Context, Authorization) 명문화

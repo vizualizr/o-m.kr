@@ -1,0 +1,30 @@
+# Refactor Grid Mapper to Span-Only Height
+
+The goal is to simplify the grid system by removing variable `rowHeight` track sizes. Height will be determined solely by the number of row tracks a cell spans (`rowSpan`), meaning all row tracks will have a uniform height.
+
+## Proposed Changes
+
+### [Component] Grid Mapper Logic
+
+#### [MODIFY] [grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js)
+- Set `currentRowHeightUnit` to a constant `1` throughout [generateGridStructure](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#218-393).
+- Update `area` calculation to simply `width * height` (where height is the `rowSpan`).
+- Update `requiredMinWidth` to `Math.ceil(rules.minArea / selectedSpan)`.
+- Update `prevRowState` to track `rowSpan` instead of the now-obsolete `rowHeight`.
+- Ensure `rowHeights` returned by [gridMapper12](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#410-479) is an array of `1`s (for backward compatibility and potential future use).
+
+### [Component] Styles
+
+#### [MODIFY] [patchwork.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/swiss/patchwork.css)
+- Add `grid-auto-rows: minmax(100px, 1fr);` (or a similar uniform height rule) to `.patchwork-grid` to ensure that `span 2` is actually twice the height of `span 1`.
+
+## Verification Plan
+
+### Automated Tests
+- No automated tests currently exist for this logic.
+
+### Manual Verification
+1. Run `npm run dev` and open `http://localhost:4321`.
+2. Verify that the grid layout still fills the screen without holes.
+3. Observe that all rows now have the same base height, and larger articles span exactly N times that base height.
+4. Check that the "Last Cell Adjustment" still prevents horizontal gaps.
