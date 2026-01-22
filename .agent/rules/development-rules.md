@@ -25,7 +25,7 @@ trigger: always_on
 - 홍보 및 개발용 도메인: dev.o-m.kr
  - 선행 홍보의 일환으로 개발 과정을 배포 중.
  - 로컬 Logseq에 개발 일지 작성 후 Logseq-SPA GitHub Action을 통해 GitHub Pages에 배포 중.
-  - 해당 logseq 그래프의 위치는 `d:\yonggeun\porter\git\o-m.kr\journal\`이다.치
+  - 해당 logseq 그래프의 위치는 `d:\yonggeun\porter\git\o-m.kr\journal\`이다.
 - ^웹사이트 배포는 github action으로 cloudflare혹은 vercel 가운데 하나를 택한다.
 
 
@@ -46,7 +46,7 @@ trigger: always_on
   - 변경 사유와 로직 요약
   - **[미래 영향]**: 향후 데이터 확장 및 스크롤리텔링 구현 시의 이점 또는 제약 사항
   - **[대안 제시]**: 현재의 '방법(How)' 외에 ROI가 더 높은 기술적 대안이 있는지 검토 결과
-- 파일 신규 생성, 삭제는 사용자의 확인과 지시를 거친 뒤에만 시작할 수 있다.
+- 파일 신규 생성, 삭제, 핵심 로직 변경 및 **Git 커밋(commit)**은 사용자의 확인과 지시를 거친 뒤에만 시작할 수 있다.
 - 단순 분석 지시를 코드 수정 지시로 임의 해석하지 않는다.
 
 ### Data Architecture
@@ -138,10 +138,9 @@ trigger: always_on
 - 모든 데이터 전처리는 scripts/fetch-data.js에서 수행한다.
 - 시각화 컴포넌트 내부에서 복잡한 비즈니스 로직(통계 계산 등)을 수행하지 않는다. 단, D3 조인 시 필요한 최소한의 데이터 접근자 정의나 시각화에 종속적인 간단한 매핑은 허용한다.
 
-### Documentation (주석 및 문서화)
+### Comments and Documentation (주석 및 문서화)
 
-- **사용자 주석 보존 (User-Provided Context)**: `src/content.config.ts`와 같이 데이터 구조나 프로젝트의 철학이 담긴 파일에서 사용자가 직접 작성한 주석은 절대 삭제하거나 수정하지 않는다. 코드 교체 시 `replace_file_content` 등을 사용할 때 기존 주석이 포함되도록 각별히 유의한다.
-- JSDoc 준수: 모든 자바스크립트 코드는 JSDoc 형식에 맞게 주석을 추가한다.
+- **사용자 주석 보존 (Sacred Context)**: `instructions.md`의 [주석 보존 및 문맥 존중] 원칙을 기술적으로 실현하기 위해, 코드 교체 시 기존 주석이 삭제되지 않도록 반드시 원본 문맥을 유지하는 방식으로 `replace_file_content` 등을 수행한다.
 - 모듈 헤더 기록: 각 모듈(파일)의 시작 부분에 반드시 다음 내용을 기재한다.
   - 목적 (Purpose)
   - 입출력 및 처리 (Inputs, Outputs & Processing)
