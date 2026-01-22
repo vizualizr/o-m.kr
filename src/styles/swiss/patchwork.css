@@ -1,28 +1,52 @@
+/* Global reset for precise calculation */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.patchwork-grid-wrapper {
+    container-type: inline-size;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0;
+}
+
 .patchwork-grid {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(8.5cqw, auto);
+    /* 가로 1컬럼 너비와 유사한 높이 확보 */
     gap: 1px;
     background-color: var(--color-outline);
     border: 1px solid var(--color-outline);
-    min-height: 100vh;
-}
-
-.patchwork-row {
-    display: flex;
     width: 100%;
-    gap: 1px;
 }
 
 .patchwork-card {
     background-color: var(--color-base-100);
-    padding: 2.5rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
-    border: 2px solid var(--color-outline) !important;
+}
+
+/* [Point 3: 필러 셀 스타일] 
+   아티클이 없어 비어있는 셀도 그리드의 일부임을 명확히 보여줍니다. */
+.patchwork-card._isFiller {
+    background-color: var(--color-base-200);
+    /* 미세한 배경색 차이 */
+    opacity: 0.5;
+    /* 기존 0.2에서 상향하여 그리드가 보듬어지게 함 */
+}
+
+/* 필러 셀 내의 도트는 더 선명하게 표시 */
+.patchwork-card._isFiller .grid-dot {
+    opacity: 0.4;
 }
 
 .grid-dot {
@@ -31,7 +55,7 @@
     background-color: var(--color-primary);
     position: absolute;
     z-index: 10;
-    @apply hidden;
+    opacity: 0.2;
 }
 
 /* Swiss Branding Typography Utils */
@@ -45,4 +69,10 @@
     font-weight: 900;
     letter-spacing: -0.04em;
     line-height: 0.9;
+}
+
+@media (max-width: 768px) {
+    .patchwork-card {
+        padding: 1rem;
+    }
 }

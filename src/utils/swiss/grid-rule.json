@@ -1,6 +1,7 @@
 {
     "colCount": 12,
     "minColsCount": 3,
+    "minArea": 9,
     "rowCount": 0,
     "rows": [
         {
@@ -8,14 +9,16 @@
             "variants": [
                 {
                     "cellCount": 1,
-                    "rowHeight": [
-                        4,
-                        6
+                    "rowSpan": [
+                        1,
+                        2
                     ]
                 },
                 {
                     "cellCount": 2,
-                    "rowHeight": 6
+                    "rowSpan": [
+                        2
+                    ]
                 }
             ]
         },
@@ -28,18 +31,15 @@
             "variants": [
                 {
                     "cellCount": 2,
-                    "rowHeight": [
-                        2,
-                        3,
-                        4
+                    "rowSpan": [
+                        1
                     ]
                 },
                 {
                     "cellCount": 3,
-                    "rowHeight": [
-                        3,
-                        4,
-                        6
+                    "rowSpan": [
+                        1,
+                        2
                     ]
                 }
             ]
@@ -49,22 +49,22 @@
             "variants": [
                 {
                     "cellCount": 2,
-                    "rowHeight": [
-                        4,
-                        3
+                    "rowSpan": [
+                        2
                     ]
                 },
                 {
                     "cellCount": 3,
-                    "rowHeight": [
-                        4
+                    "rowSpan": [
+                        2,
+                        3
                     ]
                 },
                 {
                     "cellCount": 4,
-                    "rowHeight": [
-                        2,
-                        3
+                    "rowSpan": [
+                        3,
+                        4
                     ]
                 }
             ]
