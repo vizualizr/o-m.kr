@@ -19,11 +19,15 @@
     "citeproc": "^2.4.63",
     "cssnano": "^7.0.7",
     "d3": "^7.9.0",
+    "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "flyonui": "^2.1.0",
+    "googleapis": "^170.1.0",
+    "gray-matter": "^4.0.3",
     "rehype-citation": "^2.3.1",
     "tailwindcss": "^4.1.6",
-    "with-tailwindcss": "file:"
+    "with-tailwindcss": "file:",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@iconify/json": "^2.2.337",

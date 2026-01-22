@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # zotero setting files added on 2025-07-04 
 # .zotero/
+
+# Agent secrets
+.agent/secrets/
