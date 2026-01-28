@@ -1,30 +1,29 @@
-# Refactor Grid Mapper to Span-Only Height
+# Implement Markdown Link Replacement in [validate_md.py](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/skills/markdown-validator/scripts/validate_md.py)
 
-The goal is to simplify the grid system by removing variable `rowHeight` track sizes. Height will be determined solely by the number of row tracks a cell spans (`rowSpan`), meaning all row tracks will have a uniform height.
+This plan adds a new feature to the `markdown-validator` skill to automatically replace local file URLs with their corresponding GitHub repository URLs in markdown links.
 
 ## Proposed Changes
 
-### [Component] Grid Mapper Logic
+### [Component] Markdown Validator Skill
 
-#### [MODIFY] [grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js)
-- Set `currentRowHeightUnit` to a constant `1` throughout [generateGridStructure](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#218-393).
-- Update `area` calculation to simply `width * height` (where height is the `rowSpan`).
-- Update `requiredMinWidth` to `Math.ceil(rules.minArea / selectedSpan)`.
-- Update `prevRowState` to track `rowSpan` instead of the now-obsolete `rowHeight`.
-- Ensure `rowHeights` returned by [gridMapper12](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#410-479) is an array of `1`s (for backward compatibility and potential future use).
+#### [MODIFY] [validate_md.py](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/skills/markdown-validator/scripts/validate_md.py)
 
-### [Component] Styles
-
-#### [MODIFY] [patchwork.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/swiss/patchwork.css)
-- Add `grid-auto-rows: minmax(100px, 1fr);` (or a similar uniform height rule) to `.patchwork-grid` to ensure that `span 2` is actually twice the height of `span 1`.
+- Implement a replacement logic under the `# 4. Content replacement` comment.
+- The logic will:
+    1. Search for markdown links `[text](url)` where `url` contains `file:///d:/yonggeun/porter/git/o-m.kr/production/`.
+    2. Replace the local path part with `https://github.com/yonggeun/truescape/blob/main/`.
+    3. If any replacements occurred, write the updated content back to the original file.
+- Move the replacement logic before the final return statements so it actually executes during the validation process.
+- Update the success/failure message to indicate if a replacement was performed.
 
 ## Verification Plan
 
 ### Automated Tests
-- No automated tests currently exist for this logic.
+- I will create a test script `test_replacement.py` that:
+    1. Creates a dummy markdown file `test_link.md` with the content: `Check [this file](file:///d:/yonggeun/porter/git/o-m.kr/production/README.md)`.
+    2. Runs `python .agent/skills/markdown-validator/scripts/validate_md.py test_link.md .agent/skills/markdown-validator/templates/logseq.json`.
+    3. Verifies that the content of `test_link.md` has changed to `Check [this file](https://github.com/yonggeun/truescape/blob/main/README.md)`.
+    4. Cleans up the dummy files.
 
 ### Manual Verification
-1. Run `npm run dev` and open `http://localhost:4321`.
-2. Verify that the grid layout still fills the screen without holes.
-3. Observe that all rows now have the same base height, and larger articles span exactly N times that base height.
-4. Check that the "Last Cell Adjustment" still prevents horizontal gaps.
+- None required as automated test covers the logic.

@@ -1,6 +1,6 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Antigravity Skills 프레임워크와 핵심 3개 스킬(경로 검사, 서식 검증, 충돌/백업 관리)을 완벽하게 구현하고 검증했습니다. 결정론적 자가 보호 루프가 확립되었으며, 오늘 작업을 Logseq 저널과 에이전트 로그로 정리하고 Git 커밋을 완료했습니다.",
-  "updatedAt": "2026-01-23T03:15:13.216235200Z",
-  "version": "40"
+  "summary": "Security audit checklist for checking sensitive data exposure in a public repository.",
+  "updatedAt": "2026-01-28T07:09:24.534687200Z",
+  "version": "3"
 }

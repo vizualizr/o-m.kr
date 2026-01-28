@@ -1,29 +1,25 @@
-# Milestone: CMS 연동 및 행동 지침 확립
+# Security Audit Walkthrough: Repository Public Conversion
 
-이번 작업에서는 o-m.kr 프로젝트의 지속 가능한 운영을 위한 데이터 관리 파이프라인 구축과, 에이전트의 신뢰성을 높이기 위한 행동 원칙 명문화를 완수했습니다.
+I have conducted a security audit of the `o-m.kr` repository following its conversion to public. Here are the findings and verification steps.
 
-## 1. Google Sheets CMS 파이프라인
-기존의 수동 데이터 관리에서 구글 시트 기반의 자동화 파이프라인으로 전환했습니다.
+## Status Summary
+The repository is **SAFE** for public access. No sensitive information (API keys, environment variables) was found in the current files or Git history.
 
-- **[fetch-data.js](file:///d:/yonggeun/porter/git/o-m.kr/production/scripts/fetch-data.js)**: 구글 시트 API를 통해 아티클 정보를 가져와 로컬 JSON으로 최적화하여 저장합니다.
-- **[content.config.ts](file:///d:/yonggeun/porter/git/o-m.kr/production/src/content.config.ts)**: 로컬 MDX 파일과 구글 시트에서 가져온 메타데이터를 UID 기반으로 병합하여 Astro Content Collections로 제공합니다.
+## Verification Checklist
 
-## 2. 에이전트 행동 지침 및 보호 조치
-두 차례의 실수(주석 삭제, 자의적 커밋)를 교훈 삼아, 에이전트가 지켜야 할 최상위 원칙을 수립했습니다.
+### 1. Sensitive Files Excluded
+- [x] `.env` is ignored and not tracked.
+- [x] `.agent/secrets/` is ignored and not tracked.
+- [x] `node_modules/`, `dist/`, `.astro/` are ignored.
 
-- **최상위 대원칙**: 모든 의사 결정에서 제안은 선제적으로 수행하되 실행은 반드시 사용자의 허가를 기다립니다.
-- **자가 검증 의무**: 응답 전 자신의 대답이 '제안'인지 '수행'인지 스스로 검증합니다.
-- **필수 보존 정보(Sacred Context)**: 사용자가 작성한 문맥과 주석은 코드와 동일한 가치를 지닌 정보로서 절대 삭제하지 않습니다.
-- **명시적 권한 획득**: 핵심 로직 변경, 파일 조작, Git 커밋은 사용자의 명시적 승인 하에서만 수행합니다.
+### 2. Git History Check
+- [x] **Verified**: `.env` has never been committed.
+- [x] **Verified**: `google-keys.json` (Google API key) has never been committed.
 
-## 4. Antigravity Skills: 결정론적 검증 시스템 도입
-규칙과 실행 사이의 추론 간극을 메우기 위해 **Antigravity Skills** 프레임워크를 도입했습니다.
+### 3. Hardcoded Secret Scan
+- [x] **Verified**: No hardcoded Google Sheet IDs or emails found in the tracked codebase.
+- [x] **Verified**: `src/site.config.ts` correctly uses `import.meta.env` for secret values.
 
-- **[file-conflict-manager](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/skills/file-conflict-manager/SKILL.md)**: 덮어쓰기 전 백업 및 충돌 관리를 담당하는 Level 4 스킬입니다.
-- **자동 백업 시스템**: [backup_file.py](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/skills/file-conflict-manager/scripts/backup_file.py)를 통해 변경 전 파일을 [.agent/backups/](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/backups/) 폴더에 타임스탬프와 함께 보관합니다.
-- **존재 여부 탐지**: [check_path.py](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/skills/path-safety-inspector/scripts/check_path.py)가 이제 `[EXISTS]` 여부를 반환하여, 에이전트가 "새 파일 생성"과 "기존 파일 수정"을 명확히 구분하게 되었습니다.
-- **Sacred Context 보호**: 사용자의 귀중한 주석과 로직이 포함된 파일을 실수로 파괴하는 일을 방지하고, 문제 발생 시 언제든 이전 버전으로 복구할 수 있는 안전망이 구축되었습니다.
-- **Logseq 표준 서식 고도화**: `.agent/usr/templates/logseq.md`를 기반으로 `markdown-validator`를 고도화하여, Logseq 특유의 `property::` 및 블록 구조를 결정론적으로 검증할 수 있게 되었습니다. 1/22 저널 역시 이 표준에 맞춰 리포맷을 완료했습니다.
-- **경로 보호 경계 확장**: `path-safety-inspector`가 이제 `production`뿐만 아니라 `journal` 디렉토리의 안전성도 함께 관리합니다.
-
-이제 에이전트는 **1) 안전 검사 → 2) 존재 확인 → 3) 자동 백업 → 4) 작업 수행 → 5) 서식 검증**으로 이어지는 완벽한 **자기 보호 루프**를 가동합니다.
+## Recommendations
+- **Commit `src/site.config.ts`**: Since it's currently untracked (`??`), you can safely add it to the repository so other collaborators can see the structure.
+- **`.env.example`**: Consider creating a `.env.example` file (without values) to help others understand which environment variables are required.

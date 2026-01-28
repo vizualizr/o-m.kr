@@ -1,28 +1,7 @@
-# 태스크: 워크플로우 정상화 및 자동화 신뢰성 확보
+# Task: Security Audit for Public Repository
 
-- [x] 사용자의 직설 화법 지침 수용 및 계획 수정
-- [x] 환경 정리 [x]
-    - [x] `production/journal` 폴더 및 중복 파일 삭제
-    - [x] `2026_01_22.md` 정규 경로로 이동 및 복구 [x]
-- [x] 워크플로우 고도화 (Tuning) [x]
-    - [x] `daily_summary.md` 경로 처리 로직 강화 및 Step 0 추가
-    - [x] 일괄 승인(Batch Approval) 프로세스 적용
-- [x] [규칙과 실행 사이의 추론 간극 문제] 해결 제안
-    - [x] `skills implementation.md` 정밀 분석 [x]
-    - [x] 사용자 피드백 반영 및 제안서 고도화 [x]
-    - [x] 사용자 관점의 작업 흐름 변화 명시 [x]
-- [x] Step 3: 첫 번째 실전 스킬 구현 (`path-safety-inspector`)
-    - [x] `.agent/skills/path-safety-inspector/` 디렉토리 구조 생성
-    - [x] `SKILL.md` 정의 (YAML Frontmatter + Instructions)
-    - [x] `scripts/check_path.py` 결정론적 로직 구현
-- [x] Step 4: 범용 `markdown-validator` 스킬 구현
-    - [x] `.agent/skills/markdown-validator/` 디렉토리 구조 생성
-    - [x] `validate_md.py` 범용 검증 로직 구현
-    - [x] `templates/logseq.json` 서식 정의 추가
-    - [x] `SKILL.md` 정의 (Multi-template 대응)
-- [x] Step 5: 파일 충돌 및 백업 관리 스킬 구현 (`file-conflict-manager`)
-    - [x] `check_path.py`에 파일 존재 여부 확인 로직 추가
-    - [x] `backup_file.py` 자동 백업 스크립트 구현
-    - [x] `SKILL.md` 정의 (Conflict Resolution Policy)
-- [x] Step 6: 통합 워크플로우 테스트 및 검증 (`walkthrough.md`)
-- [x] Step 7: 일일 작업 정리 및 Git 커밋
+- [x] Verify tracked files in Git (ensure `.env` and secrets are not included)
+- [x] Check `.gitignore` for comprehensive coverage
+- [x] Scan codebase for hardcoded secrets or PII
+- [x] Verify if sensitive files were ever in the Git history
+- [x] Report findings and provide remediation steps

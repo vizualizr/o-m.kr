@@ -1,6 +1,5 @@
 {
   "artifactType": "ARTIFACT_TYPE_IMPLEMENTATION_PLAN",
-  "summary": "직설적이고 효율적인 업무 방식을 반영하여 `/daily_summary` 워크플로우를 보완합니다. 수동 검수 대신 기술적 정확성을 높여 생산성을 유지합니다. 잘못된 경로의 데이터를 정리하고 정규 경로를 확립합니다.",
-  "updatedAt": "2026-01-23T01:32:31.300415Z",
-  "version": "8"
+  "summary": "Implementation plan for adding link replacement logic to `validate_md.py`.",
+  "updatedAt": "2026-01-28T01:24:52.838880300Z"
 }
