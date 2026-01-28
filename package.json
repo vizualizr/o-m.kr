@@ -3,9 +3,9 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
+    "dev": "node scripts/fetch-data.js && astro dev",
+    "build": "node scripts/fetch-data.js && astro build",
+    "preview": "node scripts/fetch-data.js && preview",
     "astro": "astro"
   },
   "dependencies": {

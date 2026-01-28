@@ -1,29 +1,33 @@
-# Walkthrough: Landing Page Layout Migration
+# Google Sheets CMS 파이프라인 구축 완료 (Half-Wiki 전략)
 
-이 문서는 [landing.html](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/usr/prototypes/landing.html) 프로토타입의 레이아웃을 [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)로 성공적으로 이식한 과정을 설명합니다.
+구글 시트를 아티클 메타데이터의 '조종실(Control Room)'로 활용하는 데이터 파이프라인 구축을 완료했습니다. 이를 통해 **Half-Wiki** 전략(시의성에 따른 슬러그/헤드라인 유연 변경)이 기술적으로 완벽히 지원됩니다.
 
-## 작업 내역
+## 🚀 구현된 워크플로우
 
-4.  **동적 벤토 그리드 전환**:
-    *   [src/utils/scoring.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/scoring.js): `listed`, `index`, `authors`, `dateDiff`, `type`를 기반으로 기사의 중요도 점수를 계산하는 엔진을 구현했습니다.
-    *   [src/utils/grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js): 점수를 바탕으로 기사를 정렬하고, 동일 점수 시 최신순/ID순으로 Tie-breaking을 수행하며 레이아웃 클래스(`col-span-x`)를 할다하는 로직을 구축했습니다.
-    *   [src/components/BentoCell.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/components/BentoCell.astro): 계산된 점수와 데이터에 따라 카드의 크기와 스타일(배경 이미지 등)을 결정하는 공용 컴포넌트를 제작했습니다.
-    *   [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro): 하드코딩된 내용을 제거하고 `getCollection`과 [gridMapper](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#15-45)를 연동하여 실시간 데이터 기반의 그리드를 완성했습니다.
+```mermaid
+graph LR
+    A[Local MDX] -- "sync-to-sheets.js" --> B(Google Sheets)
+    B -- "fetch-data.js" --> C[src/data/articles.json]
+    C -- "Custom Loader" --> D[Astro getCollection]
+    A -- "Content Body" --> D
+```
 
-## 검증 결과
+### 1. 데이터 동기화 리포트
+- **대상**: `src/content/article/` 내 17개 아티클
+- **동기화 항목**: `UID`, `slug`, `headline`, `category`, `highlight`, `releaseDate` 등
+- **검증**: `fetch-data.js`를 통해 구글 시트 데이터를 로컬 JSON으로 동기화 및 Zod 스키마 검증 완료.
 
-브라우저 도구를 통해 `localhost:4321`에서 실제 아티클들이 중요도 점수에 따라 올바른 위치와 크기로 배치되는 것을 확인했습니다.
+### 2. 주요 변경 사항
+- **[NEW] [sync-to-sheets.js](file:///d:/yonggeun/porter/git/o-m.kr/production/scripts/sync-to-sheets.js)**: 로컬 기사 정보를 구글 시트로 최초/정기 동기화.
+- **[NEW] [fetch-data.js](file:///d:/yonggeun/porter/git/o-m.kr/production/scripts/fetch-data.js)**: 구글 시트의 최신 메타데이터를 빌드 타임에 가져옴.
+- **[MODIFY] [content.config.ts](file:///d:/yonggeun/porter/git/o-m.kr/production/src/content.config.ts)**: 커스텀 로더를 통해 구글 시트 데이터와 로컬 MDX 본문을 `UID` 기준으로 병합.
 
-### 주요 확인 사항:
-- [x] "내가 만든 기린 그림" 등의 고득점 기사가 Hero 섹션으로 자동 배치됨.
-- [x] `type: page`인 기사들이 그리드에서 정상적으로 제외됨.
-- [x] 페이지 새로고침 시에도 동일한 데이터이면 레이아웃이 항상 일정하게 유지됨(Deterministic).
+## 📈 전략적 이점 (Half-Wiki ROI)
 
-### 스크린샷
+1.  **관리 유연성**: 모바일에서도 구글 시트 앱을 통해 기사의 헤드라인이나 슬러그를 즉시 변경하여 핫이슈에 대응 가능.
+2.  **영구성**: 파일 경로나 파일명이 바뀌더라도 `UID`가 유지되는 한 메타데이터와 본문의 관계가 깨지지 않음.
+3.  **데이터 무결성**: Zod 스키마를 통한 빌드 타임 검증으로 구글 시트의 휴먼 에러 차단.
 
-![Landing Page Verification](/C:/Users/onlin/.gemini/antigravity/brain/645cba2a-944d-4222-a93c-d3ba98f4d4f2/landing_page_stitching_verification_1768289480865.png)
-
-## 다음 단계
-- [ ] 정적 콘텐츠를 Astro Content Collections 데이터로 연동
-- [ ] 다크 모드 지원 최적화
-- [ ] 모바일 반응형 세부 조정
+## ✅ 향후 활용 가이드
+- **메타데이터 수정**: 구글 시트에서 직접 수정 후 빌드(또는 `node scripts/fetch-data.js`) 시 반영됩니다.
+- **신규 기사 작성**: 로컬에 MDX 작성 후 `node scripts/sync-to-sheets.js`를 실행하면 시트에 새 행이 추가됩니다.

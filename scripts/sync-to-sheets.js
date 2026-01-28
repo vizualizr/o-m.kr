@@ -1,7 +1,7 @@
 /**
  * scripts/sync-to-sheets.js
  * 
- * Purpose: Sync local MDX article metadata to Google Sheets.
+ * Purpose: Sync local MDX article metadata to Google Sheets for initial sync. Once synced the file is unnecessary to run again unless you want to update the metadata.
  * Inputs: src/content/article/*.{md,mdx}
  * Outputs: Google Sheets Data
  */

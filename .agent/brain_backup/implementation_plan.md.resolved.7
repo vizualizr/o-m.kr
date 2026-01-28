@@ -1,31 +1,27 @@
-# Implement Instapaper-like Themes
+# 워크플로우 튜닝 및 경로 정상화 계획
 
-The goal is to replicate the reading experience of Instapaper by implementing its four core color themes and adjusting the layout for a focus on readability.
+## 목적
+지시 없이 생성된 `production/journal` 폴더 문제를 해결하고, 앞으로 이런 독단적 행동이 발생하지 않도록 `/daily_summary` 워크플로우를 기술적으로 보완(Tuning)합니다.
 
-## User Review Required
+## 튜닝(Tuning)의 구체적 내용
+1. **경로 정상화 (Path Tuning)**: 
+   - 잘못 생성된 `d:\yonggeun\porter\git\o-m.kr\production\journal\` 폴더를 삭제합니다.
+   - 실제 Logseq 그래프 위치인 `d:\yonggeun\porter\git\o-m.kr\journal\`을 정규 경로로 사용합니다.
+2. **절차적 잠금 (Lock Tuning)**:
+   - 워크플로우 단계 사이에 **'보고 및 대기'** 지점을 명시하여, 사용자의 명시적 승인 없이 다음 단계(파일 저장, 커밋)로 넘어가는 것을 기술적으로 차단합니다.
+3. **책임 범위 조정 (Role Tuning)**:
+   - 에이전트가 저널 내용을 '생성'하는 것까지만 자동으로 수행하고, '파일로 물리적 저장'하는 행위는 사용자의 확인 후 도구를 호출하도록 분리합니다.
 
-> [!IMPORTANT]
-> User requested to **postpone** color changes.
-> Prioritized update of [src/pages/list.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list.astro) with layout improvements.
+## 상세 변경 내용
 
-## Proposed Changes
+### 1. [daily_summary.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/workflows/daily_summary.md)
+- `## 3. Logseq 저널 생성` 단계 이후에 `// STOP: 사용자에게 내용을 보고하고 승인을 얻어야 함` 주석 및 절차 추가.
+- 저장 경로를 `../../journal/journals/` (프로젝트 루트 기준)로 수정하여 [production](file:///d:/yonggeun/porter/git/o-m.kr/production) 폴더 침범 방지.
 
-### Styles
-#### [MODIFY] [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css)
-- **POSTPONED**: Define the four Instapaper themes using CSS variables.
+### 2. 환경 정리
+- [DELETE] `d:\yonggeun\porter\git\o-m.kr\production\journal\` 폴더 삭제.
+- [MOVE] 어제 생성된 [2026_01_22.md](file:///d:/yonggeun/porter/git/o-m.kr/production/journal/journals/2026_01_22.md) 파일을 실제 Logseq 경로로 이동.
 
-#### [MODIFY] [global.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/global.css)
-- **POSTPONED**: Apply the **Coffee** theme variables to the `:root` or `body` by default.
-- **POSTPONED**: Adjust typography.
-
-### Pages
-#### [MODIFY] [list.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list.astro)
-- Updated to use improved semantic layout and structure (similar to [list00.astro](file:///d:/yonggeun/porter/git/o-m.kr/src/pages/list00.astro) design).
-- Fixed TypeScript errors.
-
-## Verification Plan
-
-### Manual Verification
-- Start the dev server (`npm run dev`).
-- Check `http://localhost:4321/list`.
-- Verify the new layout structure is applied (even with old colors).
+## 검증 계획
+1. `/daily_summary` 실행 시 3단계 완료 후 제안만 하고 멈추는지 확인.
+2. 사용자가 저장 지시를 내리기 전까지 파일 시스템에 변화가 생기지 않는지 확인.

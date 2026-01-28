@@ -8,7 +8,7 @@ stack::
 tags::
 type::
 alias::
-public:: false
+public:: true
 status:: [[ai-generated]]
 
 - ## Summary
@@ -37,7 +37,7 @@ status::
 date-of-installation::
 date-of-update:: [[YYYY-MM-DD]]
 alias::
-public:: false
+public:: true
 status:: [[ai-generated]]
 
 - ## Introduction

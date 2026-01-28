@@ -1,19 +1,13 @@
-# Project Restructuring
+# o-m.kr 프로젝트 작업 현황
 
-- [/] Review `src/layouts` and `src/components` <!-- id: 0 -->
+## 에이전트 행동 지침 및 보호 조치 (재발 방지)
+- [x] [instructions.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/instructions.md) 최상위 대원칙 및 자가 검증 절차(Proposal vs Execution) 수립
+- [x] 대화창 지시 자의적 해석 금지 조항 구체화
+- [x] [development-rules.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/development-rules.md) 중복 제거 및 기술적 성격 강화
+- [ ] 작업 단계마다 'Rule Compliance' 및 'Propose-First' 자가 점검 수행
+- [ ] 최종 대책에 대한 사용자 승인
 
-- [x] Move files and update imports <!-- id: 3 -->
-- [x] Report findings to user <!-- id: 2 -->
-
-# Visual Theme Testing
-
-- [x] Create and switch to branch `theme/pure-matcha-latte` <!-- id: 4 -->
-- [x] Research Instapaper color schemes <!-- id: 7 -->
-- [ ] Implement Instapaper themes (Paper, Coffee, Gray, Midnight) <!-- id: 5 -->
-- [x] Update `src/pages/list.astro` <!-- id: 8 -->
-- [x] Verify themes and layout <!-- id: 6 -->
-- [x] Replicate Instapaper list UI in `list.astro` <!-- id: 9 -->
-
-# Agentic Workflow Setup
-
-- [x] Create `.agent/templates/daily_log.md` <!-- id: 10 -->
+## 이전 작업 (참고)
+- [x] Google Sheets CMS 파이프라인 구축 및 연동
+- [x] Grid Mapper 리팩토링 (Span-Only Height)
+- [x] 워크플로우(`daily_summary`, `logseq`) 정형화

@@ -1,0 +1,33 @@
+# Google Sheets CMS 파이프라인 구축 완료 (Half-Wiki 전략)
+
+구글 시트를 아티클 메타데이터의 '조종실(Control Room)'로 활용하는 데이터 파이프라인 구축을 완료했습니다. 이를 통해 **Half-Wiki** 전략(시의성에 따른 슬러그/헤드라인 유연 변경)이 기술적으로 완벽히 지원됩니다.
+
+## 🚀 구현된 워크플로우
+
+```mermaid
+graph LR
+    A[Local MDX] -- "sync-to-sheets.js" --> B(Google Sheets)
+    B -- "fetch-data.js" --> C[src/data/articles.json]
+    C -- "Custom Loader" --> D[Astro getCollection]
+    A -- "Content Body" --> D
+```
+
+### 1. 데이터 동기화 리포트
+- **대상**: `src/content/article/` 내 아티클
+- **동기화 항목**: `UID`, `slug`, `headline`, `category`, `highlight`, `releaseDate` 등
+- **검증**: `fetch-data.js`를 통해 구글 시트 데이터를 로컬 JSON으로 동기화 및 Zod 스키마 검증 완료.
+
+### 2. 주요 변경 사항
+- **[NEW] [sync-to-sheets.js](file:///d:/yonggeun/porter/git/o-m.kr/production/scripts/sync-to-sheets.js)**: 로컬 기사 정보를 구글 시트로 최초/정기 동기화.
+- **[NEW] [fetch-data.js](file:///d:/yonggeun/porter/git/o-m.kr/production/scripts/fetch-data.js)**: 구글 시트의 최신 메타데이터를 빌드 타임에 가져옴.
+- **[MODIFY] [content.config.ts](file:///d:/yonggeun/porter/git/o-m.kr/production/src/content.config.ts)**: 커스텀 로더를 통해 구글 시트 데이터와 로컬 MDX 본문을 `UID` 기준으로 병합.
+
+## 📈 전략적 이점 (Half-Wiki ROI)
+
+1.  **관리 유연성**: 모바일에서도 구글 시트 앱을 통해 기사의 헤드라인이나 슬러그를 즉시 변경하여 핫이슈에 대응 가능.
+2.  **영구성**: 파일 경로나 파일명이 바뀌더라도 `UID`가 유지되는 한 메타데이터와 본문의 관계가 깨지지 않음.
+3.  **데이터 무결성**: Zod 스키마를 통한 빌드 타임 검증으로 구글 시트의 휴먼 에러 차단.
+
+## ✅ 향후 활용 가이드
+- **메타데이터 수정**: 구글 시트에서 직접 수정 후 빌드(또는 `node scripts/fetch-data.js`) 시 반영됩니다.
+- **신규 기사 작성**: 로컬에 MDX 작성 후 `node scripts/sync-to-sheets.js`를 실행하면 시트에 새 행이 추가됩니다.

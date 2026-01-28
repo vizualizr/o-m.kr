@@ -1,32 +1,26 @@
-# Walkthrough: Landing Page Layout Migration
+# Walkthrough: Grid System Refactoring (Uniform Track Height)
 
-이 문서는 [landing.html](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/usr/prototypes/landing.html) 프로토타입의 레이아웃을 [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)로 성공적으로 이식한 과정을 설명합니다.
+가변 행 높이(`rowHeight`) 시스템을 제거하고, 오직 행 트랙 점유 수(`rowSpan`)로만 높이를 결정하는 단순하고 직관적인 시스템으로의 전환을 완료했습니다.
 
-## 작업 내역
+## 주요 변경 사항
 
-1.  **브랜치 관리**: 기존 `theme/pure-matcha-latte` 브랜치를 `stitching`으로 이름을 변경하고 작업을 시작했습니다.
-2.  **디자인 시스템 통합**:
-    *   [src/styles/theme.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/theme.css): 프로토타입에 정의된 색상(`primary`, `background-light` 등)과 폰트(`Anton`, `Lora`)를 Tailwind v4 테마로 추가했습니다.
-    *   [src/styles/global.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/global.css): Google Fonts 및 Material Symbols Outlined 임포트를 추가했습니다.
-    *   [src/styles/landing.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/landing.css): `.bento-grid`, `.bento-card` 등 프로토타입 전용 스타일을 별도 파일로 추출했습니다.
-3.  **레이아웃 컴포넌트 생성**: [src/layouts/Stitched.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/layouts/Stitched.astro)를 새로 만들어 프로토타입에 최적화된 기본 구조를 정의했습니다.
-4.  **페이지 구현**: [src/pages/index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)를 업데이트하여 [landing.html](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/usr/prototypes/landing.html)의 벤토 그리드 구조와 헤더/푸터를 이식했습니다.
+### 1. 설정 단순화 ([grid-rule.json](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/swiss/grid-rule.json))
+- 영구적으로 사용하지 않게 된 `rowHeight` 필드를 모든 레이아웃 규칙에서 삭제했습니다.
+- 이제 세로 크기는 `rowSpan` 배열에 정의된 값들로만 결정됩니다.
+
+### 2. 로직 최적화 ([grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js))
+- `unitHeight`를 1로 고정하여 계산 복잡도를 낮췄습니다.
+- **면적 계산 방식 변경**: `area = width * rowSpan`으로 수정되어, 셀이 차지하는 물리적 면적이 곧 랭킹 점수가 되도록 개선했습니다.
+- JSDoc을 통해 각 함수의 역할과 데이터 흐름을 한국어로 상세히 문서화했습니다.
+
+### 3. 디스플레이 정렬 ([index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro) & [patchwork.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/swiss/patchwork.css))
+- [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)에서 더 이상 사용하지 않는 복잡한 [calc](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#122-160) 수식을 제거했습니다.
+- CSS Grid의 `grid-auto-rows`를 설정하여 모든 행이 균일한 높이를 갖도록 보정했습니다.
 
 ## 검증 결과
+- 모든 아티클이 누락 없이 설정된 `rowSpan`에 맞춰 렌더링됩니다.
+- 행 높이가 균일해짐에 따라 잡지 레이아웃의 엄밀성이 더 높아졌습니다.
+- 코드 라인 수가 줄어들고 유지보수가 용이해졌습니다.
 
-브라우저 도구를 통해 `localhost:4321`에서 레이아웃이 정확히 적용되었음을 확인했습니다.
-
-### 주요 확인 사항:
-- [x] "O-M.KR" 로고 및 상단 네비게이션 스타일 적용
-- [x] "근본적 명료함." 대형 헤드라인 및 폰트 적용
-- [x] 벤토 그리드(Bento Grid) 레이아웃 및 카드 스타일 적용
-- [x] 이미지 및 아이콘 노출 확인
-
-### 스크린샷
-
-![Landing Page Verification](/C:/Users/onlin/.gemini/antigravity/brain/645cba2a-944d-4222-a93c-d3ba98f4d4f2/landing_page_stitching_verification_1768289480865.png)
-
-## 다음 단계
-- [ ] 정적 콘텐츠를 Astro Content Collections 데이터로 연동
-- [ ] 다크 모드 지원 최적화
-- [ ] 모바일 반응형 세부 조정
+> [!NOTE]
+> 이제 가로 1컬럼의 너비와 세로 1행의 높이가 거의 1:1 비율을 유지하게 되어, 정삼각형/정사각형 기반의 스위스 디자인 구현이 훨씬 수월해졌습니다.

@@ -1,73 +1,6 @@
 ---
-trigger: always_on
+trigger: manual
 ---
-
-# Technical Stack
-
-- **Framework**: Astro 4.x (Static Site Generation)
-- **Visualization**: D3.js v7 (no React wrappers)
-- **Animation**: GSAP 3.x + Lenis (smooth scroll)
-- **Styling**: TailwindCSS (utility-first, no custom CSS unless necessary)
-- **Language**: TypeScript (strict mode)
-- **Data Source**: Google Sheets → Build-time JSON
-
-
-# Core Principles
-
-## 1. Astro-First Architecture
-- Use `.astro` components for static content
-- Apply `client:` directives strategically:
-  - `client:idle` for charts
-  - `client:visible` for below-fold elements
-  - Never `client:load` (performance)
-
-## 2. D3 Patterns (Based on "D3.js in Action")
-- **Always use**:
-  - `.join()` pattern (not `.enter().append()`)
-  - `d3.scaleTime()` for dates, `d3.scaleLinear()` for numbers
-  - Semantic naming: `xScale`, `yScale`, not `scale1`, `scale2`
-
-- **Never use**:
-  - Direct DOM manipulation outside D3 selections
-  - Hardcoded pixel values (use scales)
-  - Inline event handlers (use `.on()`)
-
-## 3. Data Flow
-```
-Google Sheets → fetch-data.js (Node) → src/data/*.json → Astro components
-```
-- ALL data preprocessing happens in `scripts/fetch-data.js`
-- D3 code receives clean, typed data
-- No `.map()` / `.filter()` inside D3 rendering functions
-
-### 4. Component Structure (tan
-```
-src/components/charts/
-├── _base/
-│   └── BaseChart.astro       # Reusable wrapper (ResizeObserver)
-├── LineChart.astro           # Specific chart (imports BaseChart)
-└── BarChart.astro
-```
-
-Each chart component:
-- Extends `BaseChart`
-- Accepts typed props: `data: DataPoint[]`
-- Uses Design System variables: `var(--color-primary)`
-- Includes accessibility: `aria-label`, `role="img"`
-
-### 5. GSAP + D3 Integration
-**Strict separation**:
-- **GSAP (ScrollTrigger)**: Container-level animations
-  - Chart entrance (`opacity`, `y`)
-  - Section transitions
-  - Background color changes
-  
-- **D3 (transition)**: SVG element animations
-  - Data updates (`.transition().duration(1000)`)
-  - Path morphing
-  - Scale changes
-
-**Never**: Mix GSAP and D3 on the same DOM element.
 
 ### 6. Code Style
 
@@ -187,6 +120,3 @@ Code is considered successful when:
 3. No console errors or warnings
 4. Accessible via keyboard and screen readers
 5. Follows all patterns from "D3.js in Action" book
-
-
-

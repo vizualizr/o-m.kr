@@ -1,14 +1,14 @@
-# Project Restructuring
+# o-m.kr 프로젝트 작업 현황
 
-- [/] Review `src/layouts` and `src/components` <!-- id: 0 -->
-- [x] Identify files to move from `layouts` to `components` <!-- id: 1 -->
-- [x] Move files and update imports <!-- id: 3 -->
-- [x] Report findings to user <!-- id: 2 -->
+## Google Sheets CMS 전략 테스트 (Half-Wiki)
+- [x] 프로젝트 지침([instructions.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/instructions.md), [development-rules.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/rules/development-rules.md)) 업데이트
+- [x] Google API 서비스 계정 인증 환경 구축 ([.agent/secrets/google-keys.json](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/secrets/google-keys.json))
+- [x] 기사 메타데이터 추출 및 구글 시트 푸시 스크립트 작성 ([scripts/sync-to-sheets.js](file:///d:/yonggeun/porter/git/o-m.kr/production/scripts/sync-to-sheets.js))
+- [x] 기존 아티클 메타데이터 초기 동기화 테스트
+- [/] 구글 시트 데이터 기반 `src/data/*.json` 생성 스크립트 작성 (`scripts/fetch-data.js`)
+- [ ] Astro Content Collections (`uid` 기반) 연동 및 테스트
+- [ ] 전략적 이점 및 ROI 최종 평가 보고
 
-# Visual Theme Testing
-
-- [x] Create and switch to branch `theme/pure-matcha-latte` <!-- id: 4 -->
-- [x] Research Instapaper color schemes <!-- id: 7 -->
-- [ ] Implement Instapaper themes (Paper, Coffee, Gray, Midnight) <!-- id: 5 -->
-- [/] Update `src/pages/list.astro` <!-- id: 8 -->
-- [/] Verify themes and layout <!-- id: 6 -->
+## 이전 작업 (참고)
+- [x] Grid Mapper 리팩토링 (Span-Only Height)
+- [x] 워크플로우(`daily_summary`, `logseq`) 정형화

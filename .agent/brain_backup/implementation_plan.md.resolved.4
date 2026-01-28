@@ -1,40 +1,51 @@
-# Implement Instapaper-like Themes
+# Proactive Enhancement: From Debugging-Centric to Engineering-Centric
 
-The goal is to replicate the reading experience of Instapaper by implementing its four core color themes and adjusting the layout for a focus on readability.
+현재 프로젝트의 기반은 마련되었으나, [dev-method.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/usr/plans/dev-method.md)와 [overview.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/overview.md)에서 지향하는 "현업 수준의 코드 품질"과 "상호작용하는 저널리즘"을 달성하기 위해 필요한 선제적 개선 사항을 제안합니다.
 
 ## User Review Required
 
-> [!NOTE]
-> Official hex codes are not public. I have selected the following approximations based on design research. I will set **Coffee** as the default.
+> [!IMPORTANT]
+> - **Vitest 도입**: 로직 검증을 위한 테스트 환경을 구축합니다.
+> - **GSAP 설치**: 정적 텍스트를 넘어선 스크롤리텔링 구현을 위한 기반을 마련합니다.
+> - **Zod 강화**: 데이터의 정합성을 코드 레벨에서 강제합니다.
 
 ## Proposed Changes
 
-### Styles
-#### [MODIFY] [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css)
-- Define the four Instapaper themes using CSS variables.
-- **Paper** (Classic):
-  - Background: `#FDFDFD` (Off-white)
-  - Text: `#333333` (Dark Gray)
-- **Coffee** (Sepia):
-  - Background: `#F8F1E3` (Cream/Sepia)
-  - Text: `#4F321C` (Dark Brown)
-- **Gray** (Dark Gray):
-  - Background: `#333333` (Charcoal)
-  - Text: `#DDDDDD` (Light Gray)
-- **Midnight** (OLED Black):
-  - Background: `#000000` (Pure Black)
-  - Text: `#888888` (Medium Gray)
+### [Component] Engineering Excellence (TDD & Validation)
 
-#### [MODIFY] [global.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/global.css)
-- Apply the **Coffee** theme variables to the `:root` or `body` by default.
-- Adjust typography:
-  - Font: Serif for body (e.g., Georgia or similar system serif).
-  - Line-height: 1.6.
-  - Max-width: 700px (approximate reading width).
+#### [NEW] [Vitest Setup]
+- `vitest` 를 설치하고 [grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js)와 같은 복잡한 로직에 대한 단위 테스트를 작성합니다. 이는 [dev-method.md](file:///d:/yonggeun/porter/git/o-m.kr/production/.agent/usr/plans/dev-method.md)의 단기 과제인 TDD 도입을 실천하는 첫걸음입니다.
+
+#### [MODIFY] [content.config.ts](file:///d:/yonggeun/porter/git/o-m.kr/production/src/content/config.ts)
+- `z.object`를 강화하여 필드 누락으로 인한 런타임 에러를 방지합니다. (예: `revisions` 배열 비정상 처리 방지)
+
+---
+
+### [Component] UX & Interaction (Scrollytelling)
+
+#### [NEW] [Scrolly.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/components/swiss/Scrolly.astro)
+- **GSAP + ScrollTrigger**를 활용한 표준 스크롤리텔링 패턴을 구현합니다.
+- **구조**:
+    - `Sticky Stage`: 배경에서 시각화(D3.js 등)가 고정되어 나타나는 영역.
+    - `Scrolling Steps`: 투명한 배경 위로 흘러가는 텍스트(기사 내용) 영역.
+- **제어 로직**: GSAP의 `ScrollTrigger`가 각 Step의 진입/퇴장을 감지하여 배경 Stage의 데이터 상태(D3 transition)를 트리거하도록 설계합니다.
+- **Lenis 연동**: 프로젝트의 부드러운 스크롤을 위해 `Lenis` 라이브러리를 함께 검토합니다.
+
+#### [NEW] [GridInspector.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/components/dev/GridInspector.astro)
+- 개발 모드에서만 활성화되는 오버레이를 제작합니다. 각 셀의 `score`, `area`, `width/height` 값을 시각적으로 보여주어 그리드 매퍼 로직을 정교하게 튜닝할 수 있게 돕습니다.
+
+---
+
+### [Component] Automation & Data Flow
+
+#### [NEW] [fetch-data.js](file:///d:/yonggeun/porter/git/o-m.kr/production/scripts/fetch-data.js)
+- `coding-standards.md`에 기재된 "Google Sheets → Build-time JSON" 흐름을 실제 자동화 스크립트로 구현합니다. 현재 수동으로 관리되는 데이터를 동적으로 연동할 준비를 합니다.
 
 ## Verification Plan
 
+### Automated Tests
+- `npm run test`: [grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js)의 결과값이 레이아웃 규칙(12컬럼, 최소면적 9 등)을 항상 만족하는지 검증합니다.
+
 ### Manual Verification
-- Start the dev server (`npm run dev`).
-- Verify the **Coffee** theme is active.
-- Check contrast and readability against the "Instapaper feel".
+- `/article/` 페이지에서 스크롤에 따른 요소 반응 확인.
+- 개발 모드에서 그리드 인스펙터 오버레이 작동 확인.

@@ -22,12 +22,11 @@ trigger: always_on
 ### Deployment
 
 - 서비스 도메인: o-m.kr (도메인 확보 완료)
-- 홍보 및 개발용 도메인: dev.o-m.kr
- - 선행 홍보의 일환으로 개발 과정을 배포 중.
- - 로컬 Logseq에 개발 일지 작성 후 Logseq-SPA GitHub Action을 통해 GitHub Pages에 배포 중.
+- 개발 과정 홍보용 도메인: dev.o-m.kr
+ - 선행 홍보의 일환으로 개발 과정을 배포함.
+ - 로컬 Logseq에 개발 일지 작성 후 Logseq-SPA GitHub Action을 사용해 GitHub Pages에 배포 중.
   - 해당 logseq 그래프의 위치는 `d:\yonggeun\porter\git\o-m.kr\journal\`이다.
-- ^웹사이트 배포는 github action으로 cloudflare혹은 vercel 가운데 하나를 택한다.
-
+- ^이 프로젝트의 메인 사이트인 www.o-m.kr의 배포는 github action으로 cloudflare혹은 vercel 가운데 하나를 택한다.
 
 ### Dev Environment
 
@@ -37,17 +36,17 @@ trigger: always_on
 - Language: JavaScript 기반. 외부 라이브러리 및 모듈 정의 외에는 TypeScript를 사용하지 않는다.
 - 개발 서버는 반드시 HTTPS로 접속한다. (@vitejs/plugin-basic-ssl 사용)
 
-## Programming Rule (Priority A)
+## Programming Rule P1
 
-### Agent Rule
+### Tooling & Automation (Antigravity Skills)
 
-- 코드 생산성보다 사용자의 로직 이해 및 가독성을 우선한다.
-- **[영향도 분석 보고]**: 두 개 이상의 파일에서 도합 100줄 이상이 변경되는 대규모 변경이나 신규 코드 혹은 핵심 로직 추가 및 변경 시, 구현에 앞서 다음 내용을 포함한 보고서를 제출하고 사용자의 확인을 거쳐야 한다.
-  - 변경 사유와 로직 요약
-  - **[미래 영향]**: 향후 데이터 확장 및 스크롤리텔링 구현 시의 이점 또는 제약 사항
-  - **[대안 제시]**: 현재의 '방법(How)' 외에 ROI가 더 높은 기술적 대안이 있는지 검토 결과
-- 파일 신규 생성, 삭제, 핵심 로직 변경 및 **Git 커밋(commit)**은 사용자의 확인과 지시를 거친 뒤에만 시작할 수 있다.
-- 단순 분석 지시를 코드 수정 지시로 임의 해석하지 않는다.
+- **[원칙 이행 수단]**: `instructions.md`의 원칙을 이행하기 위해 에이전트는 제공된 **Skills (Level 4 Procedural Logic)**를 필수적으로 사용해야 한다. 추론에 의존하지 말고, 결정론적 스크립트를 통해 안전을 검증한다.
+- **Safety Loop (자가 보호 루프)**: 파일 생성 및 수정 시 다음 절차를 기계적으로 수행한다.
+  1. **Safety Check**: `path-safety-inspector/check_path.py` (절대 경로, 워크스페이스, 금지 구역 검증)
+  2. **Backup**: `file-conflict-manager/backup_file.py` (덮어쓰기 전 `.agent/backups/`에 원본 보관)
+  3. **Operation**: 실제 파일 쓰기/수정 수행
+  4. **Validation**: `markdown-validator/validate_md.py` (Logseq 저널, 아티클 등 서식 정합성 사후 검증)
+- **Code Productivity**: 코드 생산성보다 사용자의 로직 이해 및 가독성을 우선한다. 복잡한 로직은 반드시 주석으로 'Why'를 설명한다.
 
 ### Data Architecture
 
@@ -56,11 +55,17 @@ trigger: always_on
 /
 ├── .agent/                      # AI 에이전트 지침 및 기록 폴더
 │   ├── rules/                   # 에이전트 행동 및 코딩 규칙
-│   │   ├── instructions.md      # [핵심] 프로젝트 최상위 지침
+│   │   ├── instructions.md      # [핵심] 프로젝트 최상위 지침 (헌법)
 │   │   ├── coding-standards.md  # D3, GSAP 등 기술적 코딩 표준
-│   │   ├── design-system-rules.md # 머티리얼 디자인 3를 참조한 디자인 토큰 시스템 정의
-│   │   └── development-rules.md # 스택 정의 및 프로그래밍 아키텍처 규칙
-│   └── workflows/               # 슬래시 커맨드(/)로 실행 가능한 워크플로우
+│   │   ├── design-system-rules.md # 디자인 토큰 및 시스템 정의
+│   │   └── development-rules.md # 스택 정의 및 기술 이행 규칙 (법률)
+│   ├── skills/                  # [중요] 결정론적 검증 및 기능 수행을 위한 스킬 (Level 4 Scripts)
+│   │   ├── path-safety-inspector/ # 경로 및 권한 검증
+│   │   ├── markdown-validator/    # 서식 정합성 검증
+│   │   └── file-conflict-manager/ # 파일 백업 및 충돌 관리
+│   ├── backups/                 # [중요] 파일 덮어쓰기 전 자동 백업 보관소
+│   ├── brain_backup/            # 에이전트 기억(Artifacts) 스냅샷
+│   ├── workflows/               # 슬래시 커맨드(/)로 실행 가능한 워크플로우
 │   ├── daily-logs/              # 에이전트가 기록하는 일별 상세 작업 로그
 │   └── usr/                     # 사용자가 직접 관리하는 리소스 (에이전트는 사용자 허가 후 파일 변경 가능)
 │       ├── plans/               # 인벤토리, 정보 구조 등 기획 문서
@@ -85,53 +90,10 @@ trigger: always_on
 ├── tailwind.config.mjs          # Tailwind v4 및 FlyonUI 설정
 └── package.json                 # 의존성 및 스크립트 관리
 
-### 콘텐츠
+### 콘텐츠 관리 아키텍처
 
-#### 데이터 아키텍처 및 흐름
-
-- **원칙**: 모든 아티클 및 정보성 데이터는 Astro Content Collections를 통해 관리하며, 수동 관리 대신 자동화된 파이프라인을 지향한다.
-- **Flow**: 
-  1. **Source**: Google Sheets (데이터 관리 주체)
-  2. **Fetch**: `scripts/fetch-data.js` (Node.js를 통한 API 호출 및 데이터 수집)
-  3. **Validate**: Zod를 사용하여 기술 스키마와 콘텐츠 규칙 검증
-  4. **Emit**: `src/data/articles.json` (Astro 빌드 시 참조될 정적 에셋 생성)
-  5. **Render**: `src/content.config.ts`에서 JSON과 MDX를 병합하여 콘텐츠 컬렉션 생성
-
-#### CMS Pipeline & Data Flow
-
-```mermaid
-graph TD
-    A["Google Sheets (Metadata)"] -->|"scripts/fetch-data.js"| B["src/data/articles.json"]
-    B -->|"Merge by UID"| C["Astro Content Collections"]
-    D["src/content/articles/*.mdx"] -->|"Source Context"| C
-    C --> E["Dynamic Article Pages"]
-    E -.->|"Admin Tooling"| F["scripts/sync-to-sheets.js"]
-    F -.->|"Sync Back"| A
-```
-
-- **Data Sourcing Strategy**: 모든 정적 메타데이터(flytitle, headline 등)는 Google Sheets에서 관리하며, 문학적/창의적 본문 컨텍스트는 local MDX에서 관리한다. 
-- **UID Matching**: 시트의 `uid`와 MDX의 `id`가 일치해야 정상적으로 병합된다.
-
-#### 콘텐츠 소스
-
-- 모든 콘텐츠의 최소 단위는 아티클(article) 혹은 페이지이다.
-- 데이터 접근은 반드시 astro:content의 getCollection 함수를 사용해야 한다.
-- 아티클은 사용자가 작성하는 디지털 스토리텔링 데이터 한 개를 지칭하는 최소 단위이며 이 프로젝트의 성패를 좌우하는 핵심 콘텐츠이다.
-- 아티클 데이터는 Astro의 Content Collections (src/content/article)을 거쳐 관리한다.
-- 아티클 데이터 접근은 반드시 astro:content의 getCollection 함수를 사용해야 한다.
-- 페이지는 아티클 외에 이 사이트의 시스템과 기능을 구성하는 일반 페이지의 단위이다. 해당 페이지는 `src/page/`에서 `.astro` 형식으로 관리한다. 
-
-#### 아티클 핵심 데이터 스키마 (Article Schema)
-
-- `src\content.config.ts`에서 관리한다.
-- 아티클 객체(article.data)는 다음과 같은 핵심 필드를 포함한다. 각 필드의 주석은 사용자가 직접 작성하므로 아래 설명보다 해당 파일의 주석을 우선으로 한다. (Priority A)
-  - flytitle: an in 2 ~ 4 words of inviting phrase characterizing the issue, little enigmatic.
-  - headline:  is a title clarifies people what is going on. It is informative than attractive.
-  - rubric: a catchy phrase draws the reader whether s/he is interested in the article or not. It is attractive than informative.
-  - slug: An SEO friendly conversion of headline 
-  - date (Date): 발행일.
-  - tags (string[]): 태그 목록.
-  - revisions (Array<{ timestamp: string, ... }>): 수정 내역 배열. (정렬 로직의 기준이 됨)
+- 다음 문서에 기재된 지침을 최우선으로 따르라.
+`.agent\plans\contents-architecture.md` P1
 
 ### Core Principles & Coding Patterns
 
@@ -180,11 +142,3 @@ graph TD
 
 - 제약: localStorage, jQuery, 별도 CSS 파일 생성을 금지한다.
 - 성능: 요소 1,000개 이상 시 Canvas 고려. D3 모듈은 필요한 것만 트리쉐이킹하여 임포트.
-
-### Output Format Requirements
-
-- 컴포넌트: 전체 코드, 그룹화된 임포트, 인터페이스 정의, 사용 예시 포함.
-
-설명: 하이레벨 로직, 인라인 주석, 잠재적 이슈 및 테스트 단계 포함.
-
-디버깅: 근본 원인 분석, 해결책 설명, 재발 방지 전략 포함.

@@ -1,0 +1,47 @@
+{
+    "name": "logseq",
+    "description": "Logseq journal entry format for o-m.kr project",
+    "rules": {
+        "required_sections": [
+            {
+                "title": "Summary",
+                "level": 2,
+                "exact_match": true,
+                "prefix": "- ##"
+            },
+            {
+                "title": "Steps",
+                "level": 2,
+                "exact_match": true,
+                "prefix": "- ##"
+            },
+            {
+                "title": "Troubleshooting",
+                "level": 2,
+                "exact_match": true,
+                "prefix": "- ##"
+            },
+            {
+                "title": "log",
+                "level": 2,
+                "exact_match": true,
+                "prefix": "- ##"
+            }
+        ],
+        "properties": {
+            "required": [
+                "date-created",
+                "division",
+                "status"
+            ],
+            "values": {
+                "division": "[[makr]]",
+                "status": "[[ai-generated]]"
+            }
+        },
+        "structure": {
+            "use_bullet_points": true,
+            "no_yaml_frontmatter": true
+        }
+    }
+}

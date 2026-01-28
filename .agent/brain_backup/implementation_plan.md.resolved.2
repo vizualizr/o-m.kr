@@ -1,30 +1,46 @@
-# Implement Instapaper-like Themes
+# [APPROVED] Refactor Grid Mapper to Span-Only Height
 
-The goal is to replicate the reading experience of Instapaper by implementing its four core color themes and adjusting the layout for a focus on readability.
+변함없는 행 트랙 높이를 기반으로, 오직 `rowSpan`(트랙 점유 수)에 의해서만 세로 크기가 결정되도록 시스템을 단순화합니다.
 
 ## User Review Required
 
-> [!NOTE]
-> I will be defining four distinct themes in [src/styles/theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css): `paper`, `coffee`, `gray`, and `midnight`.
+> [!IMPORTANT]
+> - [grid-rule.json](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/swiss/grid-rule.json)에서 `rowHeight` 설정이 영구적으로 제거되었습니다.
+> - 모든 행 트랙은 동일한 높이 비율을 갖게 되며, 특정 행만 높게 설정하는 기능은 사라집니다 (대신 `rowSpan`을 늘려 대응).
+> - [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)에서 계산하던 복잡한 `grid-template-rows` 수식은 더 이상 사용하지 않습니다.
 
 ## Proposed Changes
 
-### Styles
-#### [MODIFY] [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/theme.css)
-- Define the four Instapaper themes using FlyonUI/Tailwind CSS variables:
-  - **Paper**: White background, black text (Classic).
-  - **Coffee**: Sepia/Cream background, dark brown text (Warm).
-  - **Gray**: Light gray background, dark gray text (Low contrast).
-  - **Midnight**: Black/Dark Blue background, white/light gray text (Dark mode).
-- Configure font settings to match Instapaper's focus on typography (serifs for body, sans-serif for UI).
+### [Component] Grid Configuration (JSON)
 
-#### [MODIFY] [global.css](file:///d:/yonggeun/porter/git/o-m.kr/src/styles/global.css)
-- Adjust global layout styles to mimic Instapaper's clean, centered reading column.
-- Ensure proper spacing and line-height for enhanced readability.
+#### [MODIFY] [grid-rule.json](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/swiss/grid-rule.json)
+- [DELETE] 모든 `variants` 내의 `rowHeight` 필드 삭제.
+
+---
+
+### [Component] Grid Mapper Logic (JS)
+
+#### [MODIFY] [grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js)
+- **[generateGridStructure](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#218-393) 내부 로직 단순화**:
+    - `currentRowHeightUnit`을 상수로 `1` 고정.
+    - `rowHeight` 관련 변수(`totalHeight`, `rowHeightOpts` 등) 삭제.
+    - `area` 계산식을 `width * height(span)`으로 변경.
+    - `minArea` 보장을 위한 `requiredSpan` 계산 시 `rowHeight` 보정 제거.
+- **JSDoc 업데이트**: 변경된 입출력 구조 반영.
+
+---
+
+### [Component] Display & Styles
+
+#### [MODIFY] [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)
+- 주석 처리된 `grid-template-rows` 관련 코드 영구 삭제 또는 정리.
+
+#### [MODIFY] [patchwork.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/swiss/patchwork.css)
+- `.patchwork-grid`에 `grid-auto-rows` 속성을 추가하여 균일한 트랙 높이 확보.
 
 ## Verification Plan
 
 ### Manual Verification
-- Start the dev server (`npm run dev`).
-- Test switching between the four themes (requires a theme switcher mechanism, which might need to be added or manually tested).
-- Verify readability and contrast on sample articles.
+1. `npm run dev` 실행 후 레이아웃 깨짐 확인.
+2. 모든 셀의 높이가 `rowSpan`의 배수로 정직하게 렌더링되는지 확인.
+3. 빈틈(Holes)이 발생하지 않는지 전수 검사.
