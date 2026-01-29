@@ -10,7 +10,7 @@
 @import "flyonui/variants.css";
 @source "../../node_modules/flyonui/flyonui.js";
 
-@import "@styles/theme.css";
+@import "./theme.css";
 
 .paper {
   /* @apply bg-paper-100; */
@@ -29,7 +29,7 @@
       }
 
       .texture {
-        @apply absolute inset-0 opacity-70 bg-[radial-gradient(circle,_gray_25%\,_transparent_75%)] bg-[length:0.4em_0.4em] mix-blend-color-burn pointer-events-none;
+        @apply absolute inset-0 opacity-70 bg-[radial-gradient(circle, _gray_25%\,_transparent_75%)] bg-[length:0.4em_0.4em] mix-blend-color-burn pointer-events-none;
       }
 
       .header {

@@ -1,6 +1,5 @@
 {
   "artifactType": "ARTIFACT_TYPE_TASK",
-  "summary": "Security audit checklist for checking sensitive data exposure in a public repository.",
-  "updatedAt": "2026-01-28T07:09:24.534687200Z",
-  "version": "3"
+  "summary": "Task list for fixing Tailwind v4 @theme error.",
+  "updatedAt": "2026-01-29T07:13:56.968367500Z"
 }

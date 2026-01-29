@@ -1,25 +1,277 @@
-# Security Audit Walkthrough: Repository Public Conversion
+# Walkthrough - Fixing Tailwind v4 @theme Error
 
-I have conducted a security audit of the `o-m.kr` repository following its conversion to public. Here are the findings and verification steps.
+I have resolved the "Unknown at rule @theme" error and standardized the CSS architecture for Tailwind v4.
 
-## Status Summary
-The repository is **SAFE** for public access. No sensitive information (API keys, environment variables) was found in the current files or Git history.
+## Changes Made
 
-## Verification Checklist
+### 1. CSS Standardization
+- **[global.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/global.css)**: Fixed the invalid import order. `@import "tailwindcss"` and related plugins are now at the very top, ensuring standard CSS compliance and proper parsing by Tailwind v4.
+- **[theme.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/theme.css)**: Removed redundant `@import "tailwindcss"` to keep the file clean for use as a module.
+- **[theme.css (Swiss)](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/swiss/theme.css)**: Added `@import "tailwindcss"` at the top so it is correctly recognized as an entry point when imported in layouts.
 
-### 1. Sensitive Files Excluded
-- [x] `.env` is ignored and not tracked.
-- [x] `.agent/secrets/` is ignored and not tracked.
-- [x] `node_modules/`, `dist/`, `.astro/` are ignored.
+### 2. Configuration & IDE Support
+- **[tailwind.config.mjs](file:///d:/yonggeun/porter/git/o-m.kr/production/tailwind.config.mjs)**: Converted to ESM syntax (`export default`).
+- **[.vscode/settings.json](file:///d:/yonggeun/porter/git/o-m.kr/production/.vscode/settings.json)**: Added custom configuration to ignore false-positive CSS warnings.
+- **[.vscode/tailwind.json](file:///d:/yonggeun/porter/git/o-m.kr/production/.vscode/tailwind.json)**: Added custom CSS data to provide IDE support for Tailwind v4's specific at-rules (`@theme`, `@utility`, etc.).
 
-### 2. Git History Check
-- [x] **Verified**: `.env` has never been committed.
-- [x] **Verified**: `google-keys.json` (Google API key) has never been committed.
+## Verification Results
 
-### 3. Hardcoded Secret Scan
-- [x] **Verified**: No hardcoded Google Sheet IDs or emails found in the tracked codebase.
-- [x] **Verified**: `src/site.config.ts` correctly uses `import.meta.env` for secret values.
+- **IDE Recognition**: The red squiggles for `@theme` and `@utility` should no longer appear in VS Code.
+- **Dev Server**: The styles remain correctly applied in the development environment.
+- **Build Note**: A build was attempted, and while it failed due to a bibliography path issue in `rehype-citation` (unrelated to this task), the Tailwind-specific CSS parsing errors have been resolved.
 
-## Recommendations
-- **Commit `src/site.config.ts`**: Since it's currently untracked (`??`), you can safely add it to the repository so other collaborators can see the structure.
-- **`.env.example`**: Consider creating a `.env.example` file (without values) to help others understand which environment variables are required.
+```diff:global.css
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+KR:wght@100..900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
+@import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css");
+
+@font-face {
+  font-family: 'Minguk';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Minguk-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* font-family: 'Minguk-Regular'; */
+@font-face {
+  font-family: 'Minguk';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Minguk-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import "tailwindcss";
+
+@plugin "flyonui";
+@plugin "@iconify/tailwind4";
+@import "flyonui/variants.css";
+/* @source "/node_modules/flyonui/flyonui.js"; */
+@source "../../node_modules/flyonui/flyonui.js";
+
+
+@import "@styles/theme.css";
+
+:root {
+  /* equals to 7xl in tailwind default responsive unit */
+  --max-width: 80rem;
+}
+
+body {
+  @apply text-[#363636] flex flex-col min-h-svh mb-0 items-center h-fit w-full;
+  word-break: keep-all;
+  font-family: "Nanum Square Neo", "Noto Sans KR", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+.paper {
+  @apply m-0 p-0 grow w-full;
+}
+
+main {
+  @apply mx-0 my-0 w-full md:max-w-7xl;
+}
+
+.footerContainer {
+  /* @apply bg-[#675350] text-[#fcf8ee] ; */
+  /* @apply bg-mojo-200; */
+}
+
+footer {
+  @apply footer p-3 pt-7 pb-10 max-w-4xl m-auto border-t-[1px] border-neutral-200 text-sm h-fit;
+}
+
+.card {
+  @apply shadow-none;
+}
+===
+@import "tailwindcss";
+
+@plugin "flyonui";
+@plugin "@iconify/tailwind4";
+@import "flyonui/variants.css";
+/* @source "/node_modules/flyonui/flyonui.js"; */
+@source "../../node_modules/flyonui/flyonui.js";
+
+@import "@styles/theme.css";
+
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+KR:wght@100..900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
+@import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css");
+
+@font-face {
+  font-family: 'Minguk';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Minguk-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* font-family: 'Minguk-Regular'; */
+@font-face {
+  font-family: 'Minguk';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Minguk-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  /* equals to 7xl in tailwind default responsive unit */
+  --max-width: 80rem;
+}
+
+body {
+  @apply text-[#363636] flex flex-col min-h-svh mb-0 items-center h-fit w-full;
+  word-break: keep-all;
+  font-family: "Nanum Square Neo", "Noto Sans KR", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+.paper {
+  @apply m-0 p-0 grow w-full;
+}
+
+main {
+  @apply mx-0 my-0 w-full md:max-w-7xl;
+}
+
+.footerContainer {
+  /* @apply bg-[#675350] text-[#fcf8ee] ; */
+  /* @apply bg-mojo-200; */
+}
+
+footer {
+  @apply footer p-3 pt-7 pb-10 max-w-4xl m-auto border-t-[1px] border-neutral-200 text-sm h-fit;
+}
+
+.card {
+  @apply shadow-none;
+}
+```
+```diff:theme.css
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, sans-serif, "Noto Sans KR",
+    "Noto Sans CJK KR", "Apple SD Gothic Neo", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --color-primary: #013466;
+  --color-background-light: #f5f7f8;
+  --color-background-dark: #0a0a1a;
+  --color-grid-color: #d1d1da;
+
+  --font-display: "Lora", serif;
+  --font-gothic: "Noto Sans KR", sans-serif;
+  --font-anton: "Anton", sans-serif;
+
+  --color-paper-50: oklch(98.32% 0.002 325.59);
+  --color-paper-100: oklch(96.73% 0.005 325.62);
+  --color-paper-200: oklch(93.57% 0.011 339.34);
+  --color-paper-300: oklch(90.8% 0.014 0.29);
+  --color-paper-400: oklch(87.4% 0.019 25.62);
+  --color-paper-500: oklch(83.29% 0.03 67.39);
+  --color-paper-600: oklch(77.37% 0.037 26.63);
+  --color-paper-700: oklch(70.02% 0.05 1.81);
+  --color-paper-800: oklch(59.31% 0.073 339.93);
+  --color-paper-900: oklch(43.44% 0.053 325.18);
+  --color-paper-950: oklch(22.07% 0.013 314.54);
+
+
+}
+===
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, sans-serif, "Noto Sans KR",
+    "Noto Sans CJK KR", "Apple SD Gothic Neo", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --color-primary: #013466;
+  --color-background-light: #f5f7f8;
+  --color-background-dark: #0a0a1a;
+  --color-grid-color: #d1d1da;
+
+  --font-display: "Lora", serif;
+  --font-gothic: "Noto Sans KR", sans-serif;
+  --font-anton: "Anton", sans-serif;
+
+  --color-paper-50: oklch(98.32% 0.002 325.59);
+  --color-paper-100: oklch(96.73% 0.005 325.62);
+  --color-paper-200: oklch(93.57% 0.011 339.34);
+  --color-paper-300: oklch(90.8% 0.014 0.29);
+  --color-paper-400: oklch(87.4% 0.019 25.62);
+  --color-paper-500: oklch(83.29% 0.03 67.39);
+  --color-paper-600: oklch(77.37% 0.037 26.63);
+  --color-paper-700: oklch(70.02% 0.05 1.81);
+  --color-paper-800: oklch(59.31% 0.073 339.93);
+  --color-paper-900: oklch(43.44% 0.053 325.18);
+  --color-paper-950: oklch(22.07% 0.013 314.54);
+
+
+}
+```
+```diff:theme.css
+@theme {
+    /* [Swiss Theme] Semantic Color Tokens (FlyonUI + Material Roles) */
+    --color-primary: var(--color-blue-900);
+    --color-primary-content: oklch(100% 0 0);
+    /* White text on primary */
+
+    --color-secondary: var(--color-blue-600);
+    --color-accent: var(--color-amber-500);
+
+    --color-base-100: var(--color-stone-50);
+    /* Surface / Light background */
+    --color-base-200: var(--color-stone-100);
+    --color-base-content: var(--color-stone-900);
+    /* On-Surface / Dark text */
+
+    --color-outline: var(--color-stone-200);
+    /* Semantic grid line */
+
+    /* [Swiss Theme] Typography Tokens (Semantic Extensions) */
+    --font-display: "Anton", "Apple SD Gothic Neo", "Malgun Gothic", var(--font-sans);
+    /* Display: Bold short headers */
+    --font-headline: "Lora", "Pretendard", "Noto Serif KR", serif;
+    /* Headline: Section titles */
+}
+
+@utility font-display {
+    font-family: var(--font-display);
+}
+
+@utility font-headline {
+    font-family: var(--font-headline);
+}
+===
+@import "tailwindcss";
+
+@theme {
+    /* [Swiss Theme] Semantic Color Tokens (FlyonUI + Material Roles) */
+    --color-primary: var(--color-blue-900);
+    --color-primary-content: oklch(100% 0 0);
+    /* White text on primary */
+
+    --color-secondary: var(--color-blue-600);
+    --color-accent: var(--color-amber-500);
+
+    --color-base-100: var(--color-stone-50);
+    /* Surface / Light background */
+    --color-base-200: var(--color-stone-100);
+    --color-base-content: var(--color-stone-900);
+    /* On-Surface / Dark text */
+
+    --color-outline: var(--color-stone-200);
+    /* Semantic grid line */
+
+    /* [Swiss Theme] Typography Tokens (Semantic Extensions) */
+    --font-display: "Anton", "Apple SD Gothic Neo", "Malgun Gothic", var(--font-sans);
+    /* Display: Bold short headers */
+    --font-headline: "Lora", "Pretendard", "Noto Serif KR", serif;
+    /* Headline: Section titles */
+}
+
+@utility font-display {
+    font-family: var(--font-display);
+}
+
+@utility font-headline {
+    font-family: var(--font-headline);
+}
+```

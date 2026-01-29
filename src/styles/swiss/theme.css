@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 @theme {
     /* [Swiss Theme] Semantic Color Tokens (FlyonUI + Material Roles) */
     --color-primary: var(--color-blue-900);

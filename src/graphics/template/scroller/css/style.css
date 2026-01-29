@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "@styles/theme.css";
+@import "../../../../styles/theme.css";
 
 .paper {
 	@apply bg-paper-600;
@@ -39,6 +39,7 @@
 .step {
 	@apply max-w-xl h-screen mx-auto items-center justify-center content-start p-10 pb-[50vh] bg-yellow-500/0;
 }
+
 .step .title {
 	@apply text-2xl font-bold;
 }

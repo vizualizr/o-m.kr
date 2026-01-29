@@ -5,6 +5,11 @@ import mdx from "@astrojs/mdx";
 import tailwindcss from "@tailwindcss/vite";
 import rehypeCitation from "rehype-citation";
 
+// 2026-01-29 keystatic and necessary library installed.
+import react from '@astrojs/react'
+import markdoc from '@astrojs/markdoc'
+import keystatic from '@keystatic/astro'
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -13,7 +18,7 @@ export default defineConfig({
       https: true, // reinforce ssl connection
     },
   },
-  integrations: [mdx()],
+  integrations: [mdx(), react(), markdoc(), keystatic()],
   server: {
     host: true,
   },

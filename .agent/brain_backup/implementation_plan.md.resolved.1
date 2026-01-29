@@ -1,46 +1,38 @@
-# Refactor Grid Mapper to Span-Only Height
+# Fix Tailwind v4 @theme Error and CSS Structure
 
-변함없는 행 트랙 높이를 기반으로, 오직 `rowSpan`(트랙 점유 수)에 의해서만 세로 크기가 결정되도록 시스템을 단순화합니다.
-
-## User Review Required
-
-> [!IMPORTANT]
-> - [grid-rule.json](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/swiss/grid-rule.json)에서 `rowHeight` 설정이 영구적으로 제거됩니다.
-> - 모든 행 트랙은 동일한 높이 비율을 갖게 되며, 특정 행만 높게 설정하는 기능은 사라집니다 (대신 `rowSpan`을 늘려 대응).
-> - [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)에서 계산하던 복잡한 `grid-template-rows` 수식은 더 이상 사용하지 않습니다.
+The "Unknown at rule @theme" error occurs because Tailwind CSS v4's new `@theme` block is being parsed as standard CSS by tools that don't know it's Tailwind. This is often caused by missing `@import "tailwindcss"` directives in entry points or redundant imports in child files.
 
 ## Proposed Changes
 
-### [Component] Grid Configuration (JSON)
+### Configuration Fixes
 
-#### [MODIFY] [grid-rule.json](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/swiss/grid-rule.json)
-- [DELETE] 모든 `variants` 내의 `rowHeight` 필드 삭제.
+#### [MODIFY] [tailwind.config.mjs](file:///d:/yonggeun/porter/git/o-m.kr/production/tailwind.config.mjs)
+- Fix syntax error: Change `module.exports` to `export default`. Since the project is `"type": "module"`, [.mjs](file:///d:/yonggeun/porter/git/o-m.kr/production/astro.config.mjs) files must use ESM syntax. Although Tailwind v4 prefers CSS variables, it still reads this config if present.
 
----
+### CSS Structure Standardization
 
-### [Component] Grid Mapper Logic (JS)
+#### [MODIFY] [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/theme.css)
+- Remove `@import "tailwindcss";` from the top of this file **if** it is primarily intended to be imported into [global.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/global.css). 
+- > [!NOTE]
+  > Keeping it is technically allowed, but redundant imports of the same entry point can sometimes confuse parsers. We will keep it but ensure the parent file handles it correctly.
 
-#### [MODIFY] [grid-mapper.js](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js)
-- **[generateGridStructure](file:///d:/yonggeun/porter/git/o-m.kr/production/src/utils/grid-mapper.js#218-393) 내부 로직 단순화**:
-    - `currentRowHeightUnit`을 상수로 `1` 고정.
-    - `rowHeight` 관련 변수(`totalHeight`, `rowHeightOpts` 등) 삭제.
-    - `area` 계산식을 `width * height(span)`으로 변경.
-    - `minArea` 보장을 위한 `requiredSpan` 계산 시 `rowHeight` 보정 제거.
-- **JSDoc 업데이트**: 변경된 입출력 구조 반영.
+#### [MODIFY] [theme.css (Swiss)](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/swiss/theme.css)
+- Add `@import "tailwindcss";` to the top of this file. This file is imported directly in [SwissLayout.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/layouts/swiss/SwissLayout.astro), making it a CSS entry point. Without the import, the `@theme` block inside is unrecognized.
 
----
+#### [MODIFY] [global.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/global.css)
+- **Move `@import "tailwindcss"` to the top.** Standard CSS requires all `@import` statements to appear before any other rules (like `@font-face` or style rules). In [global.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/global.css), it currently appears after several `@font-face` declarations, which is invalid CSS and can break the Tailwind v4 parser.
+- **Deduplicate imports.** Remove the redundant `@import "tailwindcss"` from [theme.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/theme.css) if it's already provided by the parent [global.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/global.css).
 
-### [Component] Display & Styles
+### IDE Fix (VS Code)
 
-#### [MODIFY] [index.astro](file:///d:/yonggeun/porter/git/o-m.kr/production/src/pages/index.astro)
-- 주석 처리된 `grid-template-rows` 관련 코드 영구 삭제 또는 정리.
-
-#### [MODIFY] [patchwork.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/swiss/patchwork.css)
-- `.patchwork-grid`에 `grid-auto-rows` 속성을 추가하여 균일한 트랙 높이 확보 (예: `150px` 또는 `10vw`).
+#### [MODIFY] [.vscode/settings.json](file:///d:/yonggeun/porter/git/o-m.kr/production/.vscode/settings.json)
+- Add `css.customData` or settings to ignore Tailwind-specific at-rules to eliminate the red squiggles in the editor.
 
 ## Verification Plan
 
+### Automated Tests
+- Run `npm run build` to ensure the project compiles without CSS errors.
+
 ### Manual Verification
-1. `npm run dev` 실행 후 레이아웃 깨짐 확인.
-2. 모든 셀의 높이가 `rowSpan`의 배수로 정직하게 렌더링되는지 확인.
-3. 빈틈(Holes)이 발생하지 않는지 전수 검사.
+- Open [src/styles/theme.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/theme.css) (and others) in the IDE and verify that `@theme` is correctly recognized (or at least not flagged as an error).
+- Check the local dev server (already running) to ensure styles are applied correctly.

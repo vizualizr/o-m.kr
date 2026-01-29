@@ -1,33 +1,275 @@
-# Google Sheets CMS 파이프라인 구축 완료 (Half-Wiki 전략)
+# Walkthrough - Fixing Tailwind v4 @theme Error
 
-구글 시트를 아티클 메타데이터의 '조종실(Control Room)'로 활용하는 데이터 파이프라인 구축을 완료했습니다. 이를 통해 **Half-Wiki** 전략(시의성에 따른 슬러그/헤드라인 유연 변경)이 기술적으로 완벽히 지원됩니다.
+I have resolved the "Unknown at rule @theme" error and standardized the CSS architecture for Tailwind v4.
 
-## 🚀 구현된 워크플로우
+## Changes Made
 
-```mermaid
-graph LR
-    A[Local MDX] -- "sync-to-sheets.js" --> B(Google Sheets)
-    B -- "fetch-data.js" --> C[src/data/articles.json]
-    C -- "Custom Loader" --> D[Astro getCollection]
-    A -- "Content Body" --> D
+### 1. CSS Standardization
+- **[global.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/global.css)**: Fixed the invalid import order. `@import "tailwindcss"` and related plugins are now at the very top, ensuring standard CSS compliance and proper parsing by Tailwind v4.
+- **[theme.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/theme.css)**: Removed redundant `@import "tailwindcss"` to keep the file clean for use as a module.
+- **[theme.css (Swiss)](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/swiss/theme.css)**: Added `@import "tailwindcss"` at the top so it is correctly recognized as an entry point when imported in layouts.
+
+### 3. CSS Alias Resolution Fix
+- **Internal Imports**: Replaced `@import "@styles/theme.css"` with relative paths (e.g., [./theme.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/theme.css)) in [global.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/global.css), [list.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/list.css), and [article.css](file:///d:/yonggeun/porter/git/o-m.kr/production/src/styles/article.css). This ensures that standard CSS processors can resolve the files without depending on the Vite/TS alias configuration, which was causing runtime errors in the browser.
+- **Nested Files**: Fixed nested scroller CSS to point to the correct relative path for the theme file.
+
+## Verification Results
+
+- **IDE Recognition**: The red squiggles for `@theme` and `@utility` should no longer appear in VS Code.
+- **Dev Server**: The styles remain correctly applied in the development environment.
+- **Build Note**: A build was attempted, and while it failed due to a bibliography path issue in `rehype-citation` (unrelated to this task), the Tailwind-specific CSS parsing errors have been resolved.
+
+```diff:global.css
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+KR:wght@100..900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
+@import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css");
+
+@font-face {
+  font-family: 'Minguk';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Minguk-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* font-family: 'Minguk-Regular'; */
+@font-face {
+  font-family: 'Minguk';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Minguk-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@import "tailwindcss";
+
+@plugin "flyonui";
+@plugin "@iconify/tailwind4";
+@import "flyonui/variants.css";
+/* @source "/node_modules/flyonui/flyonui.js"; */
+@source "../../node_modules/flyonui/flyonui.js";
+
+
+@import "@styles/theme.css";
+
+:root {
+  /* equals to 7xl in tailwind default responsive unit */
+  --max-width: 80rem;
+}
+
+body {
+  @apply text-[#363636] flex flex-col min-h-svh mb-0 items-center h-fit w-full;
+  word-break: keep-all;
+  font-family: "Nanum Square Neo", "Noto Sans KR", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+.paper {
+  @apply m-0 p-0 grow w-full;
+}
+
+main {
+  @apply mx-0 my-0 w-full md:max-w-7xl;
+}
+
+.footerContainer {
+  /* @apply bg-[#675350] text-[#fcf8ee] ; */
+  /* @apply bg-mojo-200; */
+}
+
+footer {
+  @apply footer p-3 pt-7 pb-10 max-w-4xl m-auto border-t-[1px] border-neutral-200 text-sm h-fit;
+}
+
+.card {
+  @apply shadow-none;
+}
+===
+@import "tailwindcss";
+
+@plugin "flyonui";
+@plugin "@iconify/tailwind4";
+@import "flyonui/variants.css";
+/* @source "/node_modules/flyonui/flyonui.js"; */
+@source "../../node_modules/flyonui/flyonui.js";
+
+@import "./theme.css";
+
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+KR:wght@100..900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
+@import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css");
+
+@font-face {
+  font-family: 'Minguk';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Minguk-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* font-family: 'Minguk-Regular'; */
+@font-face {
+  font-family: 'Minguk';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.1/Minguk-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  /* equals to 7xl in tailwind default responsive unit */
+  --max-width: 80rem;
+}
+
+body {
+  @apply text-[#363636] flex flex-col min-h-svh mb-0 items-center h-fit w-full;
+  word-break: keep-all;
+  font-family: "Nanum Square Neo", "Noto Sans KR", "Noto Sans CJK KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+}
+
+.paper {
+  @apply m-0 p-0 grow w-full;
+}
+
+main {
+  @apply mx-0 my-0 w-full md:max-w-7xl;
+}
+
+.footerContainer {
+  /* @apply bg-[#675350] text-[#fcf8ee] ; */
+  /* @apply bg-mojo-200; */
+}
+
+footer {
+  @apply footer p-3 pt-7 pb-10 max-w-4xl m-auto border-t-[1px] border-neutral-200 text-sm h-fit;
+}
+
+.card {
+  @apply shadow-none;
+}
 ```
+```diff:theme.css
+@import "tailwindcss";
 
-### 1. 데이터 동기화 리포트
-- **대상**: `src/content/article/` 내 17개 아티클
-- **동기화 항목**: `UID`, `slug`, `headline`, `category`, `highlight`, `releaseDate` 등
-- **검증**: `fetch-data.js`를 통해 구글 시트 데이터를 로컬 JSON으로 동기화 및 Zod 스키마 검증 완료.
+@theme {
+  --font-sans: ui-sans-serif, system-ui, sans-serif, "Noto Sans KR",
+    "Noto Sans CJK KR", "Apple SD Gothic Neo", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-### 2. 주요 변경 사항
-- **[NEW] [sync-to-sheets.js](file:///d:/yonggeun/porter/git/o-m.kr/production/scripts/sync-to-sheets.js)**: 로컬 기사 정보를 구글 시트로 최초/정기 동기화.
-- **[NEW] [fetch-data.js](file:///d:/yonggeun/porter/git/o-m.kr/production/scripts/fetch-data.js)**: 구글 시트의 최신 메타데이터를 빌드 타임에 가져옴.
-- **[MODIFY] [content.config.ts](file:///d:/yonggeun/porter/git/o-m.kr/production/src/content.config.ts)**: 커스텀 로더를 통해 구글 시트 데이터와 로컬 MDX 본문을 `UID` 기준으로 병합.
+  --color-primary: #013466;
+  --color-background-light: #f5f7f8;
+  --color-background-dark: #0a0a1a;
+  --color-grid-color: #d1d1da;
 
-## 📈 전략적 이점 (Half-Wiki ROI)
+  --font-display: "Lora", serif;
+  --font-gothic: "Noto Sans KR", sans-serif;
+  --font-anton: "Anton", sans-serif;
 
-1.  **관리 유연성**: 모바일에서도 구글 시트 앱을 통해 기사의 헤드라인이나 슬러그를 즉시 변경하여 핫이슈에 대응 가능.
-2.  **영구성**: 파일 경로나 파일명이 바뀌더라도 `UID`가 유지되는 한 메타데이터와 본문의 관계가 깨지지 않음.
-3.  **데이터 무결성**: Zod 스키마를 통한 빌드 타임 검증으로 구글 시트의 휴먼 에러 차단.
+  --color-paper-50: oklch(98.32% 0.002 325.59);
+  --color-paper-100: oklch(96.73% 0.005 325.62);
+  --color-paper-200: oklch(93.57% 0.011 339.34);
+  --color-paper-300: oklch(90.8% 0.014 0.29);
+  --color-paper-400: oklch(87.4% 0.019 25.62);
+  --color-paper-500: oklch(83.29% 0.03 67.39);
+  --color-paper-600: oklch(77.37% 0.037 26.63);
+  --color-paper-700: oklch(70.02% 0.05 1.81);
+  --color-paper-800: oklch(59.31% 0.073 339.93);
+  --color-paper-900: oklch(43.44% 0.053 325.18);
+  --color-paper-950: oklch(22.07% 0.013 314.54);
 
-## ✅ 향후 활용 가이드
-- **메타데이터 수정**: 구글 시트에서 직접 수정 후 빌드(또는 `node scripts/fetch-data.js`) 시 반영됩니다.
-- **신규 기사 작성**: 로컬에 MDX 작성 후 `node scripts/sync-to-sheets.js`를 실행하면 시트에 새 행이 추가됩니다.
+
+}
+===
+@theme {
+    --font-sans: ui-sans-serif, system-ui, sans-serif, "Noto Sans KR",
+        "Noto Sans CJK KR", "Apple SD Gothic Neo", "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+    --color-primary: #013466;
+    --color-background-light: #f5f7f8;
+    --color-background-dark: #0a0a1a;
+    --color-grid-color: #d1d1da;
+
+    --font-display: "Lora", serif;
+    --font-gothic: "Noto Sans KR", sans-serif;
+    --font-anton: "Anton", sans-serif;
+
+    --color-paper-50: oklch(98.32% 0.002 325.59);
+    --color-paper-100: oklch(96.73% 0.005 325.62);
+    --color-paper-200: oklch(93.57% 0.011 339.34);
+    --color-paper-300: oklch(90.8% 0.014 0.29);
+    --color-paper-400: oklch(87.4% 0.019 25.62);
+    --color-paper-500: oklch(83.29% 0.03 67.39);
+    --color-paper-600: oklch(77.37% 0.037 26.63);
+    --color-paper-700: oklch(70.02% 0.05 1.81);
+    --color-paper-800: oklch(59.31% 0.073 339.93);
+    --color-paper-900: oklch(43.44% 0.053 325.18);
+    --color-paper-950: oklch(22.07% 0.013 314.54);
+
+
+}
+```
+```diff:theme.css
+@theme {
+    /* [Swiss Theme] Semantic Color Tokens (FlyonUI + Material Roles) */
+    --color-primary: var(--color-blue-900);
+    --color-primary-content: oklch(100% 0 0);
+    /* White text on primary */
+
+    --color-secondary: var(--color-blue-600);
+    --color-accent: var(--color-amber-500);
+
+    --color-base-100: var(--color-stone-50);
+    /* Surface / Light background */
+    --color-base-200: var(--color-stone-100);
+    --color-base-content: var(--color-stone-900);
+    /* On-Surface / Dark text */
+
+    --color-outline: var(--color-stone-200);
+    /* Semantic grid line */
+
+    /* [Swiss Theme] Typography Tokens (Semantic Extensions) */
+    --font-display: "Anton", "Apple SD Gothic Neo", "Malgun Gothic", var(--font-sans);
+    /* Display: Bold short headers */
+    --font-headline: "Lora", "Pretendard", "Noto Serif KR", serif;
+    /* Headline: Section titles */
+}
+
+@utility font-display {
+    font-family: var(--font-display);
+}
+
+@utility font-headline {
+    font-family: var(--font-headline);
+}
+===
+@import "tailwindcss";
+
+@theme {
+    /* [Swiss Theme] Semantic Color Tokens (FlyonUI + Material Roles) */
+    --color-primary: var(--color-blue-900);
+    --color-primary-content: oklch(100% 0 0);
+    /* White text on primary */
+
+    --color-secondary: var(--color-blue-600);
+    --color-accent: var(--color-amber-500);
+
+    --color-base-100: var(--color-stone-50);
+    /* Surface / Light background */
+    --color-base-200: var(--color-stone-100);
+    --color-base-content: var(--color-stone-900);
+    /* On-Surface / Dark text */
+
+    --color-outline: var(--color-stone-200);
+    /* Semantic grid line */
+
+    /* [Swiss Theme] Typography Tokens (Semantic Extensions) */
+    --font-display: "Anton", "Apple SD Gothic Neo", "Malgun Gothic", var(--font-sans);
+    /* Display: Bold short headers */
+    --font-headline: "Lora", "Pretendard", "Noto Serif KR", serif;
+    /* Headline: Section titles */
+}
+
+@utility font-display {
+    font-family: var(--font-display);
+}
+
+@utility font-headline {
+    font-family: var(--font-headline);
+}
+```

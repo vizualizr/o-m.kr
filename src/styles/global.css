@@ -1,3 +1,13 @@
+@import "tailwindcss";
+
+@plugin "flyonui";
+@plugin "@iconify/tailwind4";
+@import "flyonui/variants.css";
+/* @source "/node_modules/flyonui/flyonui.js"; */
+@source "../../node_modules/flyonui/flyonui.js";
+
+@import "./theme.css";
+
 @import url("https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+KR:wght@100..900&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
 @import url("https://hangeul.pstatic.net/hangeul_static/css/nanum-square-round.css");
@@ -16,17 +26,6 @@
   font-weight: normal;
   font-style: normal;
 }
-
-@import "tailwindcss";
-
-@plugin "flyonui";
-@plugin "@iconify/tailwind4";
-@import "flyonui/variants.css";
-/* @source "/node_modules/flyonui/flyonui.js"; */
-@source "../../node_modules/flyonui/flyonui.js";
-
-
-@import "@styles/theme.css";
 
 :root {
   /* equals to 7xl in tailwind default responsive unit */

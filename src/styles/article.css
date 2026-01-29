@@ -11,7 +11,7 @@
 
 @source "../../node_modules/flyonui/flyonui.js";
 
-@import "@styles/theme.css";
+@import "./theme.css";
 
 .paper {
   @apply bg-paper-100;

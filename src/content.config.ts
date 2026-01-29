@@ -69,19 +69,10 @@ const articleSchema = z.object({
 const articleCollection = defineCollection({
   loader: async () => {
     const articlesDir = path.resolve('src/content/article');
-    const jsonPath = path.resolve('src/data/articles.json');
-
-    // 1. Google Sheets에서 가져온 메타데이터 로드
-    const sheetMetadataMap = new Map<string, any>();
-    if (fs.existsSync(jsonPath)) {
-      const sheetData = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
-      sheetData.forEach((item: any) => sheetMetadataMap.set(item.uid, item));
-    }
-
     const entries: any[] = [];
 
-    // 2. 로컬 MDX 파일 순회 및 병합
     function walk(dir: string) {
+      if (!fs.existsSync(dir)) return;
       const files = fs.readdirSync(dir);
       for (const file of files) {
         const fullPath = path.join(dir, file);
@@ -91,33 +82,32 @@ const articleCollection = defineCollection({
           const content = fs.readFileSync(fullPath, 'utf8');
           const { data, content: body } = matter(content);
 
-          // UID 추출 (프론트매터 우선, 없으면 경로 기반)
           const relativePath = path.relative(articlesDir, fullPath);
           const uid = (data.uid as string) || relativePath.replace(/\\/g, '/').replace(/\.(md|mdx)$/, '');
 
-          // 구글 시트 데이터와 병합 (시트 데이터가 우선순위)
-          const sheetInfo = sheetMetadataMap.get(uid) || {};
-
-          const mergedData = {
-            ...data,
-            ...sheetInfo,
-            uid,
+          // Legacy type mapping for existing MDX files
+          let contentType = data.type as string;
+          const typeMap: Record<string, string> = {
+            'page': 'document',
+            'article': 'letter',
+            'graphics': 'poster'
           };
+          if (typeMap[contentType]) {
+            contentType = typeMap[contentType];
+          }
 
-          // unique ID for Astro (we use UID)
           entries.push({
             id: uid,
-            ...mergedData,
+            ...data,
+            type: contentType,
+            uid,
             body,
           });
         }
       }
     }
 
-    if (fs.existsSync(articlesDir)) {
-      walk(articlesDir);
-    }
-
+    walk(articlesDir);
     return entries;
   },
   schema: articleSchema,

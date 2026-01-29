@@ -1,0 +1,46 @@
+{
+  "name": "o-m.kr",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/markdoc": "^0.15.10",
+    "@astrojs/mdx": "^4.0.8",
+    "@astrojs/react": "^4.4.2",
+    "@faker-js/faker": "^9.6.0",
+    "@keystatic/astro": "^5.0.6",
+    "@keystatic/core": "^0.5.48",
+    "@observablehq/plot": "^0.6.17",
+    "@tailwindcss/vite": "^4.1.6",
+    "astro": "^5.1.9",
+    "autoprefixer": "^10.4.21",
+    "citation-js": "^0.7.19",
+    "citeproc": "^2.4.63",
+    "cssnano": "^7.0.7",
+    "d3": "^7.9.0",
+    "dotenv": "^17.2.3",
+    "express": "^4.21.2",
+    "flyonui": "^2.1.0",
+    "googleapis": "^170.1.0",
+    "gray-matter": "^4.0.3",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "rehype-citation": "^2.3.1",
+    "tailwindcss": "^4.1.6",
+    "with-tailwindcss": "file:",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.2.337",
+    "@iconify/tailwind4": "^1.0.6",
+    "@tailwindcss/postcss": "^4.1.6",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-basic-ssl": "^2.0.0"
+  }
+}

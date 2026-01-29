@@ -1,0 +1,159 @@
+---
+uid: "scroller2-demo"
+type: document
+category: 데모
+flytitle: "새로운 아키텍처"
+headline: "Scroller2 데모: 내가 만든 기린 그림"
+rubric: "데이터 기반의 재사용 가능한 스크롤리텔링 컴포넌트 테스트"
+slug: "scroller2-demo"
+
+highlight:
+  listed: true
+  index: 1
+
+isAccessible: true
+createdDate: "2025-12-29T18:10"
+releaseDate: "2025-12-29T18:15"
+
+authors:
+  - "김철수"
+  - "이영희"
+  - "박지민"
+
+tags:
+  - "AI"
+  - "Software Development"
+  - "Scroller2"
+
+keywords:
+  - "Astro"
+  - "D3.js"
+  - "Scroller"
+
+images:
+  - src: "/src/content/article/2024/03/scroller/ESI.png"
+    alt: "Demo image"
+    caption: "Scroller2 아키텍처 데모 이미지"
+
+revisions:
+  - authors:
+      - "김병기"
+    timestamp: "2025-04-02T10:30"
+    message: "Updated introduction with additional details on AI capabilities."
+  - authors:
+      - "박지민"
+    timestamp: "2025-04-03T08:45"
+    message: "Refined conclusion with industry expert comments."
+  - authors:
+      - "김백기"
+    timestamp: "2025-05-28T15:49"
+    message: "Refined conclusion with industry expert comments."
+---
+
+import Scroller2 from "/src/graphics/template/scroller2/Scroller2.astro";
+
+export const scrollerSteps = [
+  {
+    title: "0. OpenVis Conf 2013",
+    content: "발표자가 절대 하지 말아야 할 일을 했습니다. 제 발표 영상을 다시 본 것이죠.<br /><br />2013년 OpenVis Conf 첫 방문 당시의 기록입니다."
+  },
+  {
+    title: "1. 추임새 (Filler Words)",
+    content: "누구나 그렇듯 제 단점만 보였습니다. 서두르는 말투, 이상한 문구, 그리고 무엇보다 '음', '어'와 같은 추임새들이요. 실제로 30분 발표 동안 180개의 추임새를 발견했습니다."
+  },
+  {
+    title: "2. 나의 발표량",
+    content: "30분 동안 총 5,040개의 단어를 말했습니다."
+  },
+  {
+    title: "3. 비틀거림의 기록",
+    content: "여기에 그 30분 동안 사용된 모든 추임새들을 시각화했습니다."
+  },
+  {
+    title: "4. 음, 아, 그리고 어",
+    content: "저는 거의 이 세 가지만 썼더군요. '음'과 '아'가 80% 이상을 차지했고, '어'가 그 뒤를 이었습니다."
+  },
+  {
+    title: "5. 시간에 따른 추임새",
+    content: "발표 초반에 실수가 몰려있기를 바랐습니다. 실제로 발표가 진행될수록 추임새가 줄어드는 경향을 보입니다. 아마도 긴장이 풀리면서 제 페이스를 찾은 것이겠죠."
+  },
+  {
+    title: "6. 다시 늘어나는 실수",
+    content: "불행히도 그 추세는 계속되지 않았습니다. 중간 지점부터 다시 '음'과 '아'가 급증합니다. 발표 끝까지 꽤 일관되게 나타나네요."
+  },
+  {
+    title: "7. 기침 효과 (The Cough Effect)",
+    content: "제 가설은 이렇습니다. 중간 지점에서 관객 중 누군가 건조하게 기침을 하는 소리를 들었고, 이를 관객의 흥미가 떨어졌다는 신호로 오인한 것이죠. 거기서 자신감이 무너졌습니다.<br /><br />물론 그냥 뒷부분 연습이 부족했다는 가설도 있습니다."
+  },
+  {
+    title: "8. 2015년의 나에게",
+    content: "진실은 아무도 모르겠지만, 이 인사이트들이 2015년의 제 발표 실력을 높여주길 바랍니다. 비록 초기 결과는 그리 낙관적이지 않지만요."
+  }
+];
+
+## 데이터 저널리즘의 미래
+
+기존에는 시각화 하나를 만들 때마다 복잡한 HTML 구조를 일일이 짜야 했습니다. 하지만 `Scroller2`를 사용하면 위와 같이 데이터(객체 배열)만 정의하면 됩니다.
+
+<Scroller2 steps={scrollerSteps}>
+  <div slot="vis" id="demo-vis-container" class="w-full h-full border border-dashed border-gray-300 flex items-center justify-center">
+    <p class="text-gray-400">여기에 D3 시각화가 렌더링됩니다.</p>
+  </div>
+</Scroller2>
+
+<script>
+  import { initDemo } from "/src/graphics/template/scroller2/js/demo.js";
+  initDemo('#demo-vis-container');
+</script>
+
+본문 내용이 이어집니다. 이제 콘텐츠 제작자는 코드가 아닌 **'이야기'**에만 집중하면 됩니다.
+
+
+## 데이터 저널리즘의 미래
+
+기존에는 시각화 하나를 만들 때마다 복잡한 HTML 구조를 일일이 짜야 했습니다. 하지만 `Scroller2`를 사용하면 위와 같이 데이터(객체 배열)만 정의하면 됩니다.
+
+
+<Scroller2
+  steps={[
+    {
+      title: "0. OpenVis Conf 2013",
+      content: "발표자가 절대 하지 말아야 할 일을 했습니다. 제 발표 영상을 다시 본 것이죠.<br /><br />2013년 OpenVis Conf 첫 방문 당시의 기록입니다."
+    },
+    {
+      title: "1. 추임새 (Filler Words)",
+      content: "누구나 그렇듯 제 단점만 보였습니다. 서두르는 말투, 이상한 문구, 그리고 무엇보다 '음', '어'와 같은 추임새들이요. 실제로 30분 발표 동안 180개의 추임새를 발견했습니다."
+    },
+    {
+      title: "2. 나의 발표량",
+      content: "30분 동안 총 5,040개의 단어를 말했습니다."
+    },
+    {
+      title: "3. 비틀거림의 기록",
+      content: "여기에 그 30분 동안 사용된 모든 추임새들을 시각화했습니다."
+    },
+    {
+      title: "4. 음, 아, 그리고 어",
+      content: "저는 거의 이 세 가지만 썼더군요. '음'과 '아'가 80% 이상을 차지했고, '어'가 그 뒤를 이었습니다."
+    },
+    {
+      title: "5. 시간에 따른 추임새",
+      content: "발표 초반에 실수가 몰려있기를 바랐습니다. 실제로 발표가 진행될수록 추임새가 줄어드는 경향을 보입니다. 아마도 긴장이 풀리면서 제 페이스를 찾은 것이겠죠."
+    },
+    {
+      title: "6. 다시 늘어나는 실수",
+      content: "불행히도 그 추세는 계속되지 않았습니다. 중간 지점부터 다시 '음'과 '아'가 급증합니다. 발표 끝까지 꽤 일관되게 나타나네요."
+    },
+    {
+      title: "7. 기침 효과 (The Cough Effect)",
+      content: "제 가설은 이렇습니다. 중간 지점에서 관객 중 누군가 건조하게 기침을 하는 소리를 들었고, 이를 관객의 흥미가 떨어졌다는 신호로 오인한 것이죠. 거기서 자신감이 무너졌습니다.<br /><br />물론 그냥 뒷부분 연습이 부족했다는 가설도 있습니다."
+    },
+    {
+      title: "8. 2015년의 나에게",
+      content: "진실은 아무도 모르겠지만, 이 인사이트들이 2015년의 제 발표 실력을 높여주길 바랍니다. 비록 초기 결과는 그리 낙관적이지 않지만요."
+    }
+  ]}
+/>
+
+본문 내용이 이어집니다. 이제 콘텐츠 제작자는 코드가 아닌 **'이야기'**에만 집중하면 됩니다.
+.

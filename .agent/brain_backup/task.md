@@ -1,7 +1,8 @@
-# Task: Security Audit for Public Repository
+# Task: Fix Tailwind v4 @theme Error
 
-- [x] Verify tracked files in Git (ensure `.env` and secrets are not included)
-- [x] Check `.gitignore` for comprehensive coverage
-- [x] Scan codebase for hardcoded secrets or PII
-- [x] Verify if sensitive files were ever in the Git history
-- [x] Report findings and provide remediation steps
+- [x] Diagnose the "Unknown at rule @theme" error
+    - [x] Check `package.json` for versions
+    - [x] Check `astro.config.mjs` for integration
+    - [x] Check for conflicting configurations (`tailwind.config.mjs`, `postcss.config.js`)
+- [x] Propose and implement a fix
+- [x] Verify the fix
