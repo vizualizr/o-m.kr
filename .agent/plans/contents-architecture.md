@@ -2,28 +2,28 @@
 
 ### 사이트 콘텐츠 맵
 
-| 레벨 1 (Main) | 레벨 2 (Sub/Dynamic) | 설명 | 파일 경로 |
-| :--- | :--- | :--- | :--- |
-| **홈 (`/`)** | - | 랜딩 페이지 | `src/pages/index.astro` |
-| **아티클 (`/article`)** | `/[slug]` | 개별 데이터 스토리텔링 콘텐츠 상세 페이지 | `src/pages/article/[...slug].astro` |
-| **소개 (`/about`)** | - | 프로젝트 및 운영자 정보 | `src/pages/about.astro` |
+|콘텐츠 유형| 레벨 1 (Main) | 레벨 2 (Sub/Dynamic) | 설명 | 파일 경로 |
+|:---| :--- | :--- | :--- | :--- |
+|page| **홈 (`/`)** | - | 랜딩 페이지 | `src/pages/index.astro` |
+|article| **아티클 (`/article`)** | `/[slug]` | 개별 데이터 스토리텔링 콘텐츠 상세 페이지 | `src/pages/article/[...slug].astro` |
+|page| **소개 (`/about`)** | - | 프로젝트 및 운영자 정보 | `src/pages/about.astro` |
 
 #### 콘텐츠 유형
 
-- 콘텐츠는 다음 세 가지 유형으로 나눈다. 
-    - ^`page`: 정적인 정보성 페이지 (기존 `page`로 정의)
-      - 레벨 1 (Main): `/about`
-      - 레벨 2 (Sub/Dynamic): `/about/[slug]`
-    - ^`article`:  일반적인 데이터 저널리즘 기사 (기존 `article`로 정의)
+- 콘텐츠 유형은 다음과 같이 분류한다. 
+  - `article`: 모든 콘텐츠는 article이며 아래 세 유형 가운데 하나이다.
+    - `document`: 정적인 정보성 페이지 (기존 `page`로 정의)
+      - 레벨 1 (Main): `/[slug]`
+    - `letter`: 텍스트와 이미지, 차트로 구성된 정적인 기사다.
       - 레벨 1 (Main): `/article`
       - 레벨 2 (Sub/Dynamic): `/article/[slug]`
-    - ^`poster`: 시각화 중심의 인터랙티브 콘텐츠 (기존 `graphics`로 정의)
+    - `poster`: 시각화 중심의 인터랙티브 콘텐츠다.
       - 레벨 1 (Main): `/article`
       - 레벨 2 (Sub/Dynamic): `/article/[slug]`
 
 #### 콘텐츠 핵심 데이터 스키마 (Article Schema)
 
-- `src\content.config.ts`에서 관리한다. 해당 파일은 P1이다.
+- `src\content.config.ts`에서 관리한다. 해당 파일의 중요도는 P1이다.
 - 아티클 객체(article.data)는 다음과 같은 핵심 필드를 포함한다. 각 필드의 주석은 사용자가 직접 작성하므로 아래 설명보다 해당 파일의 주석을 우선으로 한다.
   - flytitle: an in 2 ~ 4 words of inviting phrase characterizing the issue, little enigmatic.
   - headline:  is a title clarifies people what is going on. It is informative than attractive.
