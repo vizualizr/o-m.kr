@@ -6,7 +6,9 @@ import Paper from "@layouts/Paper.astro";
 import Header from "@components/ArticleHeader.astro";
 
 export async function getStaticPaths() {
-  const articles = await getCollection("articles");
+  const articles = await getCollection("articles", ({ data }) =>
+    ["letter", "poster"].includes(data.type),
+  );
   return articles.map((article) => ({
     params: { slug: article.data.slug },
   }));
@@ -14,7 +16,9 @@ export async function getStaticPaths() {
 
 const { params } = Astro;
 const slug = params.slug;
-const articles = await getCollection("articles");
+const articles = await getCollection("articles", ({ data }) =>
+  ["letter", "poster"].includes(data.type),
+);
 const article = articles.find((article) => article.data.slug === slug);
 const { Content } = await render(article);
 ---

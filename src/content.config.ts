@@ -11,7 +11,7 @@ const articleSchema = z.object({
   // article type specifies the kind of content: page, article, or graphics.
   // I saw something very FLYTITLE, I heard that HEADLINE, S V(ing) O
   // I worry/expect that RUBRIC may happen.
-  type: z.enum(['page', 'article', 'graphics']),
+  type: z.enum(['document', 'letter', 'poster']),
   // category is an umbrella topic to demarcate the adjacent issues.
   category: z.string().optional(),
   // flytitle is an in 2 ~ 4 words of inviting phrase characterizing the issue, little enigmatic.
